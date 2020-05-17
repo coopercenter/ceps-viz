@@ -1,3 +1,6 @@
+# Operating system files
+.DS_Store
+
 # History files
 .Rhistory
 .Rapp.history
@@ -5,8 +8,14 @@
 # Session Data files
 .RData
 
+# Ignore Rproj files
+*.Rproj
+
 # User-specific files
 .Ruserdata
+
+# Personal credentials
+my_*.R
 
 # Example code in package build process
 *-Ex.R
@@ -37,3 +46,4 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+.Rproj.user

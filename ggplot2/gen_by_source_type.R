@@ -9,7 +9,7 @@ library(data.table)
 library(ggplot2)
 library(eia)
 
-source(here("etl","my_eia_api_key.R"))
+source(here("my_eia_api_key.R"))
 
 get_EIA_series <- function(eiaKey,series_id) {
   require(jsonlite)

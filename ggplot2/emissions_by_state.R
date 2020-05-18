@@ -9,7 +9,7 @@ library(data.table)
 library(ggplot2)
 library(eia)
 
-source(here("ggplot2","my_api_key.R"))
+source(here::here("my_eia_api_key.R"))
 
 get_EIA_series <- function(eiaKey,series_id) {
   require(jsonlite)
@@ -58,7 +58,7 @@ states = c("AK","AL","AR","AZ","CA",
 for(state in states){
   series_id = paste0("EMISS.CO2-TOTV-TT-TO-",state,".A")
   
-  dt <- get_EIA_series(my_api_key,series_id)
+  dt <- get_EIA_series(eiaKey,series_id)
   setnames(dt,old="value",new="CO2_emissions")
     
   emmisions_by_state_figure <- ggplot() +

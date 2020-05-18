@@ -10,7 +10,7 @@ library(readxl)
 library(ggpubr)
 
 db_driver = dbDriver("PostgreSQL")
-source(here::here("ggplot2","my_postgres_credentials.R"))
+source(here::here("my_postgres_credentials.R"))
 
 db <- dbConnect(db_driver,user=db_user, password=ra_pwd,dbname="postgres", host=db_host)
 

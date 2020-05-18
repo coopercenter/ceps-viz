@@ -194,6 +194,22 @@ output:
 
 ***
 
+**carbon_free_generation_by_type_stacked.png**:![](carbon_free_generation_by_type_stacked.png)
+
+***
+
+ 
+
+***
+
+**carbon_versus_carbon_free_stacked.png**:![](carbon_versus_carbon_free_stacked.png)
+
+***
+
+ 
+
+***
+
 **consumption_by_sector_2019_line.png**:![](consumption_by_sector_2019_line.png)
 
 ***
@@ -386,6 +402,22 @@ output:
 
 ***
 
+**renewable_generation_by_type_stacked.png**:![](renewable_generation_by_type_stacked.png)
+
+***
+
+ 
+
+***
+
+**renewable_versus_non_renewable_stacked.png**:![](renewable_versus_non_renewable_stacked.png)
+
+***
+
+ 
+
+***
+
 **sales_by_category_gwh_line.png**:![](sales_by_category_gwh_line.png)
 
 ***
@@ -467,6 +499,38 @@ output:
 ***
 
 **total_sales_monthly.png**:![](total_sales_monthly.png)
+
+***
+
+ 
+
+***
+
+**va_annual_consumption_2017_pie_chart.png**:![](va_annual_consumption_2017_pie_chart.png)
+
+***
+
+ 
+
+***
+
+**va_annual_consumption_area.png**:![](va_annual_consumption_area.png)
+
+***
+
+ 
+
+***
+
+**va_annual_production_2019_pie_chart.png**:![](va_annual_production_2019_pie_chart.png)
+
+***
+
+ 
+
+***
+
+**va_annual_production_area.png**:![](va_annual_production_area.png)
 
 ***
 

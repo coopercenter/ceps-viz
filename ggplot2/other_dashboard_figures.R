@@ -71,7 +71,7 @@ for(row in 1:nrow(series_list_gen)){
   table <- series_list_gen[row,"series_id"]
   fuel <- series_list_gen[row,"fuel"]
   
-  dt <- get_EIA_series(my_api_key,table)
+  dt <- get_EIA_series(eiaKey,table)
   setnames(dt,old="value",new=fuel)
   
   if (is.null(va_annual_generation))
@@ -100,7 +100,7 @@ for(row in 1:nrow(series_list_con)){
   table <- series_list_con[row,"series_id"]
   sector <- series_list_con[row,"sector"]
   
-  dt <- get_EIA_series(my_api_key,table)
+  dt <- get_EIA_series(eiaKey,table)
   setnames(dt,old="value",new=sector)
   
   if (is.null(va_annual_consumption))

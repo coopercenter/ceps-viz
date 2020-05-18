@@ -11,6 +11,7 @@ donut_figure <- function(data_value,data_year,data_with_true_units,goal_value,go
   #description_of_goal = character of description of goal category (ex:Renewable Generation)
   #light_color = choice of lighter color, as a character
   #dark_color = choice of darker color, as a character (note: light_color and dark_color should be light and dark versions of same color) 
+  #end_goal variations default as NULL, but can used if there is a need for three rings: data, and intermediate goal, and an end goal
   
   require(ggplot2)
   
@@ -54,7 +55,7 @@ donut_figure <- function(data_value,data_year,data_with_true_units,goal_value,go
       theme_void()+
       xlim(-2, 3)+ 
       labs(title=paste0(" ",data_with_true_units),subtitle=paste0("in ",data_year),caption=paste0(goal_with_true_units," by ",goal_year,"\n",end_goal_with_true_units," by ",end_goal_year))+
-      geom_text(aes(x=-2,y=0,label=paste0(description_of_goal)),color=darkest_color)+
+      geom_text(aes(x=-2,y=0,label=paste0(description_of_goal)),color=darkest_color,size=3.5)+
       theme(plot.title = element_text(hjust=0.5,vjust=0,size=22,color=darkest_color),
             plot.subtitle = element_text(hjust=0.5,vjust=0,size=10,color=dark_color),
             plot.caption=element_text(hjust=0.5,vjust=1,size=22,color=light_color),
@@ -63,4 +64,121 @@ donut_figure <- function(data_value,data_year,data_with_true_units,goal_value,go
   return(donut)
 }
 
+#for timeseries stacked area figures by particular category:
+stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Year",subtitle_name=NULL){
+  #data_table must have three columns: year (or date if monthly data is being plotted where date must be of form "1990-01-01" for example), variable, and value
+  #value_unit = character description of units of value being plotted
+  #title_name = character description of what title of figure should be
+  #annual is a logical variable, which defualts to TRUE, if non-annual data is being plotted, annual should be FALSE
+  #x_label defaults to "Year" but can be substituted with another character if Year is not appropriate xlabel
+  #subtitle_name defaults to NULL, but can be set equal to a character if a subtitle is desired
+  
+  require(ggplot2)
+  if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
+  require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  
+  variable_elements <- unique(data_table$variable) #selects the unique elements of the variable column
+  variable_elements <- as.vector(variable_elements) #saves unique elements as character vector
+  
+  good_names = gsub("_"," ",variable_elements) #subtitutes "_" from variable name with a space to create legend labels
+  good_names = gsub("apco","APCO",good_names) #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  good_names = capitalize(good_names) #capitalizes first word of legend labels
+  
+  if (annual==TRUE){
+    figure <- ggplot(data_table, aes(x=year,y=value,fill=variable)) +
+      geom_area() + 
+      ylab(value_unit) + xlab(x_label) + ylim(0,NA) +
+      labs(title=title_name,subtitle=subtitle_name) +
+      scale_fill_discrete(name=NULL,breaks=variable_elements,labels=good_names)
+    figure
+  }
+  else{
+    figure <- ggplot(data_table, aes(x=date,y=value,fill=variable)) +
+      geom_area() + 
+      ylab(value_unit) + xlab(x_label) + ylim(0,NA) +
+      labs(title=title_name,subtitle=subtitle_name) +
+      scale_fill_discrete(name=NULL,breaks=variable_elements,labels=good_names)
+    figure
+  }
+  return(figure)
+}
 
+#for timeseries line figures by particular category:
+line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Year",subtitle_name=NULL){
+  #data_table must have three columns: year (or date if monthly/daily data is being plotted where date must be of form "1990-01-01" for example), variable, and value
+  #value_unit = character description of units of value being plotted
+  #title_name = character description of what title of figure should be
+  #annual is a logical variable, which defualts to TRUE, if monthly or daily data is being plotted, annual should be FALSE
+  #x_label defaults to "Year" but can be substituted with another character if Year is not appropriate xlabel
+  #subtitle_name defaults to NULL, but can be set equal to a character if a subtitle is desired
+  
+  require(ggplot2)
+  if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
+  require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  
+  variable_elements <- unique(data_table$variable) #selects the unique elements of the variable column
+  variable_elements <- as.vector(variable_elements) #saves unique elements as character vector
+  
+  good_names = gsub("_"," ",variable_elements) #subtitutes "_" from variable name with a space to create legend labels
+  good_names = gsub("apco","APCO",good_names) #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  good_names = capitalize(good_names) #capitalizes first word of legend labels
+  
+  if (annual==TRUE){
+    figure <- ggplot(data_table, aes(x=year,y=value,color=variable,shape=variable)) +
+      geom_line() + 
+      geom_point() +
+      ylab(value_unit) + xlab(x_label) + ylim(0,NA) +
+      labs(title=title_name,subtitle=subtitle_name) +
+      scale_color_discrete(name=NULL,breaks=variable_elements,labels=good_names)+
+      scale_shape_discrete(name=NULL,breaks=variable_elements,labels=good_names)
+    figure
+  }
+  else{
+    figure <- ggplot(data_table, aes(x=date,y=value,color=variable,shape=variable)) +
+      geom_line() + 
+      geom_point() +
+      ylab(value_unit) + xlab(x_label) + ylim(0,NA) +
+      labs(title=title_name,subtitle=subtitle_name) +
+      scale_color_discrete(name=NULL,breaks=variable_elements,labels=good_names)+
+      scale_shape_discrete(name=NULL,breaks=variable_elements,labels=good_names)
+    figure
+  }
+  return(figure)
+}
+
+#for pie charts:
+pie_chart_figure <- function(data_table,title_name=NULL,percent_label_size=4){
+  #data_table must have a "variable" column containing variable names of different categories and a "value" column containing the associated value of each variable that is to be plotted
+  #value may be in GWh or whatever is the unit of what is being plotted, the values need not add to 100% or 1 they can be actual values
+  #title_name defaults to NULL but can be set as a character if a title is desired
+  #percent_label_size defaults to 4, it can be changed to a smaller size if the pie chart has small slivers for example or set equal to 0 if the percent label is not desired
+  
+  require(ggplot2)
+  if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
+  require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  
+  #to compute percentages of each category(prop) and the position of labels(ypos):
+  data_table <- data_table %>% 
+    arrange(desc(variable)) %>%
+    mutate(prop = value / sum(data_table$value) *100) %>%
+    mutate(ypos = cumsum(prop)- 0.5*prop )
+  
+  variable_elements <- as.vector(data_table$variable) #selects the elements of the variable column as a vector
+  
+  good_names = gsub("_"," ",variable_elements) #subtitutes "_" from variable name with a space to create legend labels
+  good_names = gsub("apco","APCO",good_names) #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  good_names = capitalize(good_names) #capitalizes first word of legend labels
+  
+  figure <- ggplot(data_table,aes(x="",y=prop,fill=variable))+
+    geom_bar(stat="identity", width=1, color="white") +
+    coord_polar("y", start=0) +
+    theme_void() + 
+    geom_text(aes(y=ypos,label=paste0(as.character(round(prop,1)),"%")),color="white",size=percent_label_size) +
+    scale_fill_discrete(name=NULL,breaks=variable_elements,labels=good_names)+
+    labs(title=title_name)+
+    theme(plot.title=element_text(hjust=0.5))
+  
+  return(figure)
+}
+
+#note: because all these functions return ggplot2 figures, additional different desired plot elements can be added in conjunction with the use of the functions

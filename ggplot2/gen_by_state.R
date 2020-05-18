@@ -9,7 +9,7 @@ library(data.table)
 library(ggplot2)
 library(eia)
 
-source(here("etl","my_eia_api_key.R"))
+source(here::here("my_eia_api_key.R"))
 
 get_EIA_series <- function(eiaKey,series_id) {
   require(jsonlite)
@@ -94,10 +94,10 @@ for(state in states){
     table <- series_list[row,"series_id"]
     fuel <- series_list[row,"fuel"]
     
-    possibleError <- tryCatch(eia_series(table,key=my_api_key),error=function(e) e) #not every state has data for each fuel type, which would result in an error
+    possibleError <- tryCatch(eia_series(table,key=eiaKey),error=function(e) e) #not every state has data for each fuel type, which would result in an error
     if(inherits(possibleError, "error")) next #so if data for a particular fuel type is missing it will instead move to the next fuel listed in series_id
     
-    dt <- get_EIA_series(my_api_key,table)
+    dt <- get_EIA_series(eiaKey,table)
     setnames(dt,old="value",new=fuel)
     
     if (is.null(all_generation))

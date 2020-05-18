@@ -36,7 +36,7 @@ monthly_sales[date>=2020-01-01,va_total_sales_fc_gwh:=dom_total_exdc_fc_gwh+dom_
 
 db_driver = dbDriver("PostgreSQL")
 #insert your filepath here
-source(here::here("ggplot2","my_postgres_credentials.R"))
+source(here::here("my_postgres_credentials.R"))
 table = "pjm_hourly_generation"
 db <- dbConnect(db_driver,user=db_user, password=ra_pwd,dbname="postgres", host=db_host)
 script  <- paste0("select * from ",table ," where datetime_beginning_ept>='2016' and fuel_type = 'Solar';")

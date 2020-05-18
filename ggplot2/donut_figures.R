@@ -8,9 +8,10 @@ library(data.table)
 library(ggplot2)
 library(dplyr)
 library(RPostgreSQL)
+library(lubridate)
 
 db_driver = dbDriver("PostgreSQL")
-source(here::here("ggplot2","my_postgres_credentials.R"))
+source(here::here("my_postgres_credentials.R"))
 db <- dbConnect(db_driver,user=db_user, password=ra_pwd,dbname="postgres", host=db_host)
 
 table="whole_electric_industry_capacity"
@@ -19,7 +20,7 @@ capacity <- data.table(dbGetQuery(db,script))
 
 dbDisconnect(db)
 
-source(here("etl","my_eia_api_key.R"))
+source(here::here("my_eia_api_key.R"))
 
 get_EIA_series <- function(eiaKey,series_id) {
   require(jsonlite)
@@ -76,7 +77,7 @@ for(row in 1:nrow(series_list)){
   table <- series_list[row,"series_id"]
   fuel <- series_list[row,"fuel"]
   
-  dt <- get_EIA_series(my_api_key,table)
+  dt <- get_EIA_series(eiaKey,table)
   setnames(dt,old="value",new=fuel)
   
   if (is.null(va_generation))
@@ -86,7 +87,7 @@ for(row in 1:nrow(series_list)){
   
 }
 
-source(here("ggplot2","viz_functions.R"))
+source(here::here("ggplot2","viz_functions.R"))
 
 #plotting donut figure of progress towards renewable generation goal
 renewable_percent_gen_2019 = va_generation[year==2019,(all_solar+hydropower)/total]

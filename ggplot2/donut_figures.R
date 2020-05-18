@@ -8,7 +8,6 @@ library(data.table)
 library(ggplot2)
 library(dplyr)
 library(RPostgreSQL)
-library(lubridate)
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))

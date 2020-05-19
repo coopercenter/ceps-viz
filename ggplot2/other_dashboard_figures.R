@@ -51,7 +51,8 @@ series_list_gen = data.frame(
               "ELEC.GEN.DPV-VA-99.A",
               "ELEC.GEN.HYC-VA-99.A",
               "ELEC.GEN.WWW-VA-99.A",
-              "ELEC.GEN.WAS-VA-99.A"),
+              "ELEC.GEN.WAS-VA-99.A",
+              "ELEC.GEN.ALL-VA-99.A"),
   fuel=c("coal",
          "oil",
          "gas",
@@ -60,7 +61,8 @@ series_list_gen = data.frame(
          "distributed_solar",
          "hydropower",
          "wood",
-         "other_biomass"))
+         "other_biomass",
+         "total"))
 
 series_list_gen$fuel<-as.character(series_list_gen$fuel)
 
@@ -79,6 +81,9 @@ for(row in 1:nrow(series_list_gen)){
   else
   {va_annual_generation <-  merge(va_annual_generation, dt[], by ="year", all=TRUE)}
 }
+
+va_annual_generation[is.na(va_annual_generation)]=0
+va_annual_generation[,other:=total-(coal+oil+gas+nuclear+utility_solar+distributed_solar+hydropower+wood+other_biomass)]
 
 series_list_con = data.frame(
   series_id=c("SEDS.TERCB.VA.A",
@@ -112,18 +117,19 @@ for(row in 1:nrow(series_list_con)){
 source(here::here("ggplot2","viz_functions.R"))
 
 #production figures:
-lf_va_annual_generation <- melt(va_annual_generation,id="year")
+lf_va_annual_generation <- melt(va_annual_generation[,.(year,coal,oil,gas,nuclear,utility_solar,distributed_solar,hydropower,wood,other_biomass,other)],id="year")
 
-va_annual_production_area = stacked_area_figure(lf_va_annual_generation,"GWh","VA Annual Generation",subtitle_name = "By Fuel Type")
+va_annual_production_area = stacked_area_figure(lf_va_annual_generation,"GWh","VA Annual Generation",subtitle_name = "By Fuel Type",lower_limit = -1900)
 va_annual_production_area
 
 path2graphics <- here::here("graphics")
 ggsave(path=path2graphics, filename="va_annual_production_area.png")
 
-va_annual_production_2019_pie_chart = pie_chart_figure(lf_va_annual_generation[year==2019],"VA 2019 Generation",percent_label_size = 0) #setting percent_label_size = 0 to remove percent labels because slivers are so small
+va_annual_production_2019_pie_chart = pie_chart_figure(lf_va_annual_generation[year==2019&variable!="other"],"VA 2019 Generation",percent_label_size = 0) #setting percent_label_size = 0 to remove percent labels because slivers are so small
+#other is excluded because the pie chart function does not take negative values
 
 #finding location of labels and percent label for each fuel type so that labels for the larger pie slices (gas and nuclear) can be manually added
-va_2019_gen = lf_va_annual_generation[year==2019]
+va_2019_gen = lf_va_annual_generation[year==2019&variable!="other"]
 
 va_2019_gen <- va_2019_gen %>% 
   arrange(desc(variable)) %>%

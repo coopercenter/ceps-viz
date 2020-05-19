@@ -64,6 +64,56 @@ donut_figure <- function(data_value,data_year,data_with_true_units,goal_value,go
   return(donut)
 }
 
+#for plotly donut figures: 
+donut_figure_p <- function(data_value,data_year,data_with_true_units,goal_value,goal_year,goal_with_true_units,description_of_goal,light_color,dark_color,end_goal_value=NULL,end_goal_year=NULL,end_goal_with_true_units=NULL,darkest_color=NULL){
+  #see above donut_figure function for input descriptions 
+  
+  require(plotly)
+  
+  ring1 = data.frame(category=c("zfiller",paste0(description_of_goal,data_year)),
+                     value=c(1-data_value,data_value)) #ring1 data.frame consists of elements that will make up outer ring
+  ring2 = data.frame(category=c("zfiller",paste0(description_of_goal,goal_year)),
+                     value=c(1-goal_value,goal_value)) #ring2 data.frame consists of elements that will make up inner ring
+  
+  if (is.null(end_goal_value)){
+    figure <- plot_ly(textinfo="none",hoverinfo="name") %>%
+      add_pie(data = ring1, values = ~value, labels = ~category, hole = 0.8,
+              name = "currently", domain = list(x = c(0, 1), y = c(0, 1)),
+              marker=list(colors=c("whitesmoke",dark_color),
+                          line=list(color="white",width=1))) %>%
+      add_pie(data = ring2, values = ~value, labels = ~category, hole = 0.76,
+              name = "goal", domain = list(x = c(0, 1), y = c(.1, .9)),
+              marker=list(colors=c("whitesmoke",light_color),
+                          line=list(color="white",width=1))) %>%
+      layout(title=list(text=paste(data_with_true_units,"in",data_year),font = list(color = dark_color,size = 16),x=0.55),showlegend = F) %>%
+      add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "lightslategrey",size = 14)) %>%
+      add_annotations(x=0.5,y=-0.1,text=paste(goal_with_true_units,"by",goal_year),showarrow=F,font = list(color = light_color,size = 16))
+  }
+  else{
+    ring3 = data.frame(category=c("zfiller",paste0(description_of_goal,end_goal_year)),
+                       value=c(1-end_goal_value,end_goal_value)) #ring3 data.frame consists of elements that will make up innermost ring
+    
+    figure <- plot_ly(textinfo="none",hoverinfo="name") %>%
+      add_pie(data = ring1, values = ~value, labels = ~category, hole = 0.8,
+              name = "currently", domain = list(x = c(0, 1), y = c(0, 1)),
+              marker=list(colors=c("whitesmoke",darkest_color),
+                          line=list(color="white",width=1))) %>%
+      add_pie(data = ring2, values = ~value, labels = ~category, hole = 0.76,
+              name = "goal", domain = list(x = c(0, 1), y = c(.1, .9)),
+              marker=list(colors=c("whitesmoke",dark_color),
+                          line=list(color="white",width=1))) %>%
+      add_pie(data = ring3, values = ~value, labels = ~category, hole = 0.7,
+              name = "end goal", domain = list(x = c(0, 1), y = c(.2, .8)),
+              marker=list(colors=c("whitesmoke",light_color),
+                          line=list(color="white",width=1))) %>%
+      layout(title=list(text=paste(data_with_true_units,"in",data_year),font = list(color = darkest_color,size = 15),x=0.55),showlegend = F) %>%
+      add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "lightslategrey",size = 14)) %>%
+      add_annotations(x=0.5,y=-0.05,text=paste(goal_with_true_units,"by",goal_year),showarrow=F,font = list(color = dark_color,size = 15))%>%
+      add_annotations(x=0.5,y=-0.1,text=paste(end_goal_with_true_units,"by",end_goal_year),showarrow=F,font = list(color = light_color,size = 15))
+  }
+  return(figure)
+}
+
 #for timeseries stacked area figures by particular category:
 stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Year",subtitle_name=NULL){
   #data_table must have three columns: year (or date if monthly data is being plotted where date must be of form "1990-01-01" for example), variable, and value

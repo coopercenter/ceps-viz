@@ -10,6 +10,22 @@ output:
 
 ***
 
+**annual_carbon_free_generation_by_type_line.png**:![](annual_carbon_free_generation_by_type_line.png)
+
+***
+
+ 
+
+***
+
+**annual_carbon_free_generation_by_type_line2.png**:![](annual_carbon_free_generation_by_type_line2.png)
+
+***
+
+ 
+
+***
+
 **annual_change_by_utility_bar_extot.png**:![](annual_change_by_utility_bar_extot.png)
 
 ***
@@ -75,22 +91,6 @@ output:
 ***
 
 **annual_pop_growth.png**:![](annual_pop_growth.png)
-
-***
-
- 
-
-***
-
-**annual_renewable_generation_by_type_line.png**:![](annual_renewable_generation_by_type_line.png)
-
-***
-
- 
-
-***
-
-**annual_renewable_generation_by_type_line2.png**:![](annual_renewable_generation_by_type_line2.png)
 
 ***
 
@@ -179,6 +179,14 @@ output:
 ***
 
 **annual_total_elec_per_cust_res_line.png**:![](annual_total_elec_per_cust_res_line.png)
+
+***
+
+ 
+
+***
+
+**carbon_free_donut_p.png**:![](carbon_free_donut_p.png)
 
 ***
 
@@ -394,6 +402,14 @@ output:
 
 ***
 
+**renewable_donut_p.png**:![](renewable_donut_p.png)
+
+***
+
+ 
+
+***
+
 **renewable_donut.png**:![](renewable_donut.png)
 
 ***
@@ -451,6 +467,14 @@ output:
 ***
 
 **sales_by_entity_2019_stacked_area.png**:![](sales_by_entity_2019_stacked_area.png)
+
+***
+
+ 
+
+***
+
+**sw_capacity_donut_p.png**:![](sw_capacity_donut_p.png)
 
 ***
 

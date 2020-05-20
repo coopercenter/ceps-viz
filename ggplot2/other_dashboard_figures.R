@@ -144,6 +144,12 @@ va_annual_production_2019_pie_chart
 
 ggsave(path=path2graphics, filename="va_annual_production_2019_pie_chart.png")
 
+va_annual_production_2019_pie_chart_p = pie_chart_figure_p(va_2019_gen,"VA 2019 Generation")
+va_annual_production_2019_pie_chart_p
+
+va_annual_production_2019_pie_chart_p_with_legend = pie_chart_figure_p(va_2019_gen,"VA 2019 Generation",legend_shown = TRUE)
+va_annual_production_2019_pie_chart_p_with_legend
+
 #consumption figures: 
 lf_va_annual_consumption <- melt(va_annual_consumption,id="year")
 
@@ -157,9 +163,11 @@ va_annual_consumption_2017_pie_chart
 
 ggsave(path=path2graphics, filename="va_annual_consumption_2017_pie_chart.png")
 
+va_annual_consumption_2017_pie_chart_p = pie_chart_figure_p(lf_va_annual_consumption[year==2017],"VA 2017 Consumption")
+va_annual_consumption_2017_pie_chart_p
 
-
-
+va_annual_consumption_2017_pie_chart_p_with_legend = pie_chart_figure_p(lf_va_annual_consumption[year==2017],"VA 2017 Consumption",legend_shown = TRUE)
+va_annual_consumption_2017_pie_chart_p_with_legend
 
 
   

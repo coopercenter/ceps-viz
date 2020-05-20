@@ -10,6 +10,22 @@ output:
 
 ***
 
+**annual_carbon_free_generation_by_type_line.png**:![](annual_carbon_free_generation_by_type_line.png)
+
+***
+
+ 
+
+***
+
+**annual_carbon_free_generation_by_type_line2.png**:![](annual_carbon_free_generation_by_type_line2.png)
+
+***
+
+ 
+
+***
+
 **annual_change_by_utility_bar_extot.png**:![](annual_change_by_utility_bar_extot.png)
 
 ***
@@ -75,22 +91,6 @@ output:
 ***
 
 **annual_pop_growth.png**:![](annual_pop_growth.png)
-
-***
-
- 
-
-***
-
-**annual_renewable_generation_by_type_line.png**:![](annual_renewable_generation_by_type_line.png)
-
-***
-
- 
-
-***
-
-**annual_renewable_generation_by_type_line2.png**:![](annual_renewable_generation_by_type_line2.png)
 
 ***
 
@@ -186,7 +186,31 @@ output:
 
 ***
 
+**carbon_free_donut_p.png**:![](carbon_free_donut_p.png)
+
+***
+
+ 
+
+***
+
 **carbon_free_donut.png**:![](carbon_free_donut.png)
+
+***
+
+ 
+
+***
+
+**carbon_free_generation_by_type_stacked.png**:![](carbon_free_generation_by_type_stacked.png)
+
+***
+
+ 
+
+***
+
+**carbon_versus_carbon_free_stacked.png**:![](carbon_versus_carbon_free_stacked.png)
 
 ***
 
@@ -378,7 +402,31 @@ output:
 
 ***
 
+**renewable_donut_p.png**:![](renewable_donut_p.png)
+
+***
+
+ 
+
+***
+
 **renewable_donut.png**:![](renewable_donut.png)
+
+***
+
+ 
+
+***
+
+**renewable_generation_by_type_stacked.png**:![](renewable_generation_by_type_stacked.png)
+
+***
+
+ 
+
+***
+
+**renewable_versus_non_renewable_stacked.png**:![](renewable_versus_non_renewable_stacked.png)
 
 ***
 
@@ -419,6 +467,14 @@ output:
 ***
 
 **sales_by_entity_2019_stacked_area.png**:![](sales_by_entity_2019_stacked_area.png)
+
+***
+
+ 
+
+***
+
+**sw_capacity_donut_p.png**:![](sw_capacity_donut_p.png)
 
 ***
 
@@ -467,6 +523,38 @@ output:
 ***
 
 **total_sales_monthly.png**:![](total_sales_monthly.png)
+
+***
+
+ 
+
+***
+
+**va_annual_consumption_2017_pie_chart.png**:![](va_annual_consumption_2017_pie_chart.png)
+
+***
+
+ 
+
+***
+
+**va_annual_consumption_area.png**:![](va_annual_consumption_area.png)
+
+***
+
+ 
+
+***
+
+**va_annual_production_2019_pie_chart.png**:![](va_annual_production_2019_pie_chart.png)
+
+***
+
+ 
+
+***
+
+**va_annual_production_area.png**:![](va_annual_production_area.png)
 
 ***
 

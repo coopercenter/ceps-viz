@@ -56,32 +56,23 @@ ggsave(path=path2graphics, filename="total_sales_monthly.png")
 
 #plotting electricity generation by load-serving entity
 lf_monthly_sales_by_entity <-melt(monthly_sales[year<"2020",.(date,month,year,apco_total_gwh,ros_total_gwh,dom_total_gwh)],id=c("date","month","year"))
-setnames(lf_monthly_sales_by_entity,old=c("variable","value"),new=c("load_serving_entity","sales_gwh"))
 
-sales_by_entity_2019_line <- ggplot()+
-  geom_line(data=lf_monthly_sales_by_entity[year=="2019"],mapping=aes(x=month,y=sales_gwh,color=load_serving_entity))+
-  scale_color_discrete(name="Load Serving Entity",breaks=c("apco_total_gwh",
-                                                           "dom_total_gwh",
-                                                           "ros_total_gwh"),labels=c("APCO","Dominion","Rest-of-state"))+
-  ylab("Sales(GWh)")+xlab(NULL)+scale_x_discrete(limits=month.abb)+
-  labs(title="2019 VA Monthly Electricity Sales",subtitle = "By Load Serving Entity")
+source(here::here("ggplot2","viz_functions.R"))
+
+sales_by_entity_2019_line<-line_figure(lf_monthly_sales_by_entity[year=="2019"],"Sales (GWh)","2019 VA Monthly Electricity Sales",annual=FALSE,x_label="Month",subtitle_name="By Load Serving Entity",lower_limit=0)
 sales_by_entity_2019_line
 
 ggsave(path=path2graphics, filename="sales_by_entity_2019_line.png")
 
-sales_by_entity_2018_line <- ggplot()+
-  geom_line(data=lf_monthly_sales_by_entity[year=="2018"],mapping=aes(x=month,y=sales_gwh,color=load_serving_entity))+
-  scale_color_discrete(name="Load Serving Entity",breaks=c("apco_total_gwh",
-                                                           "dom_total_gwh",
-                                                           "ros_total_gwh"),labels=c("APCO","Dominion","Rest-of-state"))+
-  ylab("Sales(GWh)")+xlab(NULL)+scale_x_discrete(limits=month.abb)+
-  labs(title="2018 VA Monthly Electricity Sales",subtitle = "By Load Serving Entity")
+
+sales_by_entity_2018_line<-line_figure(lf_monthly_sales_by_entity[year=="2018"],"Sales (GWh)","2018 VA Monthly Electricity Sales",annual=FALSE,x_label="Month",subtitle_name="By Load Serving Entity",lower_limit=0)
 sales_by_entity_2018_line
 
 ggsave(path=path2graphics, filename="sales_by_entity_2018_line.png")
 
+
 monthly_sales_by_entity_line <- ggplot()+
-  geom_line(data=lf_monthly_sales_by_entity,mapping=aes(x=date,y=sales_gwh,color=load_serving_entity))+
+  geom_line(data=lf_monthly_sales_by_entity,mapping=aes(x=date,y=value,color=variable))+
   scale_color_discrete(name="Load Serving Entity",breaks=c("apco_total_gwh",
                                                            "dom_total_gwh",
                                                            "ros_total_gwh"),labels=c("APCO","Dominion","Rest-of-state"))+
@@ -91,61 +82,33 @@ monthly_sales_by_entity_line
 
 ggsave(path=path2graphics, filename="monthly_sales_by_entity_line.png")
 
-lf_annual_sales_by_entity <-melt(annual_sales[year<"2020",.(year,apco_total_gwh,ros_total_gwh,dom_total_gwh)],id=c("year"))
-setnames(lf_annual_sales_by_entity,old=c("variable","value"),new=c("load_serving_entity","sales_gwh"))
 
-annual_sales_by_entity_line <- ggplot()+
-  geom_line(data=lf_annual_sales_by_entity,mapping=aes(x=year,y=sales_gwh,color=load_serving_entity))+
-  scale_color_discrete(name="Load Serving Entity",breaks=c("apco_total_gwh",
-                                                           "dom_total_gwh",
-                                                           "ros_total_gwh"),labels=c("APCO","Dominion","Rest-of-state"))+
-  ylab("Sales(GWh)")+xlab(NULL)+
-  labs(title="VA Annual Electricity Sales",subtitle = "By Load Serving Entity, 2001-2019")
+lf_annual_sales_by_entity <-melt(annual_sales[year<"2020",.(year,apco_total_gwh,ros_total_gwh,dom_total_gwh)],id=c("year"))
+annual_sales_by_entity_line<-line_figure(lf_annual_sales_by_entity,"Sales (GWh)","VA Annual Electricity Sales",annual=TRUE,x_label="Year",subtitle_name="By Load Serving Entity, 2001-2019",lower_limit=0)
 annual_sales_by_entity_line
 
 ggsave(path=path2graphics, filename="annual_sales_by_entity_line.png")
 
+
 #plotting electricity generation by load-serving entity with stacked area
-sales_by_entity_2019_stacked_area <- ggplot()+
-  geom_area(data=lf_monthly_sales_by_entity[year=="2019"],mapping=aes(x=month,y=sales_gwh,fill=load_serving_entity))+
-  scale_fill_discrete(name="Load Serving Entity",breaks=c("apco_total_gwh",
-                                                           "dom_total_gwh",
-                                                           "ros_total_gwh"),labels=c("APCO","Dominion","Rest-of-state"))+
-  ylab("Sales(GWh)")+xlab(NULL)+scale_x_discrete(limits=month.abb)+
-  labs(title="2019 VA Monthly Electricity Sales",subtitle = "By Load Serving Entity")
+sales_by_entity_2019_stacked_area <- stacked_area_figure(lf_monthly_sales_by_entity[year=="2019"],"Sales (GWh)","2019 VA Monthly Electricity Sales",annual=FALSE,x_label="Month",subtitle_name="By Load Serving Entity",lower_limit=0)
 sales_by_entity_2019_stacked_area
 
 ggsave(path=path2graphics, filename="sales_by_entity_2019_stacked_area.png")
 
-sales_by_entity_2018_stacked_area <- ggplot()+
-  geom_area(data=lf_monthly_sales_by_entity[year=="2018"],mapping=aes(x=month,y=sales_gwh,fill=load_serving_entity))+
-  scale_fill_discrete(name="Load Serving Entity",breaks=c("apco_total_gwh",
-                                                          "dom_total_gwh",
-                                                          "ros_total_gwh"),labels=c("APCO","Dominion","Rest-of-state"))+
-  ylab("Sales(GWh)")+xlab(NULL)+scale_x_discrete(limits=month.abb)+
-  labs(title="2018 VA Monthly Electricity Sales",subtitle = "By Load Serving Entity")
+sales_by_entity_2018_stacked_area <- stacked_area_figure(lf_monthly_sales_by_entity[year=="2018"],"Sales (GWh)","2018 VA Monthly Electricity Sales",annual=FALSE,x_label="Month",subtitle_name="By Load Serving Entity",lower_limit=0)
 sales_by_entity_2018_stacked_area
 
 ggsave(path=path2graphics, filename="sales_by_entity_2018_stacked_area.png")
 
-monthly_sales_by_entity_stacked_area <- ggplot()+
-  geom_area(data=lf_monthly_sales_by_entity,mapping=aes(x=date,y=sales_gwh,fill=load_serving_entity))+
-  scale_fill_discrete(name="Load Serving Entity",breaks=c("apco_total_gwh",
-                                                           "dom_total_gwh",
-                                                           "ros_total_gwh"),labels=c("APCO","Dominion","Rest-of-state"))+
-  ylab("Sales(GWh)")+xlab(NULL)+
-  labs(title="VA Monthly Electricity Sales",subtitle = "By Load Serving Entity, 2001-2019")
+
+monthly_sales_by_entity_stacked_area <- stacked_area_figure(lf_monthly_sales_by_entity,"Sales (GWh)","VA Monthly Electricity Sales",annual=FALSE,x_label=NULL,subtitle_name="By Load Serving Entity",lower_limit=0)
 monthly_sales_by_entity_stacked_area
 
 ggsave(path=path2graphics, filename="monthly_sales_by_entity_stacked_area.png")
 
-annual_sales_by_entity_stacked_area <- ggplot()+
-  geom_area(data=lf_annual_sales_by_entity,mapping=aes(x=year,y=sales_gwh,fill=load_serving_entity))+
-  scale_fill_discrete(name="Load Serving Entity",breaks=c("apco_total_gwh",
-                                                           "dom_total_gwh",
-                                                           "ros_total_gwh"),labels=c("APCO","Dominion","Rest-of-state"))+
-  ylab("Sales(GWh)")+xlab(NULL)+
-  labs(title="VA Annual Electricity Sales",subtitle = "By Load Serving Entity, 2001-2019")
+
+annual_sales_by_entity_stacked_area<-stacked_area_figure(lf_annual_sales_by_entity,"Sales (GWh)","VA Annual Electricity Sales",annual=TRUE,x_label="Year",subtitle_name="By Load Serving Entity, 2001-2019",lower_limit=0)
 annual_sales_by_entity_stacked_area
 
 ggsave(path=path2graphics, filename="annual_sales_by_entity_stacked_area.png")

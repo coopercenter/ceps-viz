@@ -134,7 +134,7 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
   good_names = gsub("_"," ",variable_elements) #subtitutes "_" from variable name with a space to create legend labels
   good_names = gsub("apco","APCO",good_names) #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   good_names = gsub("dom", "Dominion", good_names)
-  good_names = gsub("ros", "Rest of State", good_names)
+  good_names = gsub("ros", "Rest of state", good_names)
   good_names = capitalize(good_names) #capitalizes first word of legend labels
   
   if (annual==TRUE){
@@ -176,7 +176,7 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
   good_names = gsub("_"," ",variable_elements) #subtitutes "_" from variable name with a space to create legend labels
   good_names = gsub("apco","APCO",good_names) #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   good_names = gsub("dom", "Dominion", good_names)
-  good_names = gsub("ros", "Rest of State", good_names)
+  good_names = gsub("ros", "Rest of state", good_names)
   good_names = capitalize(good_names) #capitalizes first word of legend labels
   
   if (annual==TRUE){
@@ -223,6 +223,8 @@ pie_chart_figure <- function(data_table,title_name=NULL,percent_label_size=4){
   
   good_names = gsub("_"," ",variable_elements) #subtitutes "_" from variable name with a space to create legend labels
   good_names = gsub("apco","APCO",good_names) #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  good_names = gsub("dom", "Dominion", good_names)
+  good_names = gsub("ros", "Rest of state", good_names)
   good_names = capitalize(good_names) #capitalizes first word of legend labels
   
   figure <- ggplot(data_table,aes(x="",y=prop,fill=variable))+

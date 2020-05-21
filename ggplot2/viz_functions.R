@@ -239,4 +239,33 @@ pie_chart_figure <- function(data_table,title_name=NULL,percent_label_size=4){
   return(figure)
 }
 
+#for plotly piecharts with or without legend: 
+pie_chart_figure_p <- function(data_table,title_name=NULL,legend_shown=FALSE){
+  #data_table must have a "variable" column containing variable names of different categories and a "value" column containing the associated value of each variable that is to be plotted
+  #value may be in GWh or whatever is the unit of what is being plotted, the values need not add to 100% or 1 they can be actual values
+  #title_name defaults to NULL but can be set as a character if a title is desired
+  #legend_shown defaults to FALSE
+  #       *if FALSE, no legend is shown and the name of each category and associated percent is displayed on the pie slice
+  #       *if TRUE, legend is shown and only the percent is displaye on the pie slice, this may be a better optio if some slices are very small
+  #eventually when a custom theme is set, we can store the colors from that theme in a character vector called "theme_colors" then include "marker=list(colors=theme_colors)" as argument in plotly function
+  
+  require(plotly)
+  if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
+  require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  
+  data_table[,variable:=gsub("_"," ",variable)]
+  data_table[,variable:=gsub("apco","APCO",variable)]
+  data_table[,variable:=capitalize(variable)]
+  
+  if (legend_shown==FALSE){
+    figure <- plot_ly(data_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label") %>%
+      layout(title=list(text=title_name,x=0.55),showlegend=F) 
+  }
+  else{
+    figure <- plot_ly(data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label") %>%
+      layout(title=list(text=title_name,x=0.55)) 
+  }
+  return(figure)
+}
+
 #note: because all these functions return ggplot2 figures, additional different desired plot elements can be added in conjunction with the use of the functions

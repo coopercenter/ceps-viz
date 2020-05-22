@@ -39,8 +39,6 @@ va_emissions_compounds <- va_emissions_compounds %>%
   select(Year, SO2, NO, CO2) %>%
   gather(key = "Compound", value = "emissions_in_million_metric_tons", -Year)
 
-dbDisconnect(db)
-
 source(here::here("my_eia_api_key.R"))
 
 get_EIA_series <- function(eiaKey,series_id) {

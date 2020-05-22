@@ -289,16 +289,21 @@ pie_chart_figure_p <- function(data_table,title_name=NULL,legend_shown=FALSE){
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
   require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
   
+  data_table<- data_table[seq(dim(data_table)[1],1),]
+  
+  category_count <- length(data_table$variable)
+  theme_colors <- hue_pal()(category_count)
+  
   data_table[,variable:=gsub("_"," ",variable)]
   data_table[,variable:=gsub("apco","APCO",variable)]
   data_table[,variable:=capitalize(variable)]
   
   if (legend_shown==FALSE){
-    figure <- plot_ly(data_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label") %>%
+    figure <- plot_ly(data_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
       layout(title=list(text=title_name,x=0.55),showlegend=F) 
   }
   else{
-    figure <- plot_ly(data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label") %>%
+    figure <- plot_ly(data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
       layout(title=list(text=title_name,x=0.55)) 
   }
   return(figure)

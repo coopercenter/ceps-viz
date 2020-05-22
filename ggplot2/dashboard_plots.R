@@ -277,6 +277,14 @@ melted_generation2 <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,utili
 annual_carbon_free_generation_by_type_line2<-line_figure(melted_generation2,"GWh","Annual VA Generation by Carbon-Free Sources")
 annual_carbon_free_generation_by_type_line2
 
+# Solar (broken into distributed and utility) over time
+solar_generation_time_series_line<-line_figure(melted_generation2[variable!="total"&variable!="nuclear"&variable!="hydropower"],"GWh","Annual VA Generation of Solar Energy")
+solar_generation_time_series_line
+
+# Wood generation over time
+wood_generation_time_series_line<-line_figure(lf_va_annual_generation[variable=="wood"],"GWh","Annual VA Energy Generation from Wood")
+wood_generation_time_series_line
+
 #Stacked Annual Carbon Free Generation Broken Out by Type
 carbon_free_generation_by_type_stacked<-stacked_area_figure(melted_generation2[variable!="total"],"GWh","Annual VA Generation by Carbon-Free Sources")
 carbon_free_generation_by_type_stacked

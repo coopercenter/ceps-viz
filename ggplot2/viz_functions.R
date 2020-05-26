@@ -13,7 +13,7 @@ donut_figure <- function(data_value,data_year,data_with_true_units,goal_value,go
   #dark_color = choice of darker color, as a character (note: light_color and dark_color should be light and dark versions of same color) 
   #end_goal variations default as NULL, but can used if there is a need for three rings: data, and intermediate goal, and an end goal
   
-  require(ggplot2)
+  library(ggplot2)
   
   #components of each ring are the actual value we want to display, and 1-that value as a filler so proportions of the ring are correct
   #the filler is called "zfiller" because the components of the rings are graphed in alphabetical order
@@ -68,7 +68,7 @@ donut_figure <- function(data_value,data_year,data_with_true_units,goal_value,go
 donut_figure_p <- function(data_value,data_year,data_with_true_units,goal_value,goal_year,goal_with_true_units,description_of_goal,light_color,dark_color,end_goal_value=NULL,end_goal_year=NULL,end_goal_with_true_units=NULL,darkest_color=NULL){
   #see above donut_figure function for input descriptions 
   
-  require(plotly)
+  library(plotly)
   
   ring1 = data.frame(category=c("zfiller",paste0(description_of_goal,data_year)),
                      value=c(1-data_value,data_value)) #ring1 data.frame consists of elements that will make up outer ring
@@ -118,7 +118,7 @@ donut_figure_p <- function(data_value,data_year,data_with_true_units,goal_value,
 single_ring_donut_figure_p <- function(data_value,data_year,data_with_true_units,goal_value,goal_year,goal_with_true_units,description_of_goal,light_color,dark_color,end_goal_value=NULL,end_goal_year=NULL,end_goal_with_true_units=NULL,darkest_color=NULL){
   #see above donut_figure function for input descriptions 
   
-  require(plotly)
+  library(plotly)
   
   if (is.null(end_goal_value)){
     ring = data.frame(category=c(" ","currently","goal"),
@@ -161,25 +161,22 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
   #lower_limit defaults to 0, but can be changed to another numeric value appropriate for the data
   #upper_limit defaults to NA, but can be adjusted if needed
   
-  require(ggplot2)
+  library(ggplot2)
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
-  require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  library("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
   
-  variable_elements <- unique(data_table$variable) #selects the unique elements of the variable column
-  variable_elements <- as.vector(variable_elements) #saves unique elements as character vector
-  
-  good_names = gsub("_"," ",variable_elements) #subtitutes "_" from variable name with a space to create legend labels
-  good_names = gsub("apco","APCO",good_names) #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
-  good_names = gsub("dom", "Dominion", good_names)
-  good_names = gsub("ros", "Rest of state", good_names)
-  good_names = capitalize(good_names) #capitalizes first word of legend labels
+  data_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
+  data_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  data_table[,variable:=gsub("dom","Dominion",variable)]
+  data_table[,variable:=gsub("ros","Rest of State",variable)]
+  data_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   if (annual==TRUE){
     figure <- ggplot(data_table, aes(x=year,y=value,fill=variable)) +
       geom_area() + 
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
       labs(title=title_name,subtitle=subtitle_name) +
-      scale_fill_discrete(name=NULL,breaks=variable_elements,labels=good_names)
+      scale_fill_discrete(name=NULL)
     figure
   }
   else{
@@ -187,7 +184,7 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
       geom_area() + 
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
       labs(title=title_name,subtitle=subtitle_name) +
-      scale_fill_discrete(name=NULL,breaks=variable_elements,labels=good_names)
+      scale_fill_discrete(name=NULL)
     figure
   }
   return(figure)
@@ -204,18 +201,15 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
   #lower_limit defaults to 0, but can be changed to another numeric value appropriate for the data
   #upper_limit defaults to NA, but can be adjusted if needed
   
-  require(ggplot2)
+  library(ggplot2)
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
-  require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  library("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
   
-  variable_elements <- unique(data_table$variable) #selects the unique elements of the variable column
-  variable_elements <- as.vector(variable_elements) #saves unique elements as character vector
-  
-  good_names = gsub("_"," ",variable_elements) #subtitutes "_" from variable name with a space to create legend labels
-  good_names = gsub("apco","APCO",good_names) #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
-  good_names = gsub("dom", "Dominion", good_names)
-  good_names = gsub("ros", "Rest of state", good_names)
-  good_names = capitalize(good_names) #capitalizes first word of legend labels
+  data_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
+  data_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  data_table[,variable:=gsub("dom","Dominion",variable)]
+  data_table[,variable:=gsub("ros","Rest of State",variable)]
+  data_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   if (annual==TRUE){
     figure <- ggplot(data_table, aes(x=year,y=value,color=variable,shape=variable)) +
@@ -223,8 +217,8 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
       geom_point() +
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
       labs(title=title_name,subtitle=subtitle_name) +
-      scale_color_discrete(name=NULL,breaks=variable_elements,labels=good_names)+
-      scale_shape_discrete(name=NULL,breaks=variable_elements,labels=good_names)
+      scale_color_discrete(name=NULL)+
+      scale_shape_discrete(name=NULL)
     figure
   }
   else{
@@ -233,8 +227,8 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
       geom_point() +
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
       labs(title=title_name,subtitle=subtitle_name) +
-      scale_color_discrete(name=NULL,breaks=variable_elements,labels=good_names)+
-      scale_shape_discrete(name=NULL,breaks=variable_elements,labels=good_names)
+      scale_color_discrete(name=NULL)+
+      scale_shape_discrete(name=NULL)
     figure
   }
   return(figure)
@@ -247,9 +241,9 @@ pie_chart_figure <- function(data_table,title_name=NULL,percent_label_size=4){
   #title_name defaults to NULL but can be set as a character if a title is desired
   #percent_label_size defaults to 4, it can be changed to a smaller size if the pie chart has small slivers for example or set equal to 0 if the percent label is not desired
   
-  require(ggplot2)
+  library(ggplot2)
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
-  require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  library("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
   
   #to compute percentages of each category(prop) and the position of labels(ypos):
   data_table <- data_table %>% 
@@ -287,9 +281,9 @@ pie_chart_figure_p <- function(data_table,title_name=NULL,legend_shown=FALSE){
   #       *if TRUE, legend is shown and only the percent is displaye on the pie slice, this may be a better optio if some slices are very small
   #eventually when a custom theme is set, we can store the colors from that theme in a character vector called "theme_colors" then include "marker=list(colors=theme_colors)" as argument in plotly function
   
-  require(plotly)
+  library(plotly)
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
-  require("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  library("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
   
   data_table<- data_table[seq(dim(data_table)[1],1),]
   

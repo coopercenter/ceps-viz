@@ -17,6 +17,10 @@ table="whole_electric_industry_capacity"
 script  <- paste0("select * from ",table," ;")
 capacity <- data.table(dbGetQuery(db,script))
 
+table="va_gats_data"
+script  <- paste0("select * from ",table," ;")
+gats_data <- data.table(dbGetQuery(db,script))
+
 dbDisconnect(db)
 
 source(here::here("my_eia_api_key.R"))
@@ -139,3 +143,23 @@ sw_capacity_donut_p
 single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(solar_capacity_percent_2018,"2018","392.5 MW",sw_capacity_percent_goal_2028,"2028","5,500 MW in Operation","Wind & Solar Energy","lightcoral","indianred",sw_capacity_percent_goal_2030,"2030","13,600 MW Total","maroon")
 single_ring_sw_capacity_donut_p
 
+#16,100 MW of solar and onshore wind by January 1, 2024 (from VCEA Summary 3.0)
+va_gats_data <- gats_data[state=="VA"]
+va_gats_data[,date:=as.Date(date)]
+
+distributed_solar_nameplate <- va_gats_data[primary_fuel_type=="SUN"&pjm_unit=="No"&date>=2010-01-01,sum(nameplate)] #data more relevant after 2010
+utility_solar_nameplate <- va_gats_data[primary_fuel_type=="SUN"&pjm_unit=="Yes"&date>=2010-01-01,sum(nameplate)]
+nameplate_goal = 16100
+
+sw_ring = data.frame(category=c("2019 distributed solar capacity","2019 utility solar capacity","additional onshore wind & solar necessary to reach target"),
+                     value=c(distributed_solar_nameplate,utility_solar_nameplate,nameplate_goal-(distributed_solar_nameplate+utility_solar_nameplate)))
+
+VCEA_single_ring_sw_capacity_donut_p <- plot_ly(textinfo="none",hoverinfo="label+value") %>%
+  add_pie(data = sw_ring, values = ~value, labels = ~category, sort = F,hole = 0.7,
+          domain = list(x = c(0, 1), y = c(0, 1)),
+          marker=list(colors=c("lightcoral","indianred","maroon"),
+                      line=list(color="white",width=1))) %>%
+  layout(title=list(text="807.65 MW of Solar Capacity as of 2019",font = list(color="black",size = 15),x=0.5),showlegend = F) %>%
+  add_annotations(x=0.5,y=0.5,text="Onshore Wind & Solar Capacity",showarrow=F,font = list(color = "black",size = 14)) %>%
+  add_annotations(x=0.5,y=-0.1,text="16,100 MW of Onshore Wind & Solar Capacity by 2024",showarrow=F,font = list(color = "maroon",size = 15))
+VCEA_single_ring_sw_capacity_donut_p

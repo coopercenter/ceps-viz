@@ -112,7 +112,7 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
   
   working_table <- data_table[,1:3]
   working_table[,variable:=as.character(variable)]
-  working_table <- working_table[order(variable)] #alphabatizes variable elements
+  working_table <- working_table[order(variable)] #alphabetizes variable elements
   working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   working_table[,variable:=gsub("dom","Dominion",variable)]
@@ -155,7 +155,7 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
   
   working_table <- data_table[,1:3]
   working_table[,variable:=as.character(variable)]
-  working_table <- working_table[order(variable)] #alphabatizes variable elements
+  working_table <- working_table[order(variable)] #alphabetizes variable elements
   working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   working_table[,variable:=gsub("dom","Dominion",variable)]
@@ -241,7 +241,7 @@ pie_chart_figure_p <- function(data_table,title_name=NULL,legend_shown=FALSE){
   
   working_table <- data_table[,1:3]
   working_table[,variable:=as.character(variable)]
-  working_table <- working_table[order(variable)] #alphabatizes variable elements
+  working_table <- working_table[order(variable)] #alphabetizes variable elements
   working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   working_table[,variable:=gsub("dom","Dominion",variable)]

@@ -202,26 +202,11 @@ single_ring_sw_capacity_donut_p
 #PLOTTING GENERATION/PRODUCTION FIGURES:
 
 lf_va_annual_generation <- melt(va_annual_generation[,.(year,coal,oil,gas,nuclear,utility_solar,distributed_solar,hydropower,wood,other_biomass,other)],id="year")
-
-va_annual_production_area = stacked_area_figure(lf_va_annual_generation,"GWh","VA Annual Generation",subtitle_name = "By Fuel Type",lower_limit = -1900)
+  
+va_annual_production_area = stacked_area_figure(lf_va_annual_generation,"GWh","VA Annual Generation by Fuel Type",lower_limit = -1900)
 va_annual_production_area
 
-va_annual_production_2019_pie_chart = pie_chart_figure(lf_va_annual_generation[year==2019&variable!="other"],"VA 2019 Generation",percent_label_size = 0) #setting percent_label_size = 0 to remove percent labels because slivers are so small
-#other is excluded because the pie chart function does not take negative values
-
-#finding location of labels and percent label for each fuel type so that labels for the larger pie slices (gas and nuclear) can be manually added
-va_2019_gen = lf_va_annual_generation[year==2019&variable!="other"]
-
-va_2019_gen <- va_2019_gen %>% 
-  arrange(desc(variable)) %>%
-  mutate(prop = value / sum(va_2019_gen$value) *100) %>%
-  mutate(ypos = cumsum(prop)- 0.5*prop )
-va_2019_gen=data.table(va_2019_gen)
-
-va_annual_production_2019_pie_chart = va_annual_production_2019_pie_chart +
-  geom_text(aes(y=va_2019_gen[variable=="gas",ypos],label=paste0(as.character(va_2019_gen[variable=="gas",round(prop,1)]),"%")),color="white",size=4)+
-  geom_text(aes(y=va_2019_gen[variable=="nuclear",ypos],label=paste0(as.character(va_2019_gen[variable=="nuclear",round(prop,1)]),"%")),color="white",size=4) 
-va_annual_production_2019_pie_chart
+va_2019_gen <- lf_va_annual_generation[year==2019]
 
 va_annual_production_2019_pie_chart_p = pie_chart_figure_p(va_2019_gen,"VA 2019 Generation")
 va_annual_production_2019_pie_chart_p
@@ -233,11 +218,8 @@ va_annual_production_2019_pie_chart_p_with_legend
 
 lf_va_annual_consumption <- melt(va_annual_consumption,id="year")
 
-va_annual_consumption_area = stacked_area_figure(lf_va_annual_consumption,"Billion Btu","VA Annual Consumption",subtitle_name = "By Sector") + scale_y_continuous(labels = comma)
+va_annual_consumption_area = stacked_area_figure(lf_va_annual_consumption,"Billion Btu","VA Annual Consumption by Sector") + scale_y_continuous(labels = comma)
 va_annual_consumption_area
-
-va_annual_consumption_2017_pie_chart = pie_chart_figure(lf_va_annual_consumption[year==2017],"VA 2017 Consumption")
-va_annual_consumption_2017_pie_chart
 
 va_annual_consumption_2017_pie_chart_p = pie_chart_figure_p(lf_va_annual_consumption[year==2017],"VA 2017 Consumption")
 va_annual_consumption_2017_pie_chart_p
@@ -310,7 +292,7 @@ carbon_versus_carbon_free_stacked
 # Total Renewable and Total Carbon Free Generation Over Time
 melted_renewable_and_carbon_free<-melt(va_annual_renewable_and_carbon_free_gen[,.(year,carbon_free,renewable,total)],id="year")
 
-renewable_and_carbon_free_line<-line_figure(melted_renewable_and_carbon_free,"GWh","Annual VA Generation by Type",annual=TRUE,x_label="Year",subtitle_name=NULL,lower_limit=0)
+renewable_and_carbon_free_line<-line_figure(melted_renewable_and_carbon_free,"GWh","Annual VA Generation by Type",annual=TRUE,x_label="Year")
 renewable_and_carbon_free_line
 
 #PLOTTING EMISSIONS FIGURES:
@@ -325,6 +307,7 @@ co2_electric_emissions_line<-line_figure(virginia_emissions_electric,"emissions 
 co2_electric_emissions_line
 
 setnames(va_emissions_compounds,old=c("Compound","emissions_in_million_metric_tons","Year"),new=c("variable","value","year")) #changing names to fit function inputs
+va_emissions_compounds <- data.table(va_emissions_compounds)
 emissions_line <- line_figure(va_emissions_compounds,"emissions (million metric tons)","Virginia Annual Emissions") +
   scale_y_continuous(labels = comma)
 emissions_line

@@ -110,14 +110,15 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
   library("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
   
-  data_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
-  data_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
-  data_table[,variable:=gsub("dom","Dominion",variable)]
-  data_table[,variable:=gsub("ros","Rest of State",variable)]
-  data_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
+  working_table <- data_table[,1:3]
+  working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
+  working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  working_table[,variable:=gsub("dom","Dominion",variable)]
+  working_table[,variable:=gsub("ros","Rest of State",variable)]
+  working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   if (annual==TRUE){
-    figure <- ggplot(data_table, aes(x=year,y=value,fill=variable)) +
+    figure <- ggplot(working_table, aes(x=year,y=value,fill=variable)) +
       geom_area() + 
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
       labs(title=title_name) +
@@ -125,7 +126,7 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
     figure
   }
   else{
-    figure <- ggplot(data_table, aes(x=date,y=value,fill=variable)) +
+    figure <- ggplot(working_table, aes(x=date,y=value,fill=variable)) +
       geom_area() + 
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
       labs(title=title_name) +
@@ -150,14 +151,15 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
   library("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
   
-  data_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
-  data_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
-  data_table[,variable:=gsub("dom","Dominion",variable)]
-  data_table[,variable:=gsub("ros","Rest of State",variable)]
-  data_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
+  working_table <- data_table[,1:3]
+  working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
+  working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  working_table[,variable:=gsub("dom","Dominion",variable)]
+  working_table[,variable:=gsub("ros","Rest of State",variable)]
+  working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   if (annual==TRUE){
-    figure <- ggplot(data_table, aes(x=year,y=value,color=variable,shape=variable)) +
+    figure <- ggplot(working_table, aes(x=year,y=value,color=variable,shape=variable)) +
       geom_line() + 
       geom_point() +
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
@@ -167,7 +169,7 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
     figure
   }
   else{
-    figure <- ggplot(data_table, aes(x=date,y=value,color=variable,shape=variable)) +
+    figure <- ggplot(working_table, aes(x=date,y=value,color=variable,shape=variable)) +
       geom_line() + 
       geom_point() +
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
@@ -230,21 +232,24 @@ pie_chart_figure_p <- function(data_table,title_name=NULL,legend_shown=FALSE){
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
   library("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
   
-  data_table<- data_table[seq(dim(data_table)[1],1),]
+  working_table <- data_table[,1:3]
+  #working_table <- working_table[seq(dim(working_table)[1],1),]
   
   category_count <- length(data_table$variable)
   theme_colors <- hue_pal()(category_count)
   
-  data_table[,variable:=gsub("_"," ",variable)]
-  data_table[,variable:=gsub("apco","APCO",variable)]
-  data_table[,variable:=capitalize(variable)]
+  working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
+  working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  working_table[,variable:=gsub("dom","Dominion",variable)]
+  working_table[,variable:=gsub("ros","Rest of State",variable)]
+  working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   if (legend_shown==FALSE){
-    figure <- plot_ly(data_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
+    figure <- plot_ly(working_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
       layout(title=list(text=title_name,x=0.55),showlegend=F) 
   }
   else{
-    figure <- plot_ly(data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
+    figure <- plot_ly(working_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
       layout(title=list(text=title_name,x=0.55)) 
   }
   return(figure)

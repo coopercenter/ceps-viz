@@ -95,6 +95,32 @@ single_ring_donut_figure_p <- function(data_value,data_year,data_with_true_units
   return(figure)
 }
 
+#another version of plotly donut figures with a single ring, but the data table must be built outside the function:
+single_ring_donut_figure_p2 <- function(data_table,description_of_goal,top_description,bottom_description,hover_info,colors_list){
+  #data_table must contain 2 columns: category & value where category is the appropriate label to appear on the figure and value is the appropriate value to fil the donut
+  #       *must be listed in a particular order to be displayed correctly (displayed counterclockwise)
+  #       *order must be: category you want to be last followed by the order you want the categories to be in (except last category which has already been listed)
+  #description_of_goal = character of description of goal category (ex:Renewable Generation)
+  #top_description = character of description of text you want displayed at top of donut
+  #bottom_description = character of description of text you want displayed at bottom of donut
+  #hover_info = character description of what features you want the hover info to display (ex: label+value)
+  #colors_list = character vector of colors in order corresponding to assignment to categories
+  
+  library(plotly)
+  
+  figure <- plot_ly(textinfo="none",hoverinfo=hover_info) %>%
+    add_pie(data = data_table, values = ~value, labels = ~category, sort = F,hole = 0.7,
+            domain = list(x = c(0, 1), y = c(0, 1)),
+            marker=list(colors=colors_list,
+                        line=list(color="white",width=1))) %>%
+    layout(title=list(text=top_description,font = list(color="black",size = 15),x=0.55),showlegend = F) %>%
+    add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "black",size = 14)) %>%
+    add_annotations(x=0.5,y=-0.1,text=bottom_description,showarrow=F,font = list(color = "black",size = 15))
+  figure
+  
+  return(figure)
+}
+
 #for timeseries stacked area figures by particular category:
 stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Year",lower_limit=0,upper_limit=NA){
   #data_table must have three columns: year (or date if monthly data is being plotted where date must be of form "1990-01-01" for example), variable, and value

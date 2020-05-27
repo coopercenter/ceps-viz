@@ -96,12 +96,6 @@ source(here::here("ggplot2","viz_functions.R"))
 renewable_percent_gen_2019 = va_generation[year==2019,(all_solar+hydropower)/total]
 renewable_percent_gen_2030_goal = .3 #30% of Virginia’s electricity from renewables by 2030
 
-renewable_donut <- donut_figure(renewable_percent_gen_2019,"2019","2.6%",renewable_percent_gen_2030_goal,"2030","30%","Renewable Generation","slateblue2","slateblue4")
-renewable_donut 
-
-path2graphics <- here::here("graphics")
-ggsave(path=path2graphics, filename="renewable_donut.png")
-
 renewable_donut_p <- donut_figure_p(renewable_percent_gen_2019,"2019","2.6%",renewable_percent_gen_2030_goal,"2030","30%","Renewable Generation","skyblue","steelblue")
 renewable_donut_p
 
@@ -111,11 +105,6 @@ single_ring_renewable_donut_p
 #plotting donut figure of progress towards carbon-free generation goal
 carbon_free_percent_gen_2019 = va_generation[year==2019,(all_solar+hydropower+nuclear)/total]
 carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from carbon-free sources by 2050
-
-carbon_free_donut <- donut_figure(carbon_free_percent_gen_2019,"2019","32.9%",carbon_free_percent_gen_2050_goal,"2050","100%","Carbon-Free Generation","palegreen3","palegreen4")
-carbon_free_donut
-
-ggsave(path=path2graphics, filename="carbon_free_donut.png")
 
 carbon_free_donut_p <- donut_figure_p(carbon_free_percent_gen_2019,"2019","32.9%",carbon_free_percent_gen_2050_goal,"2050","100%","Carbon-Free Generation","mediumseagreen","seagreen")
 carbon_free_donut_p
@@ -131,11 +120,6 @@ sw_capacity_2030_goal_mw = 13600 #13,600 MW of onshore wind and solar energy tot
 solar_capacity_percent_2018 = solar_capacity_2018_mw/sw_capacity_2030_goal_mw
 sw_capacity_percent_goal_2028 = sw_capacity_2028_goal_mw/sw_capacity_2030_goal_mw
 sw_capacity_percent_goal_2030 = sw_capacity_2030_goal_mw/sw_capacity_2030_goal_mw
-
-sw_capacity_donut <- donut_figure(solar_capacity_percent_2018,"2018","392.5 MW",sw_capacity_percent_goal_2028,"2028","5,500 MW in Operation","Wind & Solar Energy","indianred2","indianred3",sw_capacity_percent_goal_2030,"2030","13,600 MW Total","indianred4")
-sw_capacity_donut
-
-ggsave(path=path2graphics, filename="sw_capacity_donut.png")
 
 sw_capacity_donut_p <- donut_figure_p(solar_capacity_percent_2018,"2018","392.5 MW",sw_capacity_percent_goal_2028,"2028","5,500 MW in Operation","Wind & Solar Energy","lightcoral","indianred",sw_capacity_percent_goal_2030,"2030","13,600 MW Total","maroon")
 sw_capacity_donut_p

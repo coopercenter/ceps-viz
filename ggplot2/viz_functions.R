@@ -151,7 +151,7 @@ single_ring_donut_figure_p <- function(data_value,data_year,data_with_true_units
 }
 
 #for timeseries stacked area figures by particular category:
-stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Year",subtitle_name=NULL,lower_limit=0,upper_limit=NA){
+stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Year",lower_limit=0,upper_limit=NA){
   #data_table must have three columns: year (or date if monthly data is being plotted where date must be of form "1990-01-01" for example), variable, and value
   #value_unit = character description of units of value being plotted
   #title_name = character description of what title of figure should be
@@ -175,7 +175,7 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
     figure <- ggplot(data_table, aes(x=year,y=value,fill=variable)) +
       geom_area() + 
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
-      labs(title=title_name,subtitle=subtitle_name) +
+      labs(title=title_name) +
       scale_fill_discrete(name=NULL)
     figure
   }
@@ -183,7 +183,7 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
     figure <- ggplot(data_table, aes(x=date,y=value,fill=variable)) +
       geom_area() + 
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
-      labs(title=title_name,subtitle=subtitle_name) +
+      labs(title=title_name) +
       scale_fill_discrete(name=NULL)
     figure
   }
@@ -191,7 +191,7 @@ stacked_area_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_l
 }
 
 #for timeseries line figures by particular category:
-line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Year",subtitle_name=NULL,lower_limit=0,upper_limit=NA){
+line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Year",lower_limit=0,upper_limit=NA){
   #data_table must have three columns: year (or date if monthly/daily data is being plotted where date must be of form "1990-01-01" for example), variable, and value
   #value_unit = character description of units of value being plotted
   #title_name = character description of what title of figure should be
@@ -216,7 +216,7 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
       geom_line() + 
       geom_point() +
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
-      labs(title=title_name,subtitle=subtitle_name) +
+      labs(title=title_name) +
       scale_color_discrete(name=NULL)+
       scale_shape_discrete(name=NULL)
     figure
@@ -226,7 +226,7 @@ line_figure <- function(data_table,value_unit,title_name,annual=TRUE,x_label="Ye
       geom_line() + 
       geom_point() +
       ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
-      labs(title=title_name,subtitle=subtitle_name) +
+      labs(title=title_name) +
       scale_color_discrete(name=NULL)+
       scale_shape_discrete(name=NULL)
     figure

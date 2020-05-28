@@ -285,4 +285,18 @@ pie_chart_figure_p <- function(data_table,title_name=NULL,legend_shown=FALSE){
   return(figure)
 }
 
-#note: because all these functions return ggplot2 figures, additional different desired plot elements can be added in conjunction with the use of the functions
+#note: for the functions which return ggplot2 objects, additional different desired plot elements can be added in conjunction with the use of the functions
+
+#function to wrap ggplot objects produced from functions with ggplotly & add data citations:
+ggplotly_wrapper <- function(list){
+  #list shoule be list output from ggplot functions, which includes ggplot figure (figure), x label name (x_label), and data citation (source_citation)
+  
+  library(plotly)
+  
+  figure_p <- ggplotly(list$figure) %>%
+    layout(xaxis=list(
+      title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_citation,"<sub>","<i>")))
+  #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
+  
+  return(figure_p)
+}

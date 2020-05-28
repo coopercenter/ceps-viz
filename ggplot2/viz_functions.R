@@ -289,14 +289,95 @@ pie_chart_figure_p <- function(data_table,title_name=NULL,legend_shown=FALSE){
 
 #function to wrap ggplot objects produced from functions with ggplotly & add data citations:
 ggplotly_wrapper <- function(list){
-  #list shoule be list output from ggplot functions, which includes ggplot figure (figure), x label name (x_label), and data citation (source_citation)
+  #list shoule be list output from ggplot functions, which includes ggplot figure (figure), x label name (x_label), and data citation (source_description)
   
   library(plotly)
   
   figure_p <- ggplotly(list$figure) %>%
     layout(xaxis=list(
-      title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_citation,"<sub>","<i>")))
+      title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))
   #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
   
   return(figure_p)
 }
+
+#-----------------------------------------------------------------------------------------------
+#trial stacked area function which takes in a list of pre-loaded datasets and creates a ggplot output which can be used as an input in above ggplotly_wrapper function:
+#note: metadata table must also be loaded globally in code before use of this function
+stacked_area_trial_figure <- function(data_table_list,character_list,merge_variable,value_unit,title_name,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE){
+  #data_table_list is a list of data tables which should be ready to be merged into one table
+  #character_list is a list of the data table names as strings
+  #merge_variable is a character description of which variable the merge should be performed on (ex:"date","year)
+  #value_unit = character description of units of value being plotted
+  #title_name = character description of what title of figure should be
+  #annual is a logical variable, which defualts to TRUE, if non-annual data is being plotted, annual should be FALSE
+  #x_label defaults to "Year" but can be substituted with another character if Year is not appropriate xlabel
+  #lower_limit defaults to 0, but can be changed to another numeric value appropriate for the data
+  #upper_limit defaults to NA, but can be adjusted if needed
+  #return_static defaults to TRUE, in which case a ggplot opbject will be returned
+  #       *if FALSE, a list containing the ggplot figure, the x axis label name, and
+  
+  library(ggplot2)
+  if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
+  library("Hmisc") #Hmisc package includes a capitilization function which is utilized to get legend labels
+  
+  working_table <- NULL
+  
+  for(table in data_table_list){
+    if (is.null(working_table))
+    {working_table <- table}
+    else
+    {working_table <- merge(working_table, table[], by = merge_variable, all=TRUE)}
+  }
+  
+  lf_working_table <- melt(working_table,id=merge_variable)
+  
+  lf_working_table[,variable:=as.character(variable)]
+  lf_working_table <- lf_working_table[order(variable)] #alphabetizes variable elements
+  lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
+  lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
+  lf_working_table[,variable:=gsub("dom","Dominion",variable)]
+  lf_working_table[,variable:=gsub("ros","Rest of State",variable)]
+  lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
+  
+  setnames(lf_working_table,merge_variable,"x_unit")
+  
+  figure <- ggplot(lf_working_table, aes(x=x_unit,y=value,fill=variable)) +
+    geom_area() + 
+    ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
+    labs(title=title_name) +
+    scale_fill_discrete(name=NULL)
+  figure
+  
+  source_list <- NULL
+  
+  for(table in character_list){
+    source <- metadata[db_table_name==table,data_source_full_name]
+    
+    if(is.null(source_list))
+    {source_list <- source}
+    else
+    {source_list <- c(source_list,source)}
+  }
+  
+  source_list <-as.vector(unique(source_list))
+  
+  source_description <- NULL
+  
+  for (source in source_list){
+    if(is.null(source_description))
+    {source_description <- paste("Source:",source)}
+    else
+    {source_description <- paste0(source_description,", ",source)}
+  }
+  return_list <- list(figure=figure,x_label=x_label,source_description=source_description)
+  
+  if(return_static==TRUE)
+  {return(figure)}
+  else
+  {return(return_list)}
+}
+
+
+
+

@@ -24,6 +24,8 @@ va_emissions_compounds <- dbGetQuery(db, "SELECT * from emission")
 
 dbDisconnect(db)
 
+co2_emissions_by_fuel <- va_emissions_compounds%>%select(Year, Coal2,`Natural gas2`,Petroleum2, Other2)
+
 #get relevant features to analyze, in this case the total emissions for each compound
 va_emissions_compounds <- select(va_emissions_compounds, Year, Total, Total1, Total2)
 #rename columns
@@ -38,6 +40,16 @@ va_emissions_compounds <- va_emissions_compounds[1:19,]
 va_emissions_compounds <- va_emissions_compounds %>%
   select(Year, SO2, NO, CO2) %>%
   gather(key = "Compound", value = "emissions_in_million_metric_tons", -Year)
+
+colnames(co2_emissions_by_fuel) <- c('year', "coal","natural_gas", "petroleum", 'other')
+co2_emissions_by_fuel <- (sapply(co2_emissions_by_fuel, as.numeric))
+#make it a dataframe
+co2_emissions_by_fuel <- data.frame(co2_emissions_by_fuel)
+co2_emissions_by_fuel <- co2_emissions_by_fuel[1:19,]
+co2_emissions_by_fuel <- co2_emissions_by_fuel %>%
+  select(year, coal, natural_gas, petroleum, other) %>%
+  gather(key = "Fuel Type", value = "emissions_in_million_metric_tons", -year)
+
 
 source(here::here("my_eia_api_key.R"))
 
@@ -168,6 +180,9 @@ source(here::here("ggplot2","viz_functions.R"))
 renewable_percent_gen_2019 = va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower)/total]
 renewable_percent_gen_2030_goal = .3 #30% of Virginia’s electricity from renewables by 2030
 
+renewable_donut <- donut_figure(renewable_percent_gen_2019,"2019","2.6%",renewable_percent_gen_2030_goal,"2030","30%","Renewable Generation","slateblue2","slateblue4")
+renewable_donut 
+
 renewable_donut_p <- donut_figure_p(renewable_percent_gen_2019,"2019","2.6%",renewable_percent_gen_2030_goal,"2030","30%","Renewable Generation","skyblue","steelblue")
 renewable_donut_p
 
@@ -177,6 +192,9 @@ single_ring_renewable_donut_p
 #plotting donut figure of progress towards carbon-free generation goal
 carbon_free_percent_gen_2019 = va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower+nuclear)/total]
 carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from carbon-free sources by 2050
+
+carbon_free_donut <- donut_figure(carbon_free_percent_gen_2019,"2019","32.9%",carbon_free_percent_gen_2050_goal,"2050","100%","Carbon-Free Generation","palegreen3","palegreen4")
+carbon_free_donut
 
 carbon_free_donut_p <- donut_figure_p(carbon_free_percent_gen_2019,"2019","32.9%",carbon_free_percent_gen_2050_goal,"2050","100%","Carbon-Free Generation","mediumseagreen","seagreen")
 carbon_free_donut_p
@@ -193,6 +211,9 @@ solar_capacity_percent_2018 = solar_capacity_2018_mw/sw_capacity_2030_goal_mw
 sw_capacity_percent_goal_2028 = sw_capacity_2028_goal_mw/sw_capacity_2030_goal_mw
 sw_capacity_percent_goal_2030 = sw_capacity_2030_goal_mw/sw_capacity_2030_goal_mw
 
+sw_capacity_donut <- donut_figure(solar_capacity_percent_2018,"2018","392.5 MW",sw_capacity_percent_goal_2028,"2028","5,500 MW in Operation","Wind & Solar Energy","indianred2","indianred3",sw_capacity_percent_goal_2030,"2030","13,600 MW Total","indianred4")
+sw_capacity_donut
+
 sw_capacity_donut_p = donut_figure_p(solar_capacity_percent_2018,"2018","392.5 MW",sw_capacity_percent_goal_2028,"2028","5,500 MW in Operation","Wind & Solar Energy","lightcoral","indianred",sw_capacity_percent_goal_2030,"2030","13,600 MW Total","maroon")
 sw_capacity_donut_p
 
@@ -202,7 +223,7 @@ single_ring_sw_capacity_donut_p
 #PLOTTING GENERATION/PRODUCTION FIGURES:
 
 lf_va_annual_generation <- melt(va_annual_generation[,.(year,coal,oil,gas,nuclear,utility_solar,distributed_solar,hydropower,wood,other_biomass,other)],id="year")
-  
+
 va_annual_production_area = stacked_area_figure(lf_va_annual_generation,"GWh","VA Annual Generation by Fuel Type",lower_limit = -1900)
 va_annual_production_area
 
@@ -220,6 +241,9 @@ lf_va_annual_consumption <- melt(va_annual_consumption,id="year")
 
 va_annual_consumption_area = stacked_area_figure(lf_va_annual_consumption,"Billion Btu","VA Annual Consumption by Sector") + scale_y_continuous(labels = comma)
 va_annual_consumption_area
+
+va_annual_consumption_2017_pie_chart = pie_chart_figure(lf_va_annual_consumption[year==2017],"VA 2017 Consumption")
+va_annual_consumption_2017_pie_chart
 
 va_annual_consumption_2017_pie_chart_p = pie_chart_figure_p(lf_va_annual_consumption[year==2017],"VA 2017 Consumption")
 va_annual_consumption_2017_pie_chart_p
@@ -311,3 +335,40 @@ va_emissions_compounds <- data.table(va_emissions_compounds)
 emissions_line <- line_figure(va_emissions_compounds,"emissions (million metric tons)","Virginia Annual Emissions") +
   scale_y_continuous(labels = comma)
 emissions_line
+
+setnames(co2_emissions_by_fuel,old=c("Fuel Type","emissions_in_million_metric_tons","year"),new=c("variable","value","year")) #changing names to fit function inputs
+carbon_by_fuel_emissions_stacked <- stacked_area_figure(co2_emissions_by_fuel,"emissions (million metric tons)","Virginia CO2 Emissions By Fuel Type") +
+  scale_y_continuous(labels = comma)
+carbon_by_fuel_emissions_stacked
+
+#--------------------------------------------------------------------------------
+# reformatting the generation dataset
+va_gen_w_commas<-data.frame(format(va_annual_generation[,2:12],big.mark=",",scientific=FALSE,trim=TRUE))
+va_gen_w_commas<-cbind(va_annual_generation[,1],va_gen_w_commas)
+
+# reformatting the consumption dataset
+va_con_w_commas<-data.frame(format(va_annual_consumption[,2:5],big.mark=",",scientific=FALSE,trim=TRUE))
+va_con_w_commas<-cbind(va_annual_consumption[,1],va_con_w_commas)
+
+#reformatting carbon emissions
+virginia_emissions_electric <- virginia_emissions_electric[,1:2]
+virginia_emissions_electric_commas <- data.frame(signif(virginia_emissions_electric[,2], digits=4))
+virginia_emissions_electric_commas <- cbind(virginia_emissions_electric[,1],virginia_emissions_electric_commas)
+colnames(virginia_emissions_electric_commas) <- c('Year','Million Metric Tons of CO2')
+
+#reformatting emissions compounds dataset
+db_driver = dbDriver("PostgreSQL")
+source(here::here("my_postgres_credentials.R"))
+db <- dbConnect(db_driver,user=db_user, password=ra_pwd,dbname="postgres", host=db_host)
+va_emissions_compounds <- dbGetQuery(db, "SELECT * from emission") 
+#get relevant features to analyze, in this case the total emissions for each compound
+va_emissions_compounds <- select(va_emissions_compounds, Year, Total, Total1, Total2)
+#rename columns
+colnames(va_emissions_compounds) <- c("Year", "SO2", "NO", "CO2")
+#convert to numeric
+va_emissions_compounds <- (sapply(va_emissions_compounds, as.numeric))
+#make it a dataframe
+va_emissions_compounds <- data.frame(va_emissions_compounds)
+#limit data to baseline year of 2000
+va_emissions_compounds <- va_emissions_compounds[1:19,]
+dbDisconnect(db)

@@ -40,6 +40,9 @@ va_emissions_compounds <- va_emissions_compounds[1:19,]
 va_emissions_compounds <- va_emissions_compounds %>%
   select(Year, SO2, NO, CO2) %>%
   gather(key = "Compound", value = "emissions_in_million_metric_tons", -Year)
+#converting units from thousand metric tons to million metric tons for consitency with other figures
+va_emissions_compounds <- data.table(va_emissions_compounds)
+va_emissions_compounds[,emissions_in_million_metric_tons:=emissions_in_million_metric_tons/1000]
 
 colnames(co2_emissions_by_fuel) <- c('year', "coal","natural_gas", "petroleum", 'other')
 co2_emissions_by_fuel <- (sapply(co2_emissions_by_fuel, as.numeric))
@@ -49,7 +52,9 @@ co2_emissions_by_fuel <- co2_emissions_by_fuel[1:19,]
 co2_emissions_by_fuel <- co2_emissions_by_fuel %>%
   select(year, coal, natural_gas, petroleum, other) %>%
   gather(key = "Fuel Type", value = "emissions_in_million_metric_tons", -year)
-
+#converting units from thousand metric tons to million metric tons for consitency with other figures
+co2_emissions_by_fuel <- data.table(co2_emissions_by_fuel)
+co2_emissions_by_fuel[,emissions_in_million_metric_tons:=emissions_in_million_metric_tons/1000]
 
 source(here::here("my_eia_api_key.R"))
 
@@ -308,28 +313,26 @@ renewable_and_carbon_free_line<-line_figure(melted_renewable_and_carbon_free,"GW
 renewable_and_carbon_free_line
 
 #PLOTTING EMISSIONS FIGURES:
-virginia_emissions[,variable:="Total_CO2_Emissions"] #adding variable column so that line_figure function can be utilized
-co2_emissions_line <- line_figure(virginia_emissions,"Emissions (million metric tons CO2)","Virginia Annual CO2 Emissions") + 
+virginia_emissions[,variable:="total_CO2_emissions"] #adding variable column so that line_figure function can be utilized
+co2_emissions_line <- line_figure(virginia_emissions,"emissions (million metric tons CO2)","Virginia Annual CO2 Emissions") + 
   theme(legend.position = "none") #removing legend as only one line is plotted
 co2_emissions_line
 
-virginia_emissions_electric[,variable:="Electric_Sector_CO2_emissions"]
-co2_electric_emissions_line<-line_figure(virginia_emissions_electric,"Emissions (million metric tons CO2)","Virginia Annual CO2 Emissions from Electric Sector") +
+virginia_emissions_electric[,variable:="electric_sector_CO2_emissions"]
+co2_electric_emissions_line<-line_figure(virginia_emissions_electric,"emissions (million metric tons CO2)","Virginia Annual CO2 Emissions from Electric Sector") +
   theme(legend.position = "none") #removing legend as only one line is plotted
 co2_electric_emissions_line
 
 combined_emissions <- merge(virginia_emissions,virginia_emissions_electric,by=c("year","variable","value"),all=TRUE)
-co2_combined_emissions_line<-line_figure(combined_emissions,"Emissions (million metric tons CO2)","Virginia Combined Annual CO2 Emissions")
+co2_combined_emissions_line<-line_figure(combined_emissions,"emissions (million metric tons CO2)","Virginia Combined Annual CO2 Emissions")
 co2_combined_emissions_line
 
 setnames(va_emissions_compounds,old=c("Compound","emissions_in_million_metric_tons","Year"),new=c("variable","value","year")) #changing names to fit function inputs
-va_emissions_compounds <- data.table(va_emissions_compounds)
 emissions_line <- line_figure(va_emissions_compounds,"emissions (million metric tons)","Virginia Annual Emissions") +
   scale_y_continuous(labels = comma)
 emissions_line
 
 setnames(co2_emissions_by_fuel,old=c("Fuel Type","emissions_in_million_metric_tons","year"),new=c("variable","value","year")) #changing names to fit function inputs
-co2_emissions_by_fuel <- data.table(co2_emissions_by_fuel)
 carbon_by_fuel_emissions_stacked <- stacked_area_figure(co2_emissions_by_fuel,"emissions (million metric tons)","Virginia CO2 Emissions By Fuel Type") +
   scale_y_continuous(labels = comma)
 carbon_by_fuel_emissions_stacked

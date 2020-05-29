@@ -308,15 +308,19 @@ renewable_and_carbon_free_line<-line_figure(melted_renewable_and_carbon_free,"GW
 renewable_and_carbon_free_line
 
 #PLOTTING EMISSIONS FIGURES:
-virginia_emissions[,variable:="co2_emissions"] #adding variable column so that line_figure function can be utilized
-co2_emissions_line <- line_figure(virginia_emissions,"emissions (million metric tons CO2)","Virginia Annual CO2 Emissions") + 
+virginia_emissions[,variable:="Total_CO2_Emissions"] #adding variable column so that line_figure function can be utilized
+co2_emissions_line <- line_figure(virginia_emissions,"Emissions (million metric tons CO2)","Virginia Annual CO2 Emissions") + 
   theme(legend.position = "none") #removing legend as only one line is plotted
 co2_emissions_line
 
-virginia_emissions_electric[,variable:="co2_emissions_electric"]
-co2_electric_emissions_line<-line_figure(virginia_emissions_electric,"emissions (million metric tons CO2)","Virginia Annual CO2 Emissions from Electric Sector") +
+virginia_emissions_electric[,variable:="Electric_Sector_CO2_emissions"]
+co2_electric_emissions_line<-line_figure(virginia_emissions_electric,"Emissions (million metric tons CO2)","Virginia Annual CO2 Emissions from Electric Sector") +
   theme(legend.position = "none") #removing legend as only one line is plotted
 co2_electric_emissions_line
+
+combined_emissions <- merge(virginia_emissions,virginia_emissions_electric,by=c("year","variable","value"),all=TRUE)
+co2_combined_emissions_line<-line_figure(combined_emissions,"Emissions (million metric tons CO2)","Virginia Combined Annual CO2 Emissions")
+co2_combined_emissions_line
 
 setnames(va_emissions_compounds,old=c("Compound","emissions_in_million_metric_tons","Year"),new=c("variable","value","year")) #changing names to fit function inputs
 va_emissions_compounds <- data.table(va_emissions_compounds)

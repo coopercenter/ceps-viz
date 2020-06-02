@@ -240,3 +240,21 @@ capacity_factors[,`:=`(biomass_cf=other_biomass_gen_gwh/(other_waste_biomass/100
 
 #-------------------------------PLOTTING CAPACITY FACTORS VISUALLY-----------------------------------------------
 
+source(here::here("ggplot2","viz_functions.R"))
+
+
+#####2014 Pie chart
+lf_capacity_by_fuel_type_2014<- melt(capacity_by_fuel_type_2014[,.(date,conventional_hydroelectric, coal, hydroelectric_pumped_storage, landfill_gas,
+                                                                   municipal_solid_waste, natural_gas, nuclear, other_waste_biomass, petroleum_liquids, 
+                                                                   solar_photovoltaic, wood_wood_waste_biomass)],id="date")
+pie_chart_figure_p(lf_capacity_by_fuel_type_2014,"Capacity by Fuel Type in 2014")
+
+#####2018 Pie chart
+lf_capacity_by_fuel_type_2018<- melt(capacity_by_fuel_type_2018[,.(date,conventional_hydroelectric, coal, hydroelectric_pumped_storage, landfill_gas,
+                                                                   municipal_solid_waste, natural_gas, nuclear, other_waste_biomass, petroleum_liquids, 
+                                                          solar_photovoltaic, wood_wood_waste_biomass)],id="date")
+pie_chart_figure_p(lf_capacity_by_fuel_type_2018,"Capacity by Fuel Type in 2018")
+
+
+
+

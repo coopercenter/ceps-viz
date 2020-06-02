@@ -278,7 +278,7 @@ pie_chart_figure <- function(data_table,title_name=NULL,percent_label_size=4){
 }
 
 #for plotly piecharts with or without legend: 
-pie_chart_figure_p <- function(data_table_list,merge_variable,title_name=NULL,character_list=NULL,legend_shown=FALSE,source_citation=NULL){
+pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NULL,character_list=NULL,legend_shown=FALSE,source_citation=NULL){
   #data_table_list is a list of data tables which should be ready to be merged into one table
   #       *if only one table is included in input list (note that it still must be in list form), this table should be ready to be plotted i.e it should include a variable and value column and an x-value (usually date or year) column
   #       *value may be in GWh or whatever is the unit of what is being plotted, the values need not add to 100% or 1 they can be actual values
@@ -382,10 +382,10 @@ ggplotly_wrapper <- function(list){
 #-----------------------------------------------------------------------------------------------
 #trial stacked area function which takes in a list of pre-loaded datasets and creates a ggplot output which can be used as an input in above ggplotly_wrapper function:
 #note: metadata table must also be loaded globally in code before use of this function
-stacked_area_trial_figure <- function(data_table_list,merge_variable,value_unit,title_name,character_list=NULL,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE,source_citation=NULL,modifications=NULL){
+stacked_area_trial_figure <- function(data_table_list,merge_variable=NULL,value_unit,title_name,character_list=NULL,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE,source_citation=NULL,modifications=NULL){
   #data_table_list is a list of data tables which should be ready to be merged into one table
   #       *if only one table is included in input list (note that it still must be in list form), this table should be ready to be plotted i.e it should include a variable and value column and an x-value (usually date or year) column
-  #merge_variable is a character description of which variable the merge should be performed on (ex:"date","year)
+  #merge_variable is a character description of which variable the merge should be performed on (ex:"date","year) if applicable
   #value_unit = character description of units of value being plotted
   #title_name = character description of what title of figure should be
   #character_list defaults to NULL, but if applicable should be a list of the relevant database data table names as strings, so that their source info can be extracted from metadata table
@@ -470,10 +470,10 @@ stacked_area_trial_figure <- function(data_table_list,merge_variable,value_unit,
 
 #trial line plot function which takes in a list of pre-loaded datasets and creates a ggplot output which can be used as an input in above ggplotly_wrapper function:
 #note: metadata table must also be loaded globally in code before use of this function
-line_trial_figure <- function(data_table_list,merge_variable,value_unit,title_name,character_list=NULL,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE,source_citation=NULL,modifications=NULL){
+line_trial_figure <- function(data_table_list,merge_variable=NULL,value_unit,title_name,character_list=NULL,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE,source_citation=NULL,modifications=NULL){
   #data_table_list is a list of data tables which should be ready to be merged into one table
   #       *if only one table is included in input list (note that it still must be in list form), this table should be ready to be plotted i.e it should include a variable and value column and an x-value (usually date or year) column
-  #merge_variable is a character description of which variable the merge should be performed on (ex:"date","year)
+  #merge_variable is a character description of which variable the merge should be performed on (ex:"date","year) if applicable
   #value_unit = character description of units of value being plotted
   #title_name = character description of what title of figure should be
   #character_list defaults to NULL, but if applicable should be a list of the relevant database data table names as strings, so that their source info can be extracted from metadata table

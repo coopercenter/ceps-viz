@@ -24,6 +24,8 @@ va_emissions_compounds <- dbGetQuery(db, "SELECT * from emission")
 
 dbDisconnect(db)
 
+co2_emissions_by_fuel <- va_emissions_compounds%>%select(Year, Coal2,`Natural gas2`,Petroleum2, Other2)
+
 #get relevant features to analyze, in this case the total emissions for each compound
 va_emissions_compounds <- select(va_emissions_compounds, Year, Total, Total1, Total2)
 #rename columns
@@ -38,6 +40,21 @@ va_emissions_compounds <- va_emissions_compounds[1:19,]
 va_emissions_compounds <- va_emissions_compounds %>%
   select(Year, SO2, NO, CO2) %>%
   gather(key = "Compound", value = "emissions_in_million_metric_tons", -Year)
+#converting units from thousand metric tons to million metric tons for consitency with other figures
+va_emissions_compounds <- data.table(va_emissions_compounds)
+va_emissions_compounds[,emissions_in_million_metric_tons:=emissions_in_million_metric_tons/1000]
+
+colnames(co2_emissions_by_fuel) <- c('year', "coal","natural_gas", "petroleum", 'other')
+co2_emissions_by_fuel <- (sapply(co2_emissions_by_fuel, as.numeric))
+#make it a dataframe
+co2_emissions_by_fuel <- data.frame(co2_emissions_by_fuel)
+co2_emissions_by_fuel <- co2_emissions_by_fuel[1:19,]
+co2_emissions_by_fuel <- co2_emissions_by_fuel %>%
+  select(year, coal, natural_gas, petroleum, other) %>%
+  gather(key = "Fuel Type", value = "emissions_in_million_metric_tons", -year)
+#converting units from thousand metric tons to million metric tons for consitency with other figures
+co2_emissions_by_fuel <- data.table(co2_emissions_by_fuel)
+co2_emissions_by_fuel[,emissions_in_million_metric_tons:=emissions_in_million_metric_tons/1000]
 
 source(here::here("my_eia_api_key.R"))
 
@@ -203,25 +220,10 @@ single_ring_sw_capacity_donut_p
 
 lf_va_annual_generation <- melt(va_annual_generation[,.(year,coal,oil,gas,nuclear,utility_solar,distributed_solar,hydropower,wood,other_biomass,other)],id="year")
 
-va_annual_production_area = stacked_area_figure(lf_va_annual_generation,"GWh","VA Annual Generation",subtitle_name = "By Fuel Type",lower_limit = -1900)
+va_annual_production_area = stacked_area_figure(lf_va_annual_generation,"GWh","VA Annual Generation by Fuel Type",lower_limit = -1900)
 va_annual_production_area
 
-va_annual_production_2019_pie_chart = pie_chart_figure(lf_va_annual_generation[year==2019&variable!="other"],"VA 2019 Generation",percent_label_size = 0) #setting percent_label_size = 0 to remove percent labels because slivers are so small
-#other is excluded because the pie chart function does not take negative values
-
-#finding location of labels and percent label for each fuel type so that labels for the larger pie slices (gas and nuclear) can be manually added
-va_2019_gen = lf_va_annual_generation[year==2019&variable!="other"]
-
-va_2019_gen <- va_2019_gen %>% 
-  arrange(desc(variable)) %>%
-  mutate(prop = value / sum(va_2019_gen$value) *100) %>%
-  mutate(ypos = cumsum(prop)- 0.5*prop )
-va_2019_gen=data.table(va_2019_gen)
-
-va_annual_production_2019_pie_chart = va_annual_production_2019_pie_chart +
-  geom_text(aes(y=va_2019_gen[variable=="gas",ypos],label=paste0(as.character(va_2019_gen[variable=="gas",round(prop,1)]),"%")),color="white",size=4)+
-  geom_text(aes(y=va_2019_gen[variable=="nuclear",ypos],label=paste0(as.character(va_2019_gen[variable=="nuclear",round(prop,1)]),"%")),color="white",size=4) 
-va_annual_production_2019_pie_chart
+va_2019_gen <- lf_va_annual_generation[year==2019]
 
 va_annual_production_2019_pie_chart_p = pie_chart_figure_p(va_2019_gen,"VA 2019 Generation")
 va_annual_production_2019_pie_chart_p
@@ -233,11 +235,8 @@ va_annual_production_2019_pie_chart_p_with_legend
 
 lf_va_annual_consumption <- melt(va_annual_consumption,id="year")
 
-va_annual_consumption_area = stacked_area_figure(lf_va_annual_consumption,"Billion Btu","VA Annual Consumption",subtitle_name = "By Sector") + scale_y_continuous(labels = comma)
+va_annual_consumption_area = stacked_area_figure(lf_va_annual_consumption,"Billion Btu","VA Annual Consumption by Sector") + scale_y_continuous(labels = comma)
 va_annual_consumption_area
-
-va_annual_consumption_2017_pie_chart = pie_chart_figure(lf_va_annual_consumption[year==2017],"VA 2017 Consumption")
-va_annual_consumption_2017_pie_chart
 
 va_annual_consumption_2017_pie_chart_p = pie_chart_figure_p(lf_va_annual_consumption[year==2017],"VA 2017 Consumption")
 va_annual_consumption_2017_pie_chart_p
@@ -310,21 +309,62 @@ carbon_versus_carbon_free_stacked
 # Total Renewable and Total Carbon Free Generation Over Time
 melted_renewable_and_carbon_free<-melt(va_annual_renewable_and_carbon_free_gen[,.(year,carbon_free,renewable,total)],id="year")
 
-renewable_and_carbon_free_line<-line_figure(melted_renewable_and_carbon_free,"GWh","Annual VA Generation by Type",annual=TRUE,x_label="Year",subtitle_name=NULL,lower_limit=0)
+renewable_and_carbon_free_line<-line_figure(melted_renewable_and_carbon_free,"GWh","Annual VA Generation by Type",annual=TRUE,x_label="Year")
 renewable_and_carbon_free_line
 
 #PLOTTING EMISSIONS FIGURES:
-virginia_emissions[,variable:="co2_emissions"] #adding variable column so that line_figure function can be utilized
+virginia_emissions[,variable:="total_CO2_emissions"] #adding variable column so that line_figure function can be utilized
 co2_emissions_line <- line_figure(virginia_emissions,"emissions (million metric tons CO2)","Virginia Annual CO2 Emissions") + 
   theme(legend.position = "none") #removing legend as only one line is plotted
 co2_emissions_line
 
-virginia_emissions_electric[,variable:="co2_emissions_electric"]
+virginia_emissions_electric[,variable:="electric_sector_CO2_emissions"]
 co2_electric_emissions_line<-line_figure(virginia_emissions_electric,"emissions (million metric tons CO2)","Virginia Annual CO2 Emissions from Electric Sector") +
   theme(legend.position = "none") #removing legend as only one line is plotted
 co2_electric_emissions_line
+
+combined_emissions <- merge(virginia_emissions,virginia_emissions_electric,by=c("year","variable","value"),all=TRUE)
+co2_combined_emissions_line<-line_figure(combined_emissions,"emissions (million metric tons CO2)","Virginia Combined Annual CO2 Emissions")
+co2_combined_emissions_line
 
 setnames(va_emissions_compounds,old=c("Compound","emissions_in_million_metric_tons","Year"),new=c("variable","value","year")) #changing names to fit function inputs
 emissions_line <- line_figure(va_emissions_compounds,"emissions (million metric tons)","Virginia Annual Emissions") +
   scale_y_continuous(labels = comma)
 emissions_line
+
+setnames(co2_emissions_by_fuel,old=c("Fuel Type","emissions_in_million_metric_tons","year"),new=c("variable","value","year")) #changing names to fit function inputs
+carbon_by_fuel_emissions_stacked <- stacked_area_figure(co2_emissions_by_fuel,"emissions (million metric tons)","Virginia CO2 Emissions By Fuel Type") +
+  scale_y_continuous(labels = comma)
+carbon_by_fuel_emissions_stacked
+
+#--------------------------------------------------------------------------------
+# reformatting the generation dataset
+va_gen_w_commas<-data.frame(format(va_annual_generation[,2:12],big.mark=",",scientific=FALSE,trim=TRUE))
+va_gen_w_commas<-cbind(va_annual_generation[,1],va_gen_w_commas)
+
+# reformatting the consumption dataset
+va_con_w_commas<-data.frame(format(va_annual_consumption[,2:5],big.mark=",",scientific=FALSE,trim=TRUE))
+va_con_w_commas<-cbind(va_annual_consumption[,1],va_con_w_commas)
+
+#reformatting carbon emissions
+virginia_emissions_electric <- virginia_emissions_electric[,1:2]
+virginia_emissions_electric_commas <- data.frame(signif(virginia_emissions_electric[,2], digits=4))
+virginia_emissions_electric_commas <- cbind(virginia_emissions_electric[,1],virginia_emissions_electric_commas)
+colnames(virginia_emissions_electric_commas) <- c('Year','Million Metric Tons of CO2')
+
+#reformatting emissions compounds dataset
+db_driver = dbDriver("PostgreSQL")
+source(here::here("my_postgres_credentials.R"))
+db <- dbConnect(db_driver,user=db_user, password=ra_pwd,dbname="postgres", host=db_host)
+va_emissions_compounds <- dbGetQuery(db, "SELECT * from emission") 
+#get relevant features to analyze, in this case the total emissions for each compound
+va_emissions_compounds <- select(va_emissions_compounds, Year, Total, Total1, Total2)
+#rename columns
+colnames(va_emissions_compounds) <- c("Year", "SO2", "NO", "CO2")
+#convert to numeric
+va_emissions_compounds <- (sapply(va_emissions_compounds, as.numeric))
+#make it a dataframe
+va_emissions_compounds <- data.frame(va_emissions_compounds)
+#limit data to baseline year of 2000
+va_emissions_compounds <- va_emissions_compounds[1:19,]
+dbDisconnect(db)

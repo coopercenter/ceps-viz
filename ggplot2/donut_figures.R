@@ -102,6 +102,12 @@ renewable_donut_p
 single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_percent_gen_2019,"2019","2.6%",renewable_percent_gen_2030_goal,"2030","30%","Renewable Generation","skyblue","steelblue")
 single_ring_renewable_donut_p
 
+renewable_ring = data.frame(category=c(" ","currently","goal"),
+                            value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
+
+single_ring_renewable_donut_p2 <- single_ring_donut_figure_p2(renewable_ring,"Renewable Generation","2.6% in 2019","30% by 2030","label",c("whitesmoke","steelblue","skyblue"))
+single_ring_renewable_donut_p2
+
 #plotting donut figure of progress towards carbon-free generation goal
 carbon_free_percent_gen_2019 = va_generation[year==2019,(all_solar+hydropower+nuclear)/total]
 carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from carbon-free sources by 2050
@@ -111,6 +117,12 @@ carbon_free_donut_p
 
 single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_percent_gen_2019,"2019","32.9%",carbon_free_percent_gen_2050_goal,"2050","100%","Carbon-Free Generation","mediumseagreen","seagreen")
 single_ring_carbon_free_donut_p
+
+carbon_free_ring = data.frame(category=c("goal","currently"),
+                              value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
+
+single_ring_carbon_free_donut_p2 <- single_ring_donut_figure_p2(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","100% by 2050","label",c("mediumseagreen","seagreen"))
+single_ring_carbon_free_donut_p2
 
 #plotting donut figure of progess towards wind and solar capacity goals
 solar_capacity_2018_mw = capacity[Year==2018,as.numeric(Solar)]
@@ -127,6 +139,12 @@ sw_capacity_donut_p
 single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(solar_capacity_percent_2018,"2018","392.5 MW",sw_capacity_percent_goal_2028,"2028","5,500 MW in Operation","Wind & Solar Energy","lightcoral","indianred",sw_capacity_percent_goal_2030,"2030","13,600 MW Total","maroon")
 single_ring_sw_capacity_donut_p
 
+sw_ring = data.frame(category=c("end goal","currently","intermediate goal"),
+                     value=c(sw_capacity_percent_goal_2030-sw_capacity_percent_goal_2028,solar_capacity_percent_2018,sw_capacity_percent_goal_2028-solar_capacity_percent_2018))
+
+single_ring_sw_capacity_donut_p2 <- single_ring_donut_figure_p2(sw_ring,"Wind & Solar Capacity","392.5 MW in 2018","5,500 MW in Operation by 2028 \n 13,600 MW Total by 2030","label",c("lightcoral","maroon","indianred"))
+single_ring_sw_capacity_donut_p2
+
 #16,100 MW of solar and onshore wind by January 1, 2024 (from VCEA Summary 3.0)
 va_gats_data <- gats_data[state=="VA"]
 va_gats_data[,date:=as.Date(date)]
@@ -135,15 +153,19 @@ distributed_solar_nameplate <- va_gats_data[primary_fuel_type=="SUN"&pjm_unit=="
 utility_solar_nameplate <- va_gats_data[primary_fuel_type=="SUN"&pjm_unit=="Yes"&date>=2010-01-01,sum(nameplate)]
 nameplate_goal = 16100
 
-sw_ring = data.frame(category=c("2019 distributed solar capacity","2019 utility solar capacity","additional onshore wind & solar necessary to reach target"),
-                     value=c(distributed_solar_nameplate,utility_solar_nameplate,nameplate_goal-(distributed_solar_nameplate+utility_solar_nameplate)))
+sw_ring2 = data.frame(category=c("additional onshore wind & solar necessary to reach target","2019 distributed solar capacity","2019 utility solar capacity"),
+                     value=c(nameplate_goal-(distributed_solar_nameplate+utility_solar_nameplate),distributed_solar_nameplate,utility_solar_nameplate))
 
 VCEA_single_ring_sw_capacity_donut_p <- plot_ly(textinfo="none",hoverinfo="label+value") %>%
-  add_pie(data = sw_ring, values = ~value, labels = ~category, sort = F,hole = 0.7,
+  add_pie(data = sw_ring2, values = ~value, labels = ~category, sort = F,hole = 0.7,
           domain = list(x = c(0, 1), y = c(0, 1)),
-          marker=list(colors=c("lightcoral","indianred","maroon"),
+          marker=list(colors=c("lightcoral","maroon","indianred"),
                       line=list(color="white",width=1))) %>%
   layout(title=list(text="807.65 MW of Solar Capacity as of 2019",font = list(color="black",size = 15),x=0.5),showlegend = F) %>%
   add_annotations(x=0.5,y=0.5,text="Onshore Wind & Solar Capacity",showarrow=F,font = list(color = "black",size = 14)) %>%
   add_annotations(x=0.5,y=-0.1,text="16,100 MW of Onshore Wind & Solar Capacity by 2024",showarrow=F,font = list(color = "maroon",size = 15))
 VCEA_single_ring_sw_capacity_donut_p
+
+VCEA_single_ring_sw_capacity_donut_p2 <- single_ring_donut_figure_p2(sw_ring2,"Onshore Wind & Solar Capacity","807.65 MW of Solar Capacity as of 2019","16,100 MW of Onshore Wind & Solar Capacity by 2024","label+value",c("lightcoral","maroon","indianred"))
+VCEA_single_ring_sw_capacity_donut_p2
+

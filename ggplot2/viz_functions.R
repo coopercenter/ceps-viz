@@ -236,8 +236,6 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   return(figure)
 }
 
-#note: for the functions which return ggplot2 objects, additional different desired plot elements can be added in conjunction with the use of the functions
-
 #function to wrap ggplot objects produced from line plot and stacked area functions with ggplotly & add data citations:
 ggplotly_wrapper <- function(list){
   #list shoule be list output from ggplot functions, which includes ggplot figure (figure), x label name (x_label), and data citation (source_description)
@@ -245,8 +243,8 @@ ggplotly_wrapper <- function(list){
   library(plotly)
   
   figure_p <- ggplotly(list$figure) %>%
-    layout(xaxis=list(
-      title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))
+    layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
+           xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))
   #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
   
   return(figure_p)
@@ -254,7 +252,7 @@ ggplotly_wrapper <- function(list){
 
 #stacked area function which takes in a list of pre-loaded datasets and creates a ggplot output which can be used as an input in above ggplotly_wrapper function:
 #note: metadata table must also be loaded globally in code before use of this function
-stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_name,character_list=NULL,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE,source_citation=NULL,modifications=NULL){
+stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_name,character_list=NULL,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE,source_citation=NULL,modifications=NULL,subtitle_description=NULL){
   #data_table_list is a list of data tables which should be ready to be merged into one table
   #       *if only one table is included in input list (note that it still must be in list form), this table should be ready to be plotted i.e it should include a variable and value column and an x-value (usually date or year) column
   #merge_variable is a character description of which variable the merge should be performed on (ex:"date","year) if applicable; it should also be the x-axis being graphed
@@ -270,6 +268,7 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   #       *if needed to be set, should be of form: "Source: U.S. Energy Information Administration" for example
   #modifications defaults to NULL, in which case nothing would be added to the figure, but can be set if additional modifications are needed
   #       *examples of different modifications which may be necessary are scaling the y-axis or removing the legend
+  #subtitle_description defaults to NULL, but can be added if desired
   
   library(ggplot2)
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
@@ -299,14 +298,6 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   
   setnames(lf_working_table,merge_variable,"x_unit")
   
-  figure <- ggplot(lf_working_table, aes(x=x_unit,y=value,fill=variable)) +
-    geom_area() + 
-    ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
-    labs(title=title_name) +
-    scale_fill_discrete(name=NULL) +
-    modifications
-  figure
-  
   if(is.null(source_citation)){
     source_list <- NULL
     
@@ -332,7 +323,15 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   else
   {source_description <- source_citation}
   
-  return_list <- list(figure=figure,x_label=x_label,source_description=source_description)
+  figure <- ggplot(lf_working_table, aes(x=x_unit,y=value,fill=variable)) +
+    geom_area() + 
+    ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
+    labs(title=title_name,subtitle=subtitle_description,caption=source_description) +
+    scale_fill_discrete(name=NULL) +
+    modifications
+  figure
+  
+  return_list <- list(figure=figure,x_label=x_label,source_description=source_description,title_name=title_name,subtitle_description=subtitle_description)
   
   if(return_static==TRUE)
   {return(figure)}
@@ -342,7 +341,7 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
 
 #line plot function which takes in a list of pre-loaded datasets and creates a ggplot output which can be used as an input in above ggplotly_wrapper function:
 #note: metadata table must also be loaded globally in code before use of this function
-line_figure <- function(data_table_list,merge_variable,value_unit,title_name,character_list=NULL,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE,source_citation=NULL,modifications=NULL){
+line_figure <- function(data_table_list,merge_variable,value_unit,title_name,character_list=NULL,x_label="Year",lower_limit=0,upper_limit=NA,return_static=TRUE,source_citation=NULL,modifications=NULL,subtitle_description=NULL){
   #data_table_list is a list of data tables which should be ready to be merged into one table
   #       *if only one table is included in input list (note that it still must be in list form), this table should be ready to be plotted i.e it should include a variable and value column and an x-value (usually date or year) column
   #merge_variable is a character description of which variable the merge should be performed on (ex:"date","year) if applicable; it should also be the x-axis being graphed
@@ -358,6 +357,7 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   #       *if needed to be set, should be of form: "Source: U.S. Energy Information Administration" for example
   #modifications defaults to NULL, in which case nothing would be added to the figure, but can be set if additional modifications are needed
   #       *examples of different modifications which may be necessary are scaling the y-axis or removing the legend
+  #subtitle_description defaults to NULL, but can be added if desired
   
   library(ggplot2)
   if(!("Hmisc" %in% installed.packages())) install.packages("Hmisc")
@@ -387,16 +387,6 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   
   setnames(lf_working_table,merge_variable,"x_unit")
   
-  figure <- ggplot(lf_working_table, aes(x=x_unit,y=value,color=variable,shape=variable)) +
-    geom_line() + 
-    geom_point() +
-    ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
-    labs(title=title_name) +
-    scale_color_discrete(name=NULL)+
-    scale_shape_discrete(name=NULL)+
-    modifications
-  figure
-  
   if(is.null(source_citation)){
     source_list <- NULL
     
@@ -422,7 +412,17 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   else
   {source_description <- source_citation}
   
-  return_list <- list(figure=figure,x_label=x_label,source_description=source_description)
+  figure <- ggplot(lf_working_table, aes(x=x_unit,y=value,color=variable,shape=variable)) +
+    geom_line() + 
+    geom_point() +
+    ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
+    labs(title=title_name,subtitle=subtitle_description,caption=source_description) +
+    scale_color_discrete(name=NULL)+
+    scale_shape_discrete(name=NULL)+
+    modifications
+  figure
+  
+  return_list <- list(figure=figure,x_label=x_label,source_description=source_description,title_name=title_name,subtitle_description=subtitle_description)
   
   if(return_static==TRUE)
   {return(figure)}

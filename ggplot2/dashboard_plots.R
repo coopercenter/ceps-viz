@@ -236,7 +236,7 @@ percent_renewable_and_carbon_free_line <- line_figure(list(lf_percent_renewable_
                                                       return_static = F)
 percent_renewable_and_carbon_free_line
 
-percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line)
+percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line,line_figure = T)
 percent_renewable_and_carbon_free_line_p
 
 # Solar, Hydro, and Nuclear Generation over Time
@@ -246,7 +246,7 @@ annual_carbon_free_generation_by_type_line <- line_figure(list(eia_elec_gen_nuc_
                                                           return_static = F)
 annual_carbon_free_generation_by_type_line
 
-annual_carbon_free_generation_by_type_line_p <- ggplotly_wrapper(annual_carbon_free_generation_by_type_line)
+annual_carbon_free_generation_by_type_line_p <- ggplotly_wrapper(annual_carbon_free_generation_by_type_line,line_figure = T)
 annual_carbon_free_generation_by_type_line_p
 
 # Solar (broken into distributed and utility) over time
@@ -256,7 +256,7 @@ solar_generation_time_series_line <- line_figure(list(eia_elec_gen_sun_va_99_a[u
                                                  return_static = F)
 solar_generation_time_series_line
 
-solar_generation_time_series_line_p <- ggplotly_wrapper(solar_generation_time_series_line)
+solar_generation_time_series_line_p <- ggplotly_wrapper(solar_generation_time_series_line,line_figure = T)
 solar_generation_time_series_line_p
 
 # Wood generation over time
@@ -266,7 +266,7 @@ wood_generation_time_series_line <- line_figure(list(melt(eia_elec_gen_www_va_99
                                                 return_static = F, modifications = theme(legend.position = "none"))
 wood_generation_time_series_line
 
-wood_generation_time_series_line_p <- ggplotly_wrapper(wood_generation_time_series_line)
+wood_generation_time_series_line_p <- ggplotly_wrapper(wood_generation_time_series_line,line_figure = T)
 wood_generation_time_series_line_p
 
 #Stacked Annual Carbon Free Generation Broken Out by Type
@@ -324,7 +324,7 @@ renewable_and_carbon_free_line <- line_figure(list(renewable_and_carbon_free),
                                               return_static = F)
 renewable_and_carbon_free_line
 
-renewable_and_carbon_free_line_p <- ggplotly_wrapper(renewable_and_carbon_free_line)
+renewable_and_carbon_free_line_p <- ggplotly_wrapper(renewable_and_carbon_free_line,line_figure = T)
 renewable_and_carbon_free_line_p
 
 #--------------------------------PLOTTING EMISSIONS FIGURES--------------------------------------------------------
@@ -336,7 +336,7 @@ co2_combined_emissions_line <- line_figure(list(eia_emiss_co2_totv_ec_to_va_a,ei
                                            return_static = F)
 co2_combined_emissions_line
 
-co2_combined_emissions_line_p <- ggplotly_wrapper(co2_combined_emissions_line)
+co2_combined_emissions_line_p <- ggplotly_wrapper(co2_combined_emissions_line,line_figure = T)
 co2_combined_emissions_line_p
 
 # Emissions by compound
@@ -347,7 +347,7 @@ emissions_line <- line_figure(list(emissions_co2_by_source_va[,.(year=year,CO2=t
                               return_static = F)
 emissions_line
 
-emissions_line_p <- ggplotly_wrapper(emissions_line)
+emissions_line_p <- ggplotly_wrapper(emissions_line,line_figure = T)
 emissions_line_p
 
 # CO2 emissions by fuel type

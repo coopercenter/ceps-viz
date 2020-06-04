@@ -237,16 +237,24 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
 }
 
 #function to wrap ggplot objects produced from line plot and stacked area functions with ggplotly & add data citations:
-ggplotly_wrapper <- function(list){
-  #list shoule be list output from ggplot functions, which includes ggplot figure (figure), x label name (x_label), and data citation (source_description)
+ggplotly_wrapper <- function(list,line_figure=FALSE){
+  #list should be list output from ggplot functions, which includes ggplot figure (figure), x label name (x_label), and data citation (source_description)
+  #line_figure defaults to FALSE, but should be set as TRUE if the figure is a line plot to avoid duplicate hover info on plotly figure
   
   library(plotly)
   
-  figure_p <- ggplotly(list$figure) %>%
-    layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
-           xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))
-  #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
-  
+  if(line_figure==TRUE){
+    figure_p <- ggplotly(list$figure,tooltip=c("x","y","colour")) %>%
+      layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
+             xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))
+    #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
+    #subtitle is built into second line of title
+  }
+  else{
+    figure_p <- ggplotly(list$figure) %>%
+      layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
+             xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))
+  }
   return(figure_p)
 }
 

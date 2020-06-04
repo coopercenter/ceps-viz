@@ -120,6 +120,12 @@ renewable_donut_p
 single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_percent_gen_2019,"2019","2.6%",renewable_percent_gen_2030_goal,"2030","30%","Renewable Generation","skyblue","steelblue")
 single_ring_renewable_donut_p
 
+renewable_ring = data.frame(category=c(" ","currently","goal"),
+                            value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
+
+single_ring_renewable_donut_p2 <- single_ring_donut_figure_p2(renewable_ring,"Renewable Generation","2.6% in 2019","30% by 2030","label",c("whitesmoke","steelblue","skyblue"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"))
+single_ring_renewable_donut_p2
+
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------
 carbon_free_percent_gen_2019 = va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower+nuclear)/total]
 carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from carbon-free sources by 2050
@@ -130,7 +136,14 @@ carbon_free_donut_p
 single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_percent_gen_2019,"2019","32.9%",carbon_free_percent_gen_2050_goal,"2050","100%","Carbon-Free Generation","mediumseagreen","seagreen")
 single_ring_carbon_free_donut_p
 
+carbon_free_ring = data.frame(category=c("goal","currently"),
+                              value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
+
+single_ring_carbon_free_donut_p2 <- single_ring_donut_figure_p2(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","100% by 2050","label",c("mediumseagreen","seagreen"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"))
+single_ring_carbon_free_donut_p2
+
 #plotting donut figure of progess towards wind and solar capacity goals-----------------------------------------------------------------------------------------
+#below is a placeholder for solar and wind progress donut while we wait to hopefully get more data on solar nameplate from DMME
 solar_capacity_2018_mw = whole_electric_industry_capacity[Year==2018,as.numeric(Solar)]
 sw_capacity_2028_goal_mw = 5500 #5,500 MW of onshore wind and solar energy total [in operation] by 2028
 sw_capacity_2030_goal_mw = 13600 #13,600 MW of onshore wind and solar energy total by 2030 (from 'Virginia Clean Economy progress dashboard -- UPDATED DRAFT')

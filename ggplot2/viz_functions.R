@@ -32,7 +32,8 @@ donut_figure_p <- function(data_value,data_year,data_with_true_units,goal_value,
                           line=list(color="white",width=1))) %>%
       layout(title=list(text=paste(data_with_true_units,"in",data_year),font = list(color = dark_color,size = 16),x=0.55),showlegend = F) %>%
       add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "lightslategrey",size = 14)) %>%
-      add_annotations(x=0.5,y=-0.1,text=paste(goal_with_true_units,"by",goal_year),showarrow=F,font = list(color = light_color,size = 16))
+      add_annotations(x=0.5,y=-0.1,text=paste(goal_with_true_units,"by",goal_year),showarrow=F,font = list(color = light_color,size = 16))%>%
+      config(displaylogo = FALSE)
   }
   else{
     ring3 = data.frame(category=c("zfiller",paste0(description_of_goal,end_goal_year)),
@@ -54,7 +55,8 @@ donut_figure_p <- function(data_value,data_year,data_with_true_units,goal_value,
       layout(title=list(text=paste(data_with_true_units,"in",data_year),font = list(color = darkest_color,size = 15),x=0.55),showlegend = F) %>%
       add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "lightslategrey",size = 14)) %>%
       add_annotations(x=0.5,y=-0.05,text=paste(goal_with_true_units,"by",goal_year),showarrow=F,font = list(color = dark_color,size = 15))%>%
-      add_annotations(x=0.5,y=-0.1,text=paste(end_goal_with_true_units,"by",end_goal_year),showarrow=F,font = list(color = light_color,size = 15))
+      add_annotations(x=0.5,y=-0.1,text=paste(end_goal_with_true_units,"by",end_goal_year),showarrow=F,font = list(color = light_color,size = 15))%>%
+      config(displaylogo = FALSE)
   }
   return(figure)
 }
@@ -76,7 +78,8 @@ single_ring_donut_figure_p <- function(data_value,data_year,data_with_true_units
                           line=list(color="white",width=1))) %>%
       layout(title=list(text=paste(data_with_true_units,"in",data_year),font = list(color = dark_color,size = 16),x=0.55),showlegend = F) %>%
       add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "black",size = 14)) %>%
-      add_annotations(x=0.5,y=-0.1,text=paste(goal_with_true_units,"by",goal_year),showarrow=F,font = list(color = light_color,size = 16))
+      add_annotations(x=0.5,y=-0.1,text=paste(goal_with_true_units,"by",goal_year),showarrow=F,font = list(color = light_color,size = 16))%>%
+      config(displaylogo = FALSE)
   }
   else{
     ring = data.frame(category=c(" ","currently","intermediate goal","end goal"),
@@ -90,7 +93,8 @@ single_ring_donut_figure_p <- function(data_value,data_year,data_with_true_units
       layout(title=list(text=paste(data_with_true_units,"in",data_year),font = list(color = darkest_color,size = 15),x=0.55),showlegend = F) %>%
       add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "black",size = 14)) %>%
       add_annotations(x=0.5,y=-0.05,text=paste(goal_with_true_units,"by",goal_year),showarrow=F,font = list(color = dark_color,size = 15))%>%
-      add_annotations(x=0.5,y=-0.1,text=paste(end_goal_with_true_units,"by",end_goal_year),showarrow=F,font = list(color = light_color,size = 15))
+      add_annotations(x=0.5,y=-0.1,text=paste(end_goal_with_true_units,"by",end_goal_year),showarrow=F,font = list(color = light_color,size = 15))%>%
+      config(displaylogo = FALSE)
   }
   return(figure)
 }
@@ -144,7 +148,8 @@ single_ring_donut_figure_p2 <- function(data_table,description_of_goal,top_descr
                         line=list(color="white",width=1))) %>%
     layout(title=list(text=top_description,font = list(color="black",size = 15),x=0.55),showlegend = F) %>%
     add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "black",size = 14)) %>%
-    add_annotations(x=0.5,y=-0.1,text=paste0(bottom_description,"<br>","<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,font = list(color = "black",size = 15))
+    add_annotations(x=0.5,y=-0.1,text=paste0(bottom_description,"<br>","<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,font = list(color = "black",size = 15))%>%
+    config(displaylogo = FALSE)
   figure
   
   return(figure)
@@ -226,12 +231,14 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
     figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
       layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper'),
              showlegend=F,
-             annotations=list(x=0.5,y=-0.1,text=paste0("<i>",source_description,"</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
+             annotations=list(x=0.5,y=-0.1,text=paste0("<i>",source_description,"</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10)))%>%
+      config(displaylogo = FALSE) 
   }
   else{
     figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
       layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper'),
-             annotations=list(x=0.5,y=-0.1,text=paste0("<i>",source_description,"</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
+             annotations=list(x=0.5,y=-0.1,text=paste0("<i>",source_description,"</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10)))%>%
+      config(displaylogo = FALSE)
   }
   return(figure)
 }
@@ -246,14 +253,16 @@ ggplotly_wrapper <- function(list,line_figure=FALSE){
   if(line_figure==TRUE){
     figure_p <- ggplotly(list$figure,tooltip=c("x","y","colour")) %>%
       layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
-             xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))
+             xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))%>%
+      config(displaylogo = FALSE)
     #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
     #subtitle is built into second line of title
   }
   else{
     figure_p <- ggplotly(list$figure) %>%
       layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
-             xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))
+             xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>")))%>%
+      config(displaylogo = FALSE)
   }
   return(figure_p)
 }

@@ -242,19 +242,27 @@ capacity_factors[,`:=`(biomass_cf=other_biomass_gen_gwh/(other_waste_biomass/100
 
 source(here::here("ggplot2","viz_functions.R"))
 
+####mean capacity factor of coal
+mean_coal_cf_2018<- capacity_factors[year(date)==2018,mean(coal_cf)]
+mean_coal_cf_2014<- capacity_factors[year(date)==2014,mean(coal_cf)]
 
-#####2014 Pie chart
-lf_capacity_by_fuel_type_2014<- melt(capacity_by_fuel_type_2014[,.(date,conventional_hydroelectric, coal, hydroelectric_pumped_storage, landfill_gas,
-                                                                   municipal_solid_waste, natural_gas, nuclear, other_waste_biomass, petroleum_liquids, 
-                                                                   solar_photovoltaic, wood_wood_waste_biomass)],id="date")
-pie_chart_figure_p(lf_capacity_by_fuel_type_2014,"Capacity by Fuel Type in 2014")
-
-#####2018 Pie chart
-lf_capacity_by_fuel_type_2018<- melt(capacity_by_fuel_type_2018[,.(date,conventional_hydroelectric, coal, hydroelectric_pumped_storage, landfill_gas,
-                                                                   municipal_solid_waste, natural_gas, nuclear, other_waste_biomass, petroleum_liquids, 
-                                                          solar_photovoltaic, wood_wood_waste_biomass)],id="date")
-pie_chart_figure_p(lf_capacity_by_fuel_type_2018,"Capacity by Fuel Type in 2018")
+####data tables for coal
+mean_coal_cf_2018_data_table<-data.table(year=2018,variable=c("coal", " "),value=c(mean_coal_cf_2018, 100-mean_coal_cf_2018))
+mean_coal_cf_2014_data_table<-data.table(year=2014,variable=c("coal", " "),value=c(mean_coal_cf_2014, 100-mean_coal_cf_2014))
 
 
+####2018 Pie chart
+title_name<- "Coal Average Capacity Factor 2018"
+theme_colors <- c("orange","white")
+coal_cf_2018_piechart <- plot_ly(mean_coal_cf_2018_data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="none",insidetextfont = list(color = 'white'),marker=list(colors=theme_colors),sort=F) %>%
+  layout(title=list(text=title_name,x=0.55),showlegend=F,annotations=list(x=0.5,y=-0.1,text=paste0("<i>","U.S. Energy Information Administration","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
+coal_cf_2018_piechart
 
+
+######2014 Pie chart
+title_name<- "Coal Average Capacity Factor 2014"
+theme_colors <- c("orange","white")
+coal_cf_2014_piechart <- plot_ly(mean_coal_cf_2014_data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="none",insidetextfont = list(color = 'white'),marker=list(colors=theme_colors),sort=F) %>%
+  layout(title=list(text=title_name,x=0.55),showlegend=F,annotations=list(x=0.5,y=-0.1,text=paste0("<i>","U.S. Energy Information Administration","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
+coal_cf_2014_piechart
 

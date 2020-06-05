@@ -240,3 +240,29 @@ capacity_factors[,`:=`(biomass_cf=other_biomass_gen_gwh/(other_waste_biomass/100
 
 #-------------------------------PLOTTING CAPACITY FACTORS VISUALLY-----------------------------------------------
 
+source(here::here("ggplot2","viz_functions.R"))
+
+####mean capacity factor of coal
+mean_coal_cf_2018<- capacity_factors[year(date)==2018,mean(coal_cf)]
+mean_coal_cf_2014<- capacity_factors[year(date)==2014,mean(coal_cf)]
+
+####data tables for coal
+mean_coal_cf_2018_data_table<-data.table(year=2018,variable=c("coal", " "),value=c(mean_coal_cf_2018, 100-mean_coal_cf_2018))
+mean_coal_cf_2014_data_table<-data.table(year=2014,variable=c("coal", " "),value=c(mean_coal_cf_2014, 100-mean_coal_cf_2014))
+
+
+####2018 Pie chart
+title_name<- "Coal Average Capacity Factor 2018"
+theme_colors <- c("orange","white")
+coal_cf_2018_piechart <- plot_ly(mean_coal_cf_2018_data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="none",insidetextfont = list(color = 'white'),marker=list(colors=theme_colors),sort=F) %>%
+  layout(title=list(text=title_name,x=0.55),showlegend=F,annotations=list(x=0.5,y=-0.1,text=paste0("<i>","U.S. Energy Information Administration","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
+coal_cf_2018_piechart
+
+
+######2014 Pie chart
+title_name<- "Coal Average Capacity Factor 2014"
+theme_colors <- c("orange","white")
+coal_cf_2014_piechart <- plot_ly(mean_coal_cf_2014_data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="none",insidetextfont = list(color = 'white'),marker=list(colors=theme_colors),sort=F) %>%
+  layout(title=list(text=title_name,x=0.55),showlegend=F,annotations=list(x=0.5,y=-0.1,text=paste0("<i>","U.S. Energy Information Administration","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
+coal_cf_2014_piechart
+

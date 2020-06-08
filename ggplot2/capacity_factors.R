@@ -10,6 +10,7 @@ library(scales)
 library(eia)
 library(zoo)
 library(lubridate)
+library(plotly)
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))
@@ -265,4 +266,30 @@ theme_colors <- c("orange","white")
 coal_cf_2014_piechart <- plot_ly(mean_coal_cf_2014_data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="none",insidetextfont = list(color = 'white'),marker=list(colors=theme_colors),sort=F) %>%
   layout(title=list(text=title_name,x=0.55),showlegend=F,annotations=list(x=0.5,y=-0.1,text=paste0("<i>","U.S. Energy Information Administration","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
 coal_cf_2014_piechart
+
+
+#######Coal and Natural Gas Capacity Factors Over Time
+lf_coal_cf_and_gas_cf<- melt(capacity_factors[,.(date,coal_cf,natural_gas_cf)],id="date")
+coal_cf_and_gas_cf_over_time<-line_figure(lf_coal_cf_and_gas_cf, "Capacity Factor","Coal and Natural Gas Capacity Factors Over Time", annual=FALSE)
+coal_cf_and_gas_cf_over_time
+##need to add annotation
+
+
+lf_all_capacity_factors<-melt(capacity_factors[,.(date,biomass_cf,coal_cf,natural_gas_cf,nuclear_cf,petroleum_liquids_cf,hydroelctric_cf, wood_cf)],id="date")
+mean_coal_cf_2018<- capacity_factors[year(date)==2018,mean(coal_cf)]
+mean_biomass_cf_2018<- capacity_factors[year(date)==2018,mean(biomass_cf)]
+mean_natural_gas_cf_2018<- capacity_factors[year(date)==2018,mean(natural_gas_cf)]
+mean_nuclear_cf_2018<- capacity_factors[year(date)==2018,mean(nuclear_cf)]
+mean_petroleum_liquids_cf_2018<- capacity_factors[year(date)==2018,mean(petroleum_liquids_cf)]
+mean_hydroelctric_cf_2018<- capacity_factors[year(date)==2018,mean(hydroelctric_cf)]
+mean_wood_cf_2018<- capacity_factors[year(date)==2018,mean(wood_cf)]
+###data table excluding biomass bc value doesn't make sense
+mean_all_cf_2018_data_table<-data.table(year=2018,variable=c("coal", "natural gas","nuclear", "petroleum liquids", "hydroelectric","wood"),
+                                        value=c(mean_coal_cf_2018,mean_natural_gas_cf_2018,mean_nuclear_cf_2018,mean_petroleum_liquids_cf_2018,mean_hydroelctric_cf_2018,mean_wood_cf_2018))
+
+###bar graph of average capacity factor of all fuel types in 2018
+capicity_factors_2018_bar<-ggplot(data=mean_all_cf_2018_data_table, aes(x=variable, y=value)) +
+  geom_bar(stat="identity")+
+  xlab("Fuel Type")+ylab("Capacity Factor")+labs(title="Average Capacity Factor in 2018")
+capicity_factors_2018_bar
 

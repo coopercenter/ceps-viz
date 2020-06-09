@@ -4,6 +4,15 @@ library(here)
 library(data.table)
 library(RPostgreSQL)
 library(scales)
+library("maps") #contains state & county data
+library(sf)
+library(tidyr)
+library(dplyr)
+library(tools)
+library("rnaturalearth")
+library("rnaturalearthdata")
+library("rgeos")
+library(ggplot2)
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))
@@ -19,6 +28,10 @@ whole_electric_industry_capacity <- data.table(dbGetQuery(db,"select * from whol
 emissions_co2_by_source_va <- data.table(dbGetQuery(db, "select * from emissions_co2_by_source_va ;")) #units = thousand metric tons
 emissions_no_by_source_va <- data.table(dbGetQuery(db, "select * from emissions_no_by_source_va ;")) #units = short tons
 emissions_so2_by_source_va <- data.table(dbGetQuery(db, "select * from emissions_so2_by_source_va ;")) #units = short tons
+
+#load in energy equity data
+energy_burden_county_percent_income <- data.table(dbGetQuery(db,"select * from energy_burden_county_percent_income ;"))
+energy_burden_county_expenditures <- data.table(dbGetQuery(db,"select * from energy_burden_county_expenditures ;"))
 
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name
 fetch_time_series_from_db <- function(db_table_name, value_description, con){
@@ -372,6 +385,59 @@ carbon_by_fuel_emissions_stacked
 
 carbon_by_fuel_emissions_stacked_p <- ggplotly_wrapper(carbon_by_fuel_emissions_stacked)
 carbon_by_fuel_emissions_stacked_p 
+
+#----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
+#energy equity figures
+
+#getting citation information from metadata table
+expenditures_source <- metadata[db_table_name=="energy_burden_county_expenditures",data_source_full_name]
+percent_income_source <- metadata[db_table_name=="energy_burden_county_percent_income",data_source_full_name]
+
+counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
+va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
+
+va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
+
+#isolating just county energy equity data (as there are some cities listed as well)
+energy_burden_county_expenditures_counties <- energy_burden_county_expenditures[county %like% "County"]
+energy_burden_county_percent_income_counties <- energy_burden_county_percent_income[county %like% "County"]
+
+#adjusting county names to match format of other datasets
+va_counties$county <- paste(va_counties$county,"county")
+va_counties$county <- toTitleCase(va_counties$county)
+
+#merging county geospatial data with energy equity data
+va_energy_equity_by_county <- merge(va_counties,energy_burden_county_expenditures_counties,id="county",all=TRUE)
+va_energy_equity_by_county$avg_annual_energy_cost <- as.numeric(va_energy_equity_by_county$avg_annual_energy_cost)
+va_energy_equity_by_county <- merge(va_energy_equity_by_county,energy_burden_county_percent_income_counties,id="county",all=TRUE)
+va_energy_equity_by_county$avg_energy_burden_as_percent_income <- as.numeric(va_energy_equity_by_county$avg_energy_burden_as_percent_income) 
+
+world <- ne_countries(scale = "medium", returnclass = "sf") #to get outline outside of VA
+states <- st_as_sf(map("state", plot = FALSE, fill = TRUE)) #to get  state outline
+
+#energy burden map showing average energy expenditures by county
+va_avg_annual_energy_cost <- ggplot() +
+  geom_sf(data = world, fill = "antiquewhite1") +
+  geom_sf(data = va_energy_equity_by_county, aes(fill = avg_annual_energy_cost)) +
+  geom_sf(data = states, fill = NA) +
+  scale_fill_viridis_c(alpha = .6,name="Average Annual Energy Cost") + #setting alpha adds some transparency
+  coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
+  xlab("Longitude") + ylab("Latitude") +
+  labs(title = "VA Energy Burden", subtitle = "by County",caption = paste0("Source: ",expenditures_source)) +
+  theme(panel.background = element_rect(fill = "aliceblue"))
+va_avg_annual_energy_cost 
+
+#energy burden map showing average energy expenditures as percent of income by county
+va_avg_annual_energy_percent_exp <-  ggplot() +
+  geom_sf(data = world,fill = "antiquewhite1") +
+  geom_sf(data = va_energy_equity_by_county, aes(fill = avg_energy_burden_as_percent_income)) +
+  geom_sf(data = states, fill = NA) +
+  scale_fill_viridis_c(alpha = .6,name="Average Annual Energy Cost \nas Percentage of Income") + #setting alpha adds some transparency
+  coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE) +
+  xlab("Longitude") + ylab("Latitude") +
+  labs(title = "VA Energy Burden", subtitle = "by County", caption = paste0("Source: ",percent_income_source)) + 
+  theme(panel.background = element_rect(fill = "aliceblue"))
+va_avg_annual_energy_percent_exp
 
 #-----------------------------------------REFORMATTING DATASETS--------------------------------------------------------------------
 

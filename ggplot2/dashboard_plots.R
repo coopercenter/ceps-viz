@@ -423,7 +423,7 @@ va_avg_annual_energy_cost <- ggplot() +
   scale_fill_viridis_c(alpha = .6,name="Average Annual Energy Cost") + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
   xlab("Longitude") + ylab("Latitude") +
-  labs(title = "VA Energy Burden", subtitle = "by County",caption = paste0("Source: ",expenditures_source)) +
+  labs(title = "VA Energy Burden by County", subtitle = "For Households Below the Federal Poverty Level",caption = paste0("Source: ",expenditures_source)) +
   theme(panel.background = element_rect(fill = "aliceblue"))
 va_avg_annual_energy_cost 
 
@@ -435,7 +435,7 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
   scale_fill_viridis_c(alpha = .6,name="Average Annual Energy Cost \nas Percentage of Income") + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE) +
   xlab("Longitude") + ylab("Latitude") +
-  labs(title = "VA Energy Burden", subtitle = "by County", caption = paste0("Source: ",percent_income_source)) + 
+  labs(title = "VA Energy Burden by County", subtitle = "For Households Below the Federal Poverty Level", caption = paste0("Source: ",percent_income_source)) + 
   theme(panel.background = element_rect(fill = "aliceblue"))
 va_avg_annual_energy_percent_exp
 

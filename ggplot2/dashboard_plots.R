@@ -65,7 +65,9 @@ table_list = data.frame(
                "eia_seds_teicb_va_a",
                "eia_seds_teacb_va_a",
                "eia_emiss_co2_totv_ec_to_va_a",
-               "eia_emiss_co2_totv_tt_to_va_a"),
+               "eia_emiss_co2_totv_tt_to_va_a",
+               "eia_seds_tetcb_va_a",
+               "fred_vangsp"),
   value_name=c("coal",
                "oil",
                "gas",
@@ -81,7 +83,9 @@ table_list = data.frame(
                "industrial",
                "transportation",
                "electric_sector_CO2_emissions",
-               "total_CO2_emissions")
+               "total_CO2_emissions",
+               "total_consumption_billion_btu",
+               "GDP_million_usd")
 )
 table_list$value_name <- as.character(table_list$value_name)
 table_list$table_name <- as.character(table_list$table_name)
@@ -385,6 +389,21 @@ carbon_by_fuel_emissions_stacked
 
 carbon_by_fuel_emissions_stacked_p <- ggplotly_wrapper(carbon_by_fuel_emissions_stacked)
 carbon_by_fuel_emissions_stacked_p 
+
+#-----------------------------PLOTTING VA ELECTRICITY CONSUMPTION PER UNIT OF GDP--------------------------------------
+consumption_per_gdp <- merge(eia_seds_tetcb_va_a,fred_vangsp,id="year")
+consumption_per_gdp[,GDP_million_usd:=as.numeric(GDP_million_usd)]
+consumption_per_gdp[,consumption_per_GDP:=total_consumption_billion_btu/GDP_million_usd] #calculating consumption per GDP
+lf_consumption_per_GDP <- melt(consumption_per_gdp[year>=2000,.(year,consumption_per_GDP)],id="year") #reformatting so ready for input to function
+
+consumption_per_gdp_line <- line_figure(list(lf_consumption_per_GDP),
+                                        "year","Thousand Btu per Dollar","VA Electricity Consumption per unit GDP",
+                                        list("eia_seds_tetcb_va_a","fred_vangsp"),
+                                        return_static = F, modifications = theme(legend.position = "none"))
+consumption_per_gdp_line
+
+consumption_per_gdp_line_p <- ggplotly_wrapper(consumption_per_gdp_line,line_figure = T)
+consumption_per_gdp_line_p
 
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
 #energy equity figures

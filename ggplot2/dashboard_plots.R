@@ -143,6 +143,26 @@ wood_generation_time_series_line
 wood_generation_time_series_line_p <- ggplotly_wrapper(wood_generation_time_series_line,line_figure = T)
 wood_generation_time_series_line_p
 
+# Projected wind generation overtime
+wind_projected_generation_time_series_line <- line_figure(list(melt(total_production_forecast_offshore_wind,id="Year")),
+                                                          "Year","GWh","Annual VA Offshore Wind Energy Generation",
+                                                          list("total_production_forecast_offshore_wind"),
+                                                          return_static = F, modifications = theme(legend.position = "none"), subtitle_description = "Forecast")
+wind_projected_generation_time_series_line
+
+wind_projected_generation_time_series_line_p <- ggplotly_wrapper(wind_projected_generation_time_series_line,line_figure = T)
+wind_projected_generation_time_series_line_p
+
+# Projected wind capacity
+wind_projected_capacity_line <- line_figure(list(melt(total_mw_offshore_wind,id="Year")),
+                                            "Year","MW","VA Offshore Wind Capacity",
+                                            list("total_mw_offshore_wind"),
+                                            return_static = F, subtitle_description = "Forecast")
+wind_projected_capacity_line
+
+wind_projected_capacity_line_p <- ggplotly_wrapper(wind_projected_capacity_line, line_figure = T)
+wind_projected_capacity_line_p
+
 #Stacked Annual Carbon Free Generation Broken Out by Type
 carbon_free_generation_by_type_stacked <- stacked_area_figure(list(eia_elec_gen_nuc_va_99_a,eia_elec_gen_sun_va_99_a,eia_elec_gen_dpv_va_99_a,eia_elec_gen_hyc_va_99_a),
                                                               "year","GWh","Annual VA Generation by Carbon-Free Sources",

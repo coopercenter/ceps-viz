@@ -30,6 +30,10 @@ emissions_so2_by_source_va <- data.table(dbGetQuery(db, "select * from emissions
 energy_burden_county_percent_income <- data.table(dbGetQuery(db,"select * from energy_burden_county_percent_income ;"))
 energy_burden_county_expenditures <- data.table(dbGetQuery(db,"select * from energy_burden_county_expenditures ;"))
 
+#load in offshore wind projections
+total_mw_offshore_wind <- data.table(dbGetQuery(db,"select * from total_mw_offshore_wind ;"))
+total_production_forecast_offshore_wind <- data.table(dbGetQuery(db,"select * from total_production_forecast_offshore_wind ;"))
+
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name
 fetch_time_series_from_db <- function(db_table_name, value_description, con){
   library(RPostgreSQL)

@@ -54,10 +54,11 @@ coal_cf_2014_piechart
 
 #######Coal and Natural Gas Capacity Factors Over Time
 lf_coal_cf_and_gas_cf<- melt(capacity_factors[,.(date,coal_cf,natural_gas_cf)],id="date")
-coal_cf_and_gas_cf_over_time<-line_figure(lf_coal_cf_and_gas_cf, "Capacity Factor","Coal and Natural Gas Capacity Factors Over Time",annual=FALSE)
+coal_cf_and_gas_cf_over_time<-line_figure(list(lf_coal_cf_and_gas_cf),"date","Capacity Factor","Coal and Natural Gas Capacity Factors Over Time",
+                        list("eia_elec_gen_cow_va_99_m","eia_elec_gen_ng_va_99_m"),return_static = F)
 coal_cf_and_gas_cf_over_time
 coal_cf_and_gas_cf_over_time_p<- ggplotly_wrapper(coal_cf_and_gas_cf_over_time)
-
+coal_cf_and_gas_cf_over_time_p
 ####Coal and Natural Gas Capacity Factors Over Time Faceted
 coal_cf_and_gas_cf_over_time+facet_grid(rows=vars(variable))
 

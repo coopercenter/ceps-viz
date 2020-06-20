@@ -60,6 +60,9 @@ for(row in 1:nrow(series_list)){
   {all_generation <-  merge(all_generation, dt[], by ="date", all=TRUE)}
 }
 
+###load in offshore wind
+net_capacity_factor_offshore_wind <- data.table(dbGetQuery(db,"select * from net_capacity_factor_offshore_wind ;"))
+
 dbDisconnect(db)
 
 #reformatting column names in generator data & creating date_online variable for each generator with generator_clean function
@@ -185,5 +188,30 @@ capacity_factors[,`:=`(biomass_cf=other_biomass_gen_gwh/(other_waste_biomass_mw/
                        hydroelctric_cf=conventional_hydroelectric_gen_gwh/(conventional_hydroelectric_mw/1000*24*days_in_month)*100,
                        wood_cf=wood_gen_gwh/(wood_wood_waste_biomass_mw/1000*24*days_in_month)*100)]
 
+####mean capacity factor of coal
+mean_coal_cf_2019<- capacity_factors[year(date)==2019,mean(coal_cf)]
+mean_coal_cf_2014<- capacity_factors[year(date)==2014,mean(coal_cf)]
 
+####data tables for coal
+mean_coal_cf_2019_data_table<-data.table(year=2019,variable=c("coal", " "),value=c(mean_coal_cf_2019, 100-mean_coal_cf_2019))
+mean_coal_cf_2014_data_table<-data.table(year=2014,variable=c("coal", " "),value=c(mean_coal_cf_2014, 100-mean_coal_cf_2014))
+
+#######Coal and Natural Gas Capacity Factors Over Time
+lf_coal_cf_and_gas_cf<- melt(capacity_factors[,.(date,coal_cf,natural_gas_cf)],id="date")
+
+######means of all capacity factors in 2019
+lf_all_capacity_factors<-melt(capacity_factors[,.(date,biomass_cf,coal_cf,natural_gas_cf,nuclear_cf,petroleum_liquids_cf,hydroelctric_cf, wood_cf)],id="date")
+mean_coal_cf_2019<- capacity_factors[year(date)==2019,mean(coal_cf)]
+mean_biomass_cf_2019<- capacity_factors[year(date)==2019,mean(biomass_cf)]
+mean_natural_gas_cf_2019<- capacity_factors[year(date)==2019,mean(natural_gas_cf)]
+mean_nuclear_cf_2019<- capacity_factors[year(date)==2019,mean(nuclear_cf)]
+mean_petroleum_liquids_cf_2019<- capacity_factors[year(date)==2019,mean(petroleum_liquids_cf)]
+mean_hydroelctric_cf_2019<- capacity_factors[year(date)==2019,mean(hydroelctric_cf)]
+mean_wood_cf_2019<- capacity_factors[year(date)==2019,mean(wood_cf)]
+###data table excluding biomass bc value doesn't make sense
+mean_all_cf_2019_data_table<-data.table(year=2019,variable=c("coal", "natural gas","nuclear", "petroleum liquids", "hydroelectric","wood","wind"),
+                                        value=c(mean_coal_cf_2019,mean_natural_gas_cf_2019,mean_nuclear_cf_2019,mean_petroleum_liquids_cf_2019,mean_hydroelctric_cf_2019,mean_wood_cf_2019,44.8))
+
+###Offshore wind net capacity factors over time
+lf_net_cf_offshore_wind<- melt(net_capacity_factor_offshore_wind[,.(Year,Pilot,Stage_I,Stage_II,Stage_III)],id="Year")
 

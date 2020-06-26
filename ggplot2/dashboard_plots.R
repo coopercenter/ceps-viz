@@ -29,8 +29,7 @@ single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"
 single_ring_carbon_free_donut_p
 
 #plotting donut figure of progess towards wind and solar capacity goals-----------------------------------------------------------------------------------------
-#below is a placeholder for solar and wind progress donut while we wait to hopefully get more data on solar nameplate from DMME
-solar_capacity_2019_mw = pjm_solar[status=="In Service",sum(mfo)] #currently only solar in service, no wind
+solar_capacity_2019_mw = pjm_solar_working[status=="In Service",sum(mfo)] #currently only solar in service, no wind
 sw_capacity_2024_mw_goal = 16100 #16,100 MW of solar and onshore wind by January 1, 2024 (from VCEA Summary 3.0)
 
 sw_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
@@ -39,6 +38,15 @@ sw_ring = data.frame(category=c("additional capacity necessary to reach goal","2
 single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity","701.4 MW of Solar Capacity as of 2019","Goal: 16,100 MW of Onshore Wind & Solar Capacity by 2024","label+value",c("indianred","maroon"),list("pjm_solar","pjm_wind"))
 single_ring_sw_capacity_donut_p
 
+#plotting donut figure of progress towards storage capacity
+storage_capacity_2019_mw = pjm_storage_working[status=="In Service",sum(mfo)]
+storage_capacity_2035_mw_goal = 3100
+
+storage_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
+                          value=c(storage_capacity_2035_mw_goal-storage_capacity_2019_mw,storage_capacity_2019_mw))
+
+single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","4 MW of Storage Capacity as of 2019","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("lavender","plum"),list("pjm_solar","pjm_wind"))
+single_ring_storage_capacity_donut_p
 #--------------------------------------------PLOTTING GENERATION/PRODUCTION FIGURES----------------------------------------------------------------
 
 va_annual_production_area <- stacked_area_figure(list(eia_elec_gen_cow_va_99_a,eia_elec_gen_pel_va_99_a,eia_elec_gen_ng_va_99_a,eia_elec_gen_nuc_va_99_a,eia_elec_gen_sun_va_99_a,eia_elec_gen_dpv_va_99_a,eia_elec_gen_hyc_va_99_a,eia_elec_gen_www_va_99_a,eia_elec_gen_was_va_99_a,other_annual_generation),
@@ -202,52 +210,70 @@ renewable_and_carbon_free_line
 renewable_and_carbon_free_line_p <- ggplotly_wrapper(renewable_and_carbon_free_line,line_figure = T)
 renewable_and_carbon_free_line_p
 
-#--------------------------PLOTTING WIND AND SOLAR PROJECTED CAPACITY ADDITIONS----------------------------------
+#--------------------------PLOTTING WIND AND SOLAR PROJECTED CAPACITY ADDITIONS (AND STORAGE)----------------------------------
 
 apco_dom_target_vs_projected_capacity <- line_figure(list(lf_apco_dom_onwind_and_solar[date<='2040-01-01']),
-                                                     "date","Capacity (MW)", "Appalachian Power & Dominion Onshore Wind and Solar",
+                                                     "date","Capacity (MW)", "Appalachian Power & Dominion Utility Onshore Wind and Solar",
                                                      list("pjm_solar","pjm_wind","VCEA_onshore_wind_solar"),
-                                                     return_static = F, subtitle_description = "Current and Projected Capacity vs VCEA Target Capacity")
+                                                     return_static = F, subtitle_description = "Current and Projected Capacity vs VCEA Target Capacity",x_label = "Date")
 apco_dom_target_vs_projected_capacity
 
 apco_dom_target_vs_projected_capacity_p <- ggplotly_wrapper(apco_dom_target_vs_projected_capacity,line_figure = T)
 apco_dom_target_vs_projected_capacity_p
 
 apco_dom_projected_capacity <- line_figure(list(lf_apco_dom_onwind_and_solar[variable!="target_apco_onshore_wind_and_solar"&variable!="target_dom_onshore_wind_and_solar"&date<"2024-01-01"]),
-                                        "date","Capacity (MW)", "Appalachian Power & Dominion Onshore Wind and Solar",
+                                        "date","Capacity (MW)", "Appalachian Power & Dominion Utility Onshore Wind and Solar",
                                         list("pjm_solar","pjm_wind"),
-                                        return_static = F,subtitle_description = "Current and Projected Capacity")
+                                        return_static = F,subtitle_description = "Current and Projected Capacity",x_label = "Date")
 apco_dom_projected_capacity
 
 apco_dom_projected_capacity_p <- ggplotly_wrapper(apco_dom_projected_capacity, line_figure = T)
 apco_dom_projected_capacity_p
 
 apco_dom_target_capacity <- line_figure(list(melt(VCEA_onshore_wind_solar[,.(year,target_apco_onshore_wind_and_solar,target_dom_onshore_wind_and_solar)],id="year")),
-                                        "year","Capacity (MW)", "Appalachian Power & Dominion Onshore Wind and Solar",
+                                        "year","Capacity (MW)", "Appalachian Power & Dominion Utility Onshore Wind and Solar",
                                         list("VCEA_onshore_wind_solar"),
-                                        return_static = F,subtitle_description = "VCEA Target Capacity")
+                                        return_static = F,subtitle_description = "VCEA Target Capacity",x_label = "Year")
 apco_dom_target_capacity
 
 apco_dom_target_capacity_p <- ggplotly_wrapper(apco_dom_target_capacity, line_figure = T)
 apco_dom_target_capacity_p
 
 on_off_wind_solar_line <- line_figure(list(lf_wind_and_solar_capacity_projections),
-                                      "date","Capacity (MW)","Virginia Current and Projected Wind and Solar Capacity",
+                                      "date","Capacity (MW)","Virginia Current and Projected Utility Wind and Solar Capacity",
                                       list("pjm_wind","pjm_solar"),
-                                      return_static = F)
+                                      return_static = F,x_label = "Date")
 on_off_wind_solar_line
 
 on_off_wind_solar_line_p <- ggplotly_wrapper(on_off_wind_solar_line,line_figure = T)
 on_off_wind_solar_line_p
 
 on_off_wind_solar_area <- stacked_area_figure(list(lf_wind_and_solar_capacity_projections),
-                                              "date","Capacity (MW)","Virginia Current and Projected Wind and Solar Capacity",
+                                              "date","Capacity (MW)","Virginia Current and Projected Utility Wind and Solar Capacity",
                                               list("pjm_wind","pjm_solar"),
-                                              return_static = F)
+                                              return_static = F,x_label = "Date")
 on_off_wind_solar_area
 
 on_off_wind_solar_area_p <- ggplotly_wrapper(on_off_wind_solar_area)
 on_off_wind_solar_area_p
+
+dominion_offshore_wind_projected_capacity <- line_figure(list(lf_wind_and_solar_capacity_projections[variable=="offshore_wind"&date>='2023-12-15']),
+                                                         "date","Capacity (MW)","Dominion Projected Offshore Wind Capacity",
+                                                         list("pjm_wind","VCEA_onshore_wind_solar"),
+                                                         return_static = F,x_label="Date",subtitle_description = "Note: VCEA requires Dominion to develop 5,200 MW of offshore wind by 2034",modifications = theme(legend.position = "none"))
+dominion_offshore_wind_projected_capacity
+
+dominion_offshore_wind_projected_capacity_p <- ggplotly_wrapper(dominion_offshore_wind_projected_capacity,line_figure = T)
+dominion_offshore_wind_projected_capacity_p
+
+storage_projected_capacity_line <-line_figure(list(lf_storage_capacity_projections),
+                                              "date","Capacity (MW)","Virginia Current and Projected Utility Storage Capacity",
+                                              list("pjm_storage"),
+                                              return_static = F,modifications = theme(legend.position = "none"),x_label = "Date")
+storage_projected_capacity_line
+
+storage_projected_capacity_line_p <- ggplotly_wrapper(storage_projected_capacity_line,line_figure = T)
+storage_projected_capacity_line_p
 
 #--------------------------------PLOTTING EMISSIONS FIGURES--------------------------------------------------------
 
@@ -285,7 +311,7 @@ carbon_by_fuel_emissions_stacked_p
 #-------------------------------------PLOTTING ENERGY EFFICIENCY FIGURES--------------------------------------
 
 consumption_per_gdp_line <- line_figure(list(melt(energy_consumption_per_unit_gdp_va,id="year")),
-                                        "year","Consumption per GDP (Btu/$)","VA Electricity Consumption per unit GDP",
+                                        "year","Consumption per GDP (Btu/$)","Virginia Electricity Consumption per GDP",
                                         list("fred_vangsp","eia_seds_tetcb_va_a"), #for now, may change to derived values table name at some point 
                                         return_static = F, modifications = theme(legend.position = "none"))
 consumption_per_gdp_line
@@ -294,13 +320,31 @@ consumption_per_gdp_line_p <- ggplotly_wrapper(consumption_per_gdp_line,line_fig
 consumption_per_gdp_line_p
 
 consumption_per_capita_line <- line_figure(list(melt(energy_consumption_per_capita_va,id="year")),
-                                           "year","Consumption per Capita (Thousand Btu/Person)","VA Electricity Consumption per Capita",
+                                           "year","Consumption per Capita (Billion Btu/Person)","Virginia Electricity Consumption per Capita",
                                            list("residential_population_va","eia_seds_tetcb_va_a"), #for now, may change to derived values table names at some point 
                                            return_static = F, modifications = theme(legend.position = "none"))
 consumption_per_capita_line
 
 consumption_per_capita_line_p <- ggplotly_wrapper(consumption_per_capita_line,line_figure = T)
 consumption_per_capita_line_p
+
+emissions_per_gdp_line <- line_figure(list(melt(co2_emission_per_thousand_dollars_of_gdp_va,id="year")),
+                                      "year","Emissions per GDP (Metric Tons/Thousand $)","Virginia CO2 Emissions per GDP",
+                                      list("co2_emission_per_thousand_dollars_of_gdp_va"),
+                                      return_static=F,modifications = theme(legend.position = "none"))
+emissions_per_gdp_line
+
+emissions_per_gdp_line_p <- ggplotly_wrapper(emissions_per_gdp_line,line_figure = T)
+emissions_per_gdp_line_p
+
+emissions_per_capita_line <- line_figure(list(melt(co2_emission_per_capita_va,id="year")),
+                                      "year","Emissions per Capita (Metric Tons/Person)","Virginia CO2 Emissions per Capita",
+                                      list("co2_emission_per_capita_va"),
+                                      return_static=F,modifications = theme(legend.position = "none"))
+emissions_per_capita_line
+
+emissions_per_capita_line_p <- ggplotly_wrapper(emissions_per_capita_line,line_figure = T)
+emissions_per_capita_line_p
 
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
 #energy equity figures
@@ -339,13 +383,15 @@ va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = NULL
   layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>")),
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=15)),
          yaxis=list(titlefont=list(size=15)))%>%
-  config(displaylogo = FALSE)
+  config(displaylogo = FALSE,
+         modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_cost_p
 
 va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = NULL) %>%
   layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>")),
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=15)),
          yaxis=list(titlefont=list(size=15)))%>%
-  config(displaylogo = FALSE)
+  config(displaylogo = FALSE,
+         modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_percent_exp_p
 

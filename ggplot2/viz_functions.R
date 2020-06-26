@@ -48,7 +48,8 @@ single_ring_donut_figure_p <- function(data_table,description_of_goal,top_descri
     layout(title=list(text=top_description,font = list(color="black",size = 14),x=0.55),showlegend = F) %>%
     add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "black",size = 14)) %>%
     add_annotations(x=0.5,y=-0.11,text=paste0(bottom_description,"<br>","<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,font = list(color = "black",size = 14))%>%
-    config(displaylogo = FALSE)
+    config(displaylogo = FALSE,
+           modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d"))
   figure
   
   return(figure)
@@ -95,6 +96,8 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
   lf_working_table[,variable:=gsub("ros","Rest of state",variable)]
+  lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
+  lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   #building source citation if no source citation is given as an input
@@ -131,13 +134,15 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
       layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper'),
              showlegend=F,
              annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=15)))%>%
-      config(displaylogo = FALSE) 
+      config(displaylogo = FALSE,
+             modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d")) 
   }
   else{
     figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
       layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper'),
              annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=15)))%>%
-      config(displaylogo = FALSE)
+      config(displaylogo = FALSE,
+             modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d"))
   }
   return(figure)
 }
@@ -154,7 +159,8 @@ ggplotly_wrapper <- function(list,line_figure=FALSE){
       layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
              xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>"),titlefont=list(size=15)),
              yaxis=list(titlefont=list(size=15)))%>%
-      config(displaylogo = FALSE)
+      config(displaylogo = FALSE,
+             modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d"))
     #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
     #subtitle is built into second line of title
   }
@@ -163,7 +169,8 @@ ggplotly_wrapper <- function(list,line_figure=FALSE){
       layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
              xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>"),titlefont=list(size=15)),
              yaxis=list(titlefont=list(size=15)))%>%
-      config(displaylogo = FALSE)
+      config(displaylogo = FALSE,
+             modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d"))
   }
   return(figure_p)
 }
@@ -212,6 +219,8 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
   lf_working_table[,variable:=gsub("ros","Rest of State",variable)]
+  lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
+  lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   setnames(lf_working_table,merge_variable,"x_unit")
@@ -301,6 +310,8 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
   lf_working_table[,variable:=gsub("ros","Rest of State",variable)]
+  lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
+  lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   setnames(lf_working_table,merge_variable,"x_unit")

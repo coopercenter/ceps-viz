@@ -36,6 +36,8 @@ energy_burden_county_expenditures <- data.table(dbGetQuery(db,"select * from ene
 #load in energy efficiency data
 energy_consumption_per_capita_va <- data.table(dbGetQuery(db,"select * from energy_consumption_per_capita_va ;"))
 energy_consumption_per_unit_gdp_va <- data.table(dbGetQuery(db,"select * from energy_consumption_per_unit_gdp_va ;"))
+co2_emission_per_capita_va <- data.table(dbGetQuery(db,"select * from co2_emission_per_capita_va ;"))
+co2_emission_per_thousand_dollars_of_gdp_va <- data.table(dbGetQuery(db,"select * from co2_emission_per_thousand_dollars_of_gdp_va ;"))
 
 #load in offshore wind projections
 total_mw_offshore_wind <- data.table(dbGetQuery(db,"select * from total_mw_offshore_wind ;"))
@@ -176,29 +178,31 @@ va_annual_renewable_and_carbon_free_gen[,not_renewable:=total-renewable]
 va_annual_renewable_and_carbon_free_gen[,carbon_emitting:=total-carbon_free]
 
 # Solar & Wind Capacity vs VCEA goals -----------------------------------------------------------------------
-pjm_solar_names <- names(pjm_solar)
+# Creating working versions to keep formatting of tables intact when they are uploaded to dashboard
+pjm_solar_working <- pjm_solar
+pjm_solar_names <- names(pjm_solar_working)
 pjm_solar_good_names <- tolower(gsub(" ","_", pjm_solar_names))
-names(pjm_solar) <- pjm_solar_good_names 
+names(pjm_solar_working) <- pjm_solar_good_names 
 
-pjm_wind_names <- names(pjm_wind)
+pjm_wind_working <- pjm_wind
+pjm_wind_names <- names(pjm_wind_working)
 pjm_wind_good_names <- tolower(gsub(" ","_", pjm_wind_names))
-names(pjm_wind) <- pjm_wind_good_names 
+names(pjm_wind_working) <- pjm_wind_good_names 
 
-pjm_wind[,projected_in_service_date:=as.Date(projected_in_service_date,"%m/%d/%Y")]
-pjm_solar[,projected_in_service_date:=as.Date(projected_in_service_date,"%m/%d/%Y")]
-pjm_solar[,actual_in_service_date:=as.Date(actual_in_service_date,"%m/%d/%Y")]
-pjm_solar[,revised_in_service_date:=as.Date(revised_in_service_date,"%m/%d/%Y")]
+pjm_wind_working[,projected_in_service_date:=as.Date(projected_in_service_date,"%m/%d/%Y")]
+pjm_solar_working[,projected_in_service_date:=as.Date(projected_in_service_date,"%m/%d/%Y")]
+pjm_solar_working[,actual_in_service_date:=as.Date(actual_in_service_date,"%m/%d/%Y")]
 
 VCEA_onshore_wind_solar[,date:=as.Date(paste0(year,"-01-01"))]
 VCEA_onshore_wind_solar[year>=2023,apco_onshore_wind_and_solar_mw:=na.locf(apco_onshore_wind_and_solar_mw)] #filling in goals between benchmark years
 VCEA_onshore_wind_solar[year>=2024,dominion_onshore_wind_and_solar_mw:=na.locf(dominion_onshore_wind_and_solar_mw)] #filling in goals between benchmark years
 setnames(VCEA_onshore_wind_solar,old=c("apco_onshore_wind_and_solar_mw","dominion_onshore_wind_and_solar_mw"),new=c("target_apco_onshore_wind_and_solar","target_dom_onshore_wind_and_solar"))
 
-apco_dom_onwind_and_solar <- pjm_wind[transmission_owner=="AEP",.(date=projected_in_service_date,apco_onshore_wind=mfo)] #AEP is owner of APCO
+apco_dom_onwind_and_solar <- pjm_wind_working[transmission_owner=="AEP",.(date=projected_in_service_date,apco_onshore_wind=mfo)] #AEP is owner of APCO
 #note: Dominion currently only has offshore wind in development
-apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar[transmission_owner=="AEP",.(date=projected_in_service_date,apco_solar=mfo)],id="date",all=TRUE) #APCO has no in service solar plant
-apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar[transmission_owner=="Dominion"&status=="In Service",.(date=actual_in_service_date,dom_solar=mfo)],by="date",all=TRUE,allow.cartesian=TRUE)
-apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar[transmission_owner=="Dominion"&status=="Active",.(date=projected_in_service_date,dom_solar=mfo)],by=c("date","dom_solar"),all=TRUE,allow.cartesian=TRUE)
+apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar_working[transmission_owner=="AEP",.(date=projected_in_service_date,apco_solar=mfo)],id="date",all=TRUE) #APCO has no in service solar plant
+apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar_working[transmission_owner=="Dominion"&status=="In Service",.(date=actual_in_service_date,dom_solar=mfo)],by="date",all=TRUE,allow.cartesian=TRUE)
+apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar_working[transmission_owner=="Dominion"&status=="Active",.(date=projected_in_service_date,dom_solar=mfo)],by=c("date","dom_solar"),all=TRUE,allow.cartesian=TRUE)
 
 apco_dom_onwind_and_solar <- apco_dom_onwind_and_solar[,.(date=first(date),
                                                           apco_onshore_wind=sum(apco_onshore_wind,na.rm=T),
@@ -223,10 +227,10 @@ apco_dom_onwind_and_solar[apco_dom_onwind_and_solar==0]=NA #making 0 values NA f
 
 lf_apco_dom_onwind_and_solar <- melt(apco_dom_onwind_and_solar,id="date")
 
-wind_and_solar_capacity_projections <- pjm_wind[fuel=="Wind",.(date=projected_in_service_date,onshore_wind=mfo)] 
-wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections,pjm_wind[fuel=="Offshore Wind",.(date=projected_in_service_date,offshore_wind=mfo)],by="date",all=T)
-wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections,pjm_solar[status=="In Service",.(date=actual_in_service_date,solar=mfo)],by="date",all=T)
-wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections,pjm_solar[status!="In Service",.(date=projected_in_service_date,solar=mfo)],by=c("date","solar"),all=T)
+wind_and_solar_capacity_projections <- pjm_wind_working[fuel=="Wind",.(date=projected_in_service_date,onshore_wind=mfo)] 
+wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections,pjm_wind_working[fuel=="Offshore Wind",.(date=projected_in_service_date,offshore_wind=mfo)],by="date",all=T)
+wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections,pjm_solar_working[status=="In Service",.(date=actual_in_service_date,solar=mfo)],by="date",all=T)
+wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections,pjm_solar_working[status!="In Service",.(date=projected_in_service_date,solar=mfo)],by=c("date","solar"),all=T)
 
 wind_and_solar_capacity_projections <- wind_and_solar_capacity_projections[,.(date=first(date),
                                                                               onshore_wind=sum(onshore_wind,na.rm = T),
@@ -241,6 +245,23 @@ wind_and_solar_capacity_projections <- wind_and_solar_capacity_projections[,.(da
 wind_and_solar_capacity_projections[wind_and_solar_capacity_projections==0]=NA #making 0 values NA for graphing purposes
 
 lf_wind_and_solar_capacity_projections <-melt(wind_and_solar_capacity_projections,id="date")
+
+#Energy Storage
+pjm_storage_working <- pjm_storage
+pjm_storage_names <- names(pjm_storage_working)
+pjm_storage_good_names <- tolower(gsub(" ","_", pjm_storage_names))
+names(pjm_storage_working) <- pjm_storage_good_names 
+
+pjm_storage_working[,projected_in_service_date:=as.Date(projected_in_service_date,"%m/%d/%Y")]
+pjm_storage_working[,actual_in_service_date:=as.Date(actual_in_service_date,"%m/%d/%Y")]
+
+storage_capacity_projections <- pjm_storage_working[status=="In Service",.(date=actual_in_service_date,storage=mfo)]
+storage_capacity_projections <- merge(storage_capacity_projections,pjm_storage_working[status=="Active",.(date=projected_in_service_date,storage=mfo)],by=c("date","storage"),all=T)
+
+storage_capacity_projections <- storage_capacity_projections[,.(storage=sum(storage)),by=date]
+storage_capacity_projections <- storage_capacity_projections[,.(date,storage=cumsum(storage))]
+
+lf_storage_capacity_projections <- melt(storage_capacity_projections,id="date")
 
 # For energy equity figures------------------------------------------------------------------------------------------------
 #getting citation information from metadata table

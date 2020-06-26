@@ -12,6 +12,7 @@ library("rgeos")
 library(ggplot2)
 library(zoo)
 library(lubridate)
+library("Hmisc")
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))
@@ -295,6 +296,9 @@ states <- st_as_sf(map("state", plot = FALSE, fill = TRUE)) #to get  state outli
 # reformatting the generation dataset
 va_gen_w_commas<-data.frame(format(va_annual_generation[,2:12],big.mark=",",scientific=FALSE,trim=TRUE))
 va_gen_w_commas<-cbind(va_annual_generation[,1],va_gen_w_commas)
+gen_names <- names(va_gen_w_commas)
+good_gen_names <- capitalize(gsub("_"," ", gen_names))
+names(va_gen_w_commas) <- good_gen_names
 
 # reformatting the consumption dataset
 consumption_by_sector_list <- list(eia_seds_tercb_va_a,eia_seds_teccb_va_a,eia_seds_teicb_va_a,eia_seds_teacb_va_a)

@@ -47,7 +47,7 @@ single_ring_donut_figure_p <- function(data_table,description_of_goal,top_descri
                         line=list(color="white",width=1))) %>%
     layout(title=list(text=top_description,font = list(color="black",size = 14),x=0.55),showlegend = F) %>%
     add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "black",size = 14)) %>%
-    add_annotations(x=0.5,y=-0.11,text=paste0(bottom_description,"<br>","<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,font = list(color = "black",size = 14))%>%
+    add_annotations(x=0.5,y=-0.13,text=paste0(bottom_description,"<br>","<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,font = list(color = "black",size = 14))%>%
     config(displaylogo = FALSE,
            modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d"))
   figure
@@ -131,16 +131,16 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   
   if (legend_shown==FALSE){
     figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
-      layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper'),
+      layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper',font=list(size=15)),
              showlegend=F,
-             annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=15)))%>%
+             annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=14)))%>%
       config(displaylogo = FALSE,
              modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d")) 
   }
   else{
     figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
-      layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper'),
-             annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=15)))%>%
+      layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper',font=list(size=15)),
+             annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=14)))%>%
       config(displaylogo = FALSE,
              modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d"))
   }
@@ -148,30 +148,21 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
 }
 
 #function to wrap ggplot objects produced from line plot and stacked area functions with ggplotly & add data citations:
-ggplotly_wrapper <- function(list,line_figure=FALSE){
+ggplotly_wrapper <- function(list){
   #list should be list output from ggplot functions, which includes ggplot figure (figure), x label name (x_label), and data citation (source_description)
   #line_figure defaults to FALSE, but should be set as TRUE if the figure is a line plot to avoid duplicate hover info on plotly figure
   
   library(plotly)
   
-  if(line_figure==TRUE){
-    figure_p <- ggplotly(list$figure,tooltip=c("x","y","colour")) %>%
-      layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
-             xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>"),titlefont=list(size=15)),
-             yaxis=list(titlefont=list(size=15)))%>%
-      config(displaylogo = FALSE,
-             modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d"))
+  figure_p <- ggplotly(list$figure,tooltip="text") %>%
+    layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>"),font=list(size=15)),
+           xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>"),titlefont=list(size=14)),
+           yaxis=list(title = list$y_label,titlefont=list(size=14)))%>%
+    config(displaylogo = FALSE,
+           modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d"))
     #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
     #subtitle is built into second line of title
-  }
-  else{
-    figure_p <- ggplotly(list$figure) %>%
-      layout(title = list(text=paste0(list$title_name,"<br>","<sup>",list$subtitle_description,"</sup>")),
-             xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>"),titlefont=list(size=15)),
-             yaxis=list(titlefont=list(size=15)))%>%
-      config(displaylogo = FALSE,
-             modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d"))
-  }
+  
   return(figure_p)
 }
 
@@ -251,14 +242,14 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   {source_description <- source_citation}
   
   figure <- ggplot(lf_working_table,aes(x=x_unit,y=value,fill=variable)) +
-    geom_area() + 
+    geom_area(aes(group=variable,text=paste0(x_label,": ",x_unit,"\n","Value: ",value,"\n","Variable: ",variable))) + 
     ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
     labs(title=title_name,subtitle=subtitle_description,caption=source_description) +
     scale_fill_discrete(name=NULL) +
     modifications
   figure
   
-  return_list <- list(figure=figure,x_label=x_label,source_description=source_description,title_name=title_name,subtitle_description=subtitle_description)
+  return_list <- list(figure=figure,x_label=x_label,source_description=source_description,title_name=title_name,subtitle_description=subtitle_description,y_label=value_unit)
   
   if(return_static==TRUE)
   {return(figure)}
@@ -342,7 +333,7 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   {source_description <- source_citation}
   
   figure <- ggplot(lf_working_table, aes(x=x_unit,y=value,color=variable,shape=variable)) +
-    geom_line() + 
+    geom_line(aes(group=variable,text=paste0(x_label,": ",x_unit,"\n","Value: ",value,"\n","Variable: ",variable))) + 
     ylab(value_unit) + xlab(x_label) + ylim(lower_limit,upper_limit) +
     labs(title=title_name,subtitle=subtitle_description,caption=source_description) +
     scale_color_discrete(name=NULL)+
@@ -350,7 +341,7 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
     modifications
   figure
   
-  return_list <- list(figure=figure,x_label=x_label,source_description=source_description,title_name=title_name,subtitle_description=subtitle_description)
+  return_list <- list(figure=figure,x_label=x_label,source_description=source_description,title_name=title_name,subtitle_description=subtitle_description,y_label=value_unit)
   
   if(return_static==TRUE)
   {return(figure)}

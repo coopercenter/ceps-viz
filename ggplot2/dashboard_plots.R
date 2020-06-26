@@ -380,17 +380,17 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
 va_avg_annual_energy_percent_exp
 
 va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = NULL) %>%
-  layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=18)),
+  layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=15)),
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
-         yaxis=list(titlefont=list(size=15)))%>%
+         yaxis=list(title="Latitude",titlefont=list(size=14)))%>%
   config(displaylogo = FALSE,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_cost_p
 
 va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = NULL) %>%
-  layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=18)),
+  layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=15)),
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
-         yaxis=list(titlefont=list(size=15)))%>%
+         yaxis=list(title="Latitude",titlefont=list(size=14)))%>%
   config(displaylogo = FALSE,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_percent_exp_p

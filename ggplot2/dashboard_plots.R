@@ -101,7 +101,7 @@ percent_renewable_and_carbon_free_line <- line_figure(list(lf_percent_renewable_
                                                       return_static = F)
 percent_renewable_and_carbon_free_line
 
-percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line,line_figure = T)
+percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line)
 percent_renewable_and_carbon_free_line_p
 
 # Solar, Hydro, and Nuclear Generation over Time
@@ -111,7 +111,7 @@ annual_carbon_free_generation_by_type_line <- line_figure(list(eia_elec_gen_nuc_
                                                           return_static = F)
 annual_carbon_free_generation_by_type_line
 
-annual_carbon_free_generation_by_type_line_p <- ggplotly_wrapper(annual_carbon_free_generation_by_type_line,line_figure = T)
+annual_carbon_free_generation_by_type_line_p <- ggplotly_wrapper(annual_carbon_free_generation_by_type_line)
 annual_carbon_free_generation_by_type_line_p
 
 # Solar (broken into distributed and utility) over time
@@ -121,7 +121,7 @@ solar_generation_time_series_line <- line_figure(list(eia_elec_gen_sun_va_99_a[u
                                                  return_static = F)
 solar_generation_time_series_line
 
-solar_generation_time_series_line_p <- ggplotly_wrapper(solar_generation_time_series_line,line_figure = T)
+solar_generation_time_series_line_p <- ggplotly_wrapper(solar_generation_time_series_line)
 solar_generation_time_series_line_p
 
 # Wood generation over time
@@ -131,7 +131,7 @@ wood_generation_time_series_line <- line_figure(list(melt(eia_elec_gen_www_va_99
                                                 return_static = F, modifications = theme(legend.position = "none"))
 wood_generation_time_series_line
 
-wood_generation_time_series_line_p <- ggplotly_wrapper(wood_generation_time_series_line,line_figure = T)
+wood_generation_time_series_line_p <- ggplotly_wrapper(wood_generation_time_series_line)
 wood_generation_time_series_line_p
 
 # Projected wind generation overtime
@@ -141,7 +141,7 @@ wind_projected_generation_time_series_line <- line_figure(list(melt(total_produc
                                                           return_static = F, modifications = theme(legend.position = "none"), subtitle_description = "Forecast")
 wind_projected_generation_time_series_line
 
-wind_projected_generation_time_series_line_p <- ggplotly_wrapper(wind_projected_generation_time_series_line,line_figure = T)
+wind_projected_generation_time_series_line_p <- ggplotly_wrapper(wind_projected_generation_time_series_line)
 wind_projected_generation_time_series_line_p
 
 # Projected wind capacity
@@ -151,7 +151,7 @@ wind_projected_capacity_line <- line_figure(list(melt(total_mw_offshore_wind,id=
                                             return_static = F, subtitle_description = "Forecast")
 wind_projected_capacity_line
 
-wind_projected_capacity_line_p <- ggplotly_wrapper(wind_projected_capacity_line, line_figure = T)
+wind_projected_capacity_line_p <- ggplotly_wrapper(wind_projected_capacity_line)
 wind_projected_capacity_line_p
 
 #Stacked Annual Carbon Free Generation Broken Out by Type
@@ -207,7 +207,7 @@ renewable_and_carbon_free_line <- line_figure(list(renewable_and_carbon_free),
                                               return_static = F)
 renewable_and_carbon_free_line
 
-renewable_and_carbon_free_line_p <- ggplotly_wrapper(renewable_and_carbon_free_line,line_figure = T)
+renewable_and_carbon_free_line_p <- ggplotly_wrapper(renewable_and_carbon_free_line)
 renewable_and_carbon_free_line_p
 
 #--------------------------PLOTTING WIND AND SOLAR PROJECTED CAPACITY ADDITIONS (AND STORAGE)----------------------------------
@@ -218,7 +218,7 @@ apco_dom_target_vs_projected_capacity <- line_figure(list(lf_apco_dom_onwind_and
                                                      return_static = F, subtitle_description = "Current and Projected Capacity vs VCEA Target Capacity",x_label = "Date")
 apco_dom_target_vs_projected_capacity
 
-apco_dom_target_vs_projected_capacity_p <- ggplotly_wrapper(apco_dom_target_vs_projected_capacity,line_figure = T)
+apco_dom_target_vs_projected_capacity_p <- ggplotly_wrapper(apco_dom_target_vs_projected_capacity)
 apco_dom_target_vs_projected_capacity_p
 
 apco_dom_projected_capacity <- line_figure(list(lf_apco_dom_onwind_and_solar[variable!="target_apco_onshore_wind_and_solar"&variable!="target_dom_onshore_wind_and_solar"&date<"2024-01-01"]),
@@ -227,7 +227,7 @@ apco_dom_projected_capacity <- line_figure(list(lf_apco_dom_onwind_and_solar[var
                                         return_static = F,subtitle_description = "Current and Projected Capacity",x_label = "Date")
 apco_dom_projected_capacity
 
-apco_dom_projected_capacity_p <- ggplotly_wrapper(apco_dom_projected_capacity, line_figure = T)
+apco_dom_projected_capacity_p <- ggplotly_wrapper(apco_dom_projected_capacity)
 apco_dom_projected_capacity_p
 
 apco_dom_target_capacity <- line_figure(list(melt(VCEA_onshore_wind_solar[,.(year,target_apco_onshore_wind_and_solar,target_dom_onshore_wind_and_solar)],id="year")),
@@ -236,7 +236,7 @@ apco_dom_target_capacity <- line_figure(list(melt(VCEA_onshore_wind_solar[,.(yea
                                         return_static = F,subtitle_description = "VCEA Target Capacity",x_label = "Year")
 apco_dom_target_capacity
 
-apco_dom_target_capacity_p <- ggplotly_wrapper(apco_dom_target_capacity, line_figure = T)
+apco_dom_target_capacity_p <- ggplotly_wrapper(apco_dom_target_capacity)
 apco_dom_target_capacity_p
 
 on_off_wind_solar_line <- line_figure(list(lf_wind_and_solar_capacity_projections),
@@ -245,7 +245,7 @@ on_off_wind_solar_line <- line_figure(list(lf_wind_and_solar_capacity_projection
                                       return_static = F,x_label = "Date")
 on_off_wind_solar_line
 
-on_off_wind_solar_line_p <- ggplotly_wrapper(on_off_wind_solar_line,line_figure = T)
+on_off_wind_solar_line_p <- ggplotly_wrapper(on_off_wind_solar_line)
 on_off_wind_solar_line_p
 
 on_off_wind_solar_area <- stacked_area_figure(list(lf_wind_and_solar_capacity_projections),
@@ -263,7 +263,7 @@ dominion_offshore_wind_projected_capacity <- line_figure(list(lf_wind_and_solar_
                                                          return_static = F,x_label="Date",subtitle_description = "Note: VCEA requires Dominion to develop 5,200 MW of offshore wind by 2034",modifications = theme(legend.position = "none"))
 dominion_offshore_wind_projected_capacity
 
-dominion_offshore_wind_projected_capacity_p <- ggplotly_wrapper(dominion_offshore_wind_projected_capacity,line_figure = T)
+dominion_offshore_wind_projected_capacity_p <- ggplotly_wrapper(dominion_offshore_wind_projected_capacity)
 dominion_offshore_wind_projected_capacity_p
 
 storage_projected_capacity_line <-line_figure(list(lf_storage_capacity_projections),
@@ -272,7 +272,7 @@ storage_projected_capacity_line <-line_figure(list(lf_storage_capacity_projectio
                                               return_static = F,modifications = theme(legend.position = "none"),x_label = "Date")
 storage_projected_capacity_line
 
-storage_projected_capacity_line_p <- ggplotly_wrapper(storage_projected_capacity_line,line_figure = T)
+storage_projected_capacity_line_p <- ggplotly_wrapper(storage_projected_capacity_line)
 storage_projected_capacity_line_p
 
 #--------------------------------PLOTTING EMISSIONS FIGURES--------------------------------------------------------
@@ -284,7 +284,7 @@ co2_combined_emissions_line <- line_figure(list(eia_emiss_co2_totv_ec_to_va_a,ei
                                            return_static = F)
 co2_combined_emissions_line
 
-co2_combined_emissions_line_p <- ggplotly_wrapper(co2_combined_emissions_line,line_figure = T)
+co2_combined_emissions_line_p <- ggplotly_wrapper(co2_combined_emissions_line)
 co2_combined_emissions_line_p
 
 # Emissions by compound
@@ -295,7 +295,7 @@ emissions_line <- line_figure(list(emissions_co2_by_source_va[,.(year=year,CO2=t
                               return_static = F)
 emissions_line
 
-emissions_line_p <- ggplotly_wrapper(emissions_line,line_figure = T)
+emissions_line_p <- ggplotly_wrapper(emissions_line)
 emissions_line_p
 
 # CO2 emissions by fuel type
@@ -316,7 +316,7 @@ consumption_per_gdp_line <- line_figure(list(melt(energy_consumption_per_unit_gd
                                         return_static = F, modifications = theme(legend.position = "none"))
 consumption_per_gdp_line
 
-consumption_per_gdp_line_p <- ggplotly_wrapper(consumption_per_gdp_line,line_figure = T)
+consumption_per_gdp_line_p <- ggplotly_wrapper(consumption_per_gdp_line)
 consumption_per_gdp_line_p
 
 consumption_per_capita_line <- line_figure(list(melt(energy_consumption_per_capita_va,id="year")),
@@ -325,7 +325,7 @@ consumption_per_capita_line <- line_figure(list(melt(energy_consumption_per_capi
                                            return_static = F, modifications = theme(legend.position = "none"))
 consumption_per_capita_line
 
-consumption_per_capita_line_p <- ggplotly_wrapper(consumption_per_capita_line,line_figure = T)
+consumption_per_capita_line_p <- ggplotly_wrapper(consumption_per_capita_line)
 consumption_per_capita_line_p
 
 emissions_per_gdp_line <- line_figure(list(melt(co2_emission_per_thousand_dollars_of_gdp_va,id="year")),
@@ -334,7 +334,7 @@ emissions_per_gdp_line <- line_figure(list(melt(co2_emission_per_thousand_dollar
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_gdp_line
 
-emissions_per_gdp_line_p <- ggplotly_wrapper(emissions_per_gdp_line,line_figure = T)
+emissions_per_gdp_line_p <- ggplotly_wrapper(emissions_per_gdp_line)
 emissions_per_gdp_line_p
 
 emissions_per_capita_line <- line_figure(list(melt(co2_emission_per_capita_va,id="year")),
@@ -343,7 +343,7 @@ emissions_per_capita_line <- line_figure(list(melt(co2_emission_per_capita_va,id
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_capita_line
 
-emissions_per_capita_line_p <- ggplotly_wrapper(emissions_per_capita_line,line_figure = T)
+emissions_per_capita_line_p <- ggplotly_wrapper(emissions_per_capita_line)
 emissions_per_capita_line_p
 
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
@@ -380,16 +380,16 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
 va_avg_annual_energy_percent_exp
 
 va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = NULL) %>%
-  layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>")),
-         xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=15)),
+  layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=18)),
+         xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
          yaxis=list(titlefont=list(size=15)))%>%
   config(displaylogo = FALSE,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_cost_p
 
 va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = NULL) %>%
-  layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>")),
-         xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=15)),
+  layout(title = list(text=paste0("Virginia Energy Burden by County","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=18)),
+         xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
          yaxis=list(titlefont=list(size=15)))%>%
   config(displaylogo = FALSE,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))

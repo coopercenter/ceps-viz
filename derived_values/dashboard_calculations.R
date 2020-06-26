@@ -44,6 +44,7 @@ total_production_forecast_offshore_wind <- data.table(dbGetQuery(db,"select * fr
 #load in pjm solar and wind data & apco/dominion goals
 pjm_solar <- data.table(dbGetQuery(db,"select * from pjm_solar ;"))
 pjm_wind <- data.table(dbGetQuery(db,"select * from pjm_wind ;"))
+pjm_storage <- data.table(dbGetQuery(db,"select * from pjm_storage ;"))
 VCEA_onshore_wind_solar <- data.table(dbGetQuery(db,"select * from \"VCEA_onshore_wind_solar\" ;"))
 
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name

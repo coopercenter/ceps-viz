@@ -95,7 +95,7 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
-  lf_working_table[,variable:=gsub("ros","Rest of state",variable)]
+  lf_working_table[,variable:=gsub("^ros$","Rest of state",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
@@ -159,7 +159,7 @@ ggplotly_wrapper <- function(list){
            xaxis=list(title = paste0(list$x_label,"<br>","<i>","<sub>",list$source_description,"<sub>","<i>"),titlefont=list(size=14)),
            yaxis=list(title = list$y_label,titlefont=list(size=14)))%>%
     config(displaylogo = FALSE,
-           modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d"))
+           modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","zoom2d","autoScale2d","resetScale2d"))
     #citation is built into x-axis label rather than as an annotation so that it does not move as plot margins change, which happens with plotly annotations
     #subtitle is built into second line of title
   
@@ -209,7 +209,7 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
-  lf_working_table[,variable:=gsub("ros","Rest of State",variable)]
+  lf_working_table[,variable:=gsub("^ros$","Rest of State",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
@@ -300,7 +300,7 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
-  lf_working_table[,variable:=gsub("ros","Rest of State",variable)]
+  lf_working_table[,variable:=gsub("^ros$","Rest of State",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels

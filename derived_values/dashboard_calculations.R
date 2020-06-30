@@ -39,6 +39,8 @@ energy_consumption_per_capita_va <- data.table(dbGetQuery(db,"select * from ener
 energy_consumption_per_unit_gdp_va <- data.table(dbGetQuery(db,"select * from energy_consumption_per_unit_gdp_va ;"))
 co2_emission_per_capita_va <- data.table(dbGetQuery(db,"select * from co2_emission_per_capita_va ;"))
 co2_emission_per_thousand_dollars_of_gdp_va <- data.table(dbGetQuery(db,"select * from co2_emission_per_thousand_dollars_of_gdp_va ;"))
+virginia_annual_savings_through_2022 <- data.table(dbGetQuery(db,"select * from virginia_annual_savings_through_2022 ;"))
+virginia_annual_savings_through_2020 <- data.table(dbGetQuery(db,"select * from virginia_annual_savings_through_2020 ;"))
 
 #load in offshore wind projections
 total_mw_offshore_wind <- data.table(dbGetQuery(db,"select * from total_mw_offshore_wind ;"))
@@ -205,8 +207,7 @@ apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar_working[t
 apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar_working[transmission_owner=="Dominion"&status=="In Service",.(date=actual_in_service_date,dom_solar=mfo)],by="date",all=TRUE,allow.cartesian=TRUE)
 apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,pjm_solar_working[transmission_owner=="Dominion"&status=="Active",.(date=projected_in_service_date,dom_solar=mfo)],by=c("date","dom_solar"),all=TRUE,allow.cartesian=TRUE)
 
-apco_dom_onwind_and_solar <- apco_dom_onwind_and_solar[,.(date=first(date),
-                                                          apco_onshore_wind=sum(apco_onshore_wind,na.rm=T),
+apco_dom_onwind_and_solar <- apco_dom_onwind_and_solar[,.(apco_onshore_wind=sum(apco_onshore_wind,na.rm=T),
                                                           apco_solar=sum(apco_solar,na.rm=T),
                                                           dom_solar=sum(dom_solar,na.rm=T)),by=date]
 
@@ -233,8 +234,7 @@ wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections
 wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections,pjm_solar_working[status=="In Service",.(date=actual_in_service_date,solar=mfo)],by="date",all=T)
 wind_and_solar_capacity_projections <- merge(wind_and_solar_capacity_projections,pjm_solar_working[status!="In Service",.(date=projected_in_service_date,solar=mfo)],by=c("date","solar"),all=T)
 
-wind_and_solar_capacity_projections <- wind_and_solar_capacity_projections[,.(date=first(date),
-                                                                              onshore_wind=sum(onshore_wind,na.rm = T),
+wind_and_solar_capacity_projections <- wind_and_solar_capacity_projections[,.(onshore_wind=sum(onshore_wind,na.rm = T),
                                                                               offshore_wind=sum(offshore_wind,na.rm = T),
                                                                               solar=sum(solar,na.rm = T)),by=date]
 
@@ -290,6 +290,11 @@ va_energy_equity_by_county$avg_energy_burden_as_percent_income <- as.numeric(va_
 
 world <- ne_countries(scale = "medium", returnclass = "sf") #to get outline outside of VA
 states <- st_as_sf(map("state", plot = FALSE, fill = TRUE)) #to get  state outline
+
+#For energy efficiency figures--------------------------------------------------------------------------------------------
+#renaming columns so it can be accepted as input into piechart function
+setnames(virginia_annual_savings_through_2020,old=c("Company Name","MWh"),new=c("variable","value"))
+setnames(virginia_annual_savings_through_2022,old=c("Company Name","MWh"),new=c("variable","value"))
 
 #-----------------------------------------REFORMATTING DATASETS--------------------------------------------------------------------
 

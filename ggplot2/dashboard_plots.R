@@ -346,6 +346,26 @@ emissions_per_capita_line
 emissions_per_capita_line_p <- ggplotly_wrapper(emissions_per_capita_line)
 emissions_per_capita_line_p
 
+annual_savings_2020_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
+                                                                  title_name = "Virginia Annual Savings through 2020 (MWh)",
+                                                                  character_list = list("virginia_annual_savings_through_2020"))
+annual_savings_2020_pie_chart_p
+
+annual_savings_2020_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
+                                                      title_name = "Virginia Annual Savings through 2020 (MWh)",
+                                                      character_list = list("virginia_annual_savings_through_2020"),legend_shown = T)
+annual_savings_2020_pie_chart_p_with_legend
+
+annual_savings_2022_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savings_through_2022[variable!="Total Needed"]),
+                                                      title_name = "Virginia Annual Savings through 2022 (MWh)",
+                                                      character_list = list("virginia_annual_savings_through_2020"))
+annual_savings_2022_pie_chart_p
+
+annual_savings_2022_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_annual_savings_through_2022[variable!="Total Needed"]),
+                                                                  title_name = "Virginia Annual Savings through 2022 (MWh)",
+                                                                  character_list = list("virginia_annual_savings_through_2020"),legend_shown = T)
+annual_savings_2022_pie_chart_p_with_legend
+
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
 #energy equity figures
 

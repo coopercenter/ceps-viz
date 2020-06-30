@@ -330,7 +330,7 @@ consumption_per_capita_line_p
 
 emissions_per_gdp_line <- line_figure(list(melt(co2_emission_per_thousand_dollars_of_gdp_va,id="year")),
                                       "year","Emissions per GDP (Metric Tons/Thousand $)","Virginia CO2 Emissions per GDP",
-                                      list("co2_emission_per_thousand_dollars_of_gdp_va"),
+                                      list("eia_emiss_co2_totv_tt_to_va_a","fred_vangsp"),
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_gdp_line
 
@@ -339,7 +339,7 @@ emissions_per_gdp_line_p
 
 emissions_per_capita_line <- line_figure(list(melt(co2_emission_per_capita_va,id="year")),
                                       "year","Emissions per Capita (Metric Tons/Person)","Virginia CO2 Emissions per Capita",
-                                      list("co2_emission_per_capita_va"),
+                                      list("eia_emiss_co2_totv_tt_to_va_a","residential_population_va"),
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_capita_line
 

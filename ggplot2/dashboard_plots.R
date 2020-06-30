@@ -45,7 +45,7 @@ storage_capacity_2035_mw_goal = 3100
 storage_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                           value=c(storage_capacity_2035_mw_goal-storage_capacity_2019_mw,storage_capacity_2019_mw))
 
-single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","4 MW of Storage Capacity as of 2019","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("lavender","plum"),list("pjm_solar","pjm_wind"))
+single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","4 MW of Storage Capacity as of 2019","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("lavender","plum"),list("pjm_solar"))
 single_ring_storage_capacity_donut_p
 #--------------------------------------------PLOTTING GENERATION/PRODUCTION FIGURES----------------------------------------------------------------
 
@@ -268,7 +268,7 @@ dominion_offshore_wind_projected_capacity_p
 
 storage_projected_capacity_line <-line_figure(list(lf_storage_capacity_projections),
                                               "date","Capacity (MW)","Virginia Current and Projected Utility Storage Capacity",
-                                              list("pjm_storage"),
+                                              list("pjm_solar"), #using pjm_solar instead of pjm_storage because its not yet in metadata
                                               return_static = F,modifications = theme(legend.position = "none"),x_label = "Date")
 storage_projected_capacity_line
 
@@ -346,24 +346,25 @@ emissions_per_capita_line
 emissions_per_capita_line_p <- ggplotly_wrapper(emissions_per_capita_line)
 emissions_per_capita_line_p
 
+#Note: below figures come from ACEEE data - no metadata entries yet so manual citations are used
 annual_savings_2020_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
                                                                   title_name = "Virginia Annual Savings through 2020 (MWh)",
-                                                                  character_list = list("virginia_annual_savings_through_2020"))
+                                                                  character_list = list("virginia_annual_savings_through_2020"),source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2020_pie_chart_p
 
 annual_savings_2020_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
                                                       title_name = "Virginia Annual Savings through 2020 (MWh)",
-                                                      character_list = list("virginia_annual_savings_through_2020"),legend_shown = T)
+                                                      character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2020_pie_chart_p_with_legend
 
 annual_savings_2022_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savings_through_2022[variable!="Total Needed"]),
                                                       title_name = "Virginia Annual Savings through 2022 (MWh)",
-                                                      character_list = list("virginia_annual_savings_through_2020"))
+                                                      character_list = list("virginia_annual_savings_through_2020"),source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2022_pie_chart_p
 
 annual_savings_2022_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_annual_savings_through_2022[variable!="Total Needed"]),
                                                                   title_name = "Virginia Annual Savings through 2022 (MWh)",
-                                                                  character_list = list("virginia_annual_savings_through_2020"),legend_shown = T)
+                                                                  character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2022_pie_chart_p_with_legend
 
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------

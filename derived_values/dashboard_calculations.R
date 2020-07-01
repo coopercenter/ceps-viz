@@ -331,5 +331,8 @@ va_emissions_compounds <- merge(emissions_co2_by_source_va[,.(year=year,CO2=tota
 va_emissions_compounds <- merge(va_emissions_compounds,emissions_so2_by_source_va[,.(year=year,SO2=total/1102311.31)],id="year")
 va_emissions_compounds <- va_emissions_compounds[11:29,] #limit data to baseline year of 2000
 
+# Energy Efficiency dataset
+investment_by_IOUs <- data.table(dbGetQuery(db,"select * from current_ee_programs ;"))
+
 
 

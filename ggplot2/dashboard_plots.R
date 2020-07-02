@@ -102,16 +102,6 @@ percent_renewable_and_carbon_free_line
 percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line)
 percent_renewable_and_carbon_free_line_p
 
-#Same graph but without legend for subplot purposes later on
-percent_renewable_and_carbon_free_line_nolegend <- line_figure(list(lf_percent_renewable_and_carbon_free),
-                                                      "year","Percentage of Total Generation","Percentage of Virginia Annual Electricity Generation",
-                                                      list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
-                                                      return_static = F,upper_limit = 100,modifications = theme(legend.position = "none"))
-percent_renewable_and_carbon_free_line_nolegend
-
-percent_renewable_and_carbon_free_line_nolegend_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line_nolegend)
-percent_renewable_and_carbon_free_line_nolegend_p
-
 percent_renewable_and_carbon_free_goal_line <- line_figure(list(lf_VCEA_goal_percent_gen),
                                                       "year","Percentage of Total Generation","Percentage of Virginia Annual Electricity Generation",
                                                       list("VCEA_storage"),
@@ -121,10 +111,19 @@ percent_renewable_and_carbon_free_goal_line
 percent_renewable_and_carbon_free_goal_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_line)
 percent_renewable_and_carbon_free_goal_line_p
 
+percent_renewable_and_carbon_free_goal_combined_line <- line_figure(list(lf_percent_renewable_carbon_free_combined_dt),
+                                                      "year","Percentage of Total Generation","Percentage of Virginia Annual Electricity Generation",
+                                                      list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","VCEA_storage"),
+                                                      return_static = F)
+percent_renewable_and_carbon_free_goal_combined_line
+
+percent_renewable_and_carbon_free_goal_combined_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_combined_line)
+percent_renewable_and_carbon_free_goal_combined_line_p
+
 #facet grid
-renewable_and_carbon_free_facet_graph <- ggplot(data=lf_percent_renewable_carbon_free_combined,mapping=aes(x=year,y=value,color=category))+
-  geom_line(aes(group=category,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",category)))+
-  facet_grid(.~variable,scales="free")+
+renewable_and_carbon_free_facet_graph <- ggplot(data=lf_percent_renewable_carbon_free_combined,mapping=aes(x=year,y=value,color=variable))+
+  geom_line(aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
+  facet_grid(.~category,scales="free")+
   scale_color_discrete(name=NULL)+
   xlab("Year")+ylab("Percentage of Total Generation")+ylim(0,NA)+
   labs(title="Percentage of Virginia Goal Annual Electricity Generation",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")

@@ -179,15 +179,24 @@ percent_renewable_carbon_free_combined <- merge(lf_percent_renewable_and_carbon_
 lf_percent_renewable_carbon_free_combined <- melt(percent_renewable_carbon_free_comined,id=c("year","category"))
 lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined[!is.na(value)]
 
-lf_percent_renewable_carbon_free_combined[,category:=gsub("percent_renewable","Percent renewable",category)]
-lf_percent_renewable_carbon_free_combined[,category:=gsub("percent_carbon_free","Percent carbon free",category)]
-lf_percent_renewable_carbon_free_combined[,variable:=gsub("goal","Goal",variable)]
-lf_percent_renewable_carbon_free_combined[,variable:=gsub("historic","Historic",variable)]
+setnames(lf_percent_renewable_carbon_free_combined,old=c("variable","category"),new=c("category","variable"))
+
+lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_renewable","Percent renewable",variable)]
+lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_carbon_free","Percent carbon free",variable)]
+lf_percent_renewable_carbon_free_combined[,category:=gsub("goal","Goal",category)]
+lf_percent_renewable_carbon_free_combined[,category:=gsub("historic","Historic",category)]
+
+VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
+                                   percent_renewable_goal=c(30,30,30,30),
+                                   percent_carbon_free_goal=c(NA,NA,100,100))
+lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
+
+lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
 
 # below code ensures that historic data will appear first then goal data
 lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined %>% 
-  arrange(desc(variable)) %>%
-  mutate_at(vars(variable), funs(factor(., levels=unique(.)))) 
+  arrange(desc(category)) %>%
+  mutate_at(vars(category), funs(factor(., levels=unique(.))))
 
 # Finding sum of total annual renewable generation----------------------------------------------------------------
 va_annual_renewable_and_carbon_free_gen[,renewable:=all_solar+hydropower]

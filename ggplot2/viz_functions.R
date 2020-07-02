@@ -6,6 +6,7 @@ theme_ceps <- function() {
     # title 
     plot.title =element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
     plot.caption =element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
+    plot.subtitle = element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
     # color background 
     panel.background = element_rect(fill = "#F0F0F0"),
     plot.background=element_rect(fill="#F0F0F0"),

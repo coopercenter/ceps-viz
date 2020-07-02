@@ -92,6 +92,8 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   
   lf_working_table[,variable:=as.character(variable)]
   lf_working_table <- lf_working_table[order(variable)] #alphabetizes variable elements
+  lf_working_table[,variable:=gsub("solar_utility","Solar (utility)",variable)]
+  lf_working_table[,variable:=gsub("solar_distributed","Solar (distributed)",variable)]
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
@@ -206,6 +208,8 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   
   lf_working_table[,variable:=as.character(variable)]
   lf_working_table <- lf_working_table[order(variable)] #alphabetizes variable elements
+  lf_working_table[,variable:=gsub("solar_utility","Solar (utility)",variable)]
+  lf_working_table[,variable:=gsub("solar_distributed","Solar (distributed)",variable)]
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
@@ -297,6 +301,8 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   
   lf_working_table[,variable:=as.character(variable)]
   lf_working_table <- lf_working_table[order(variable)] #alphabetizes variable elements
+  lf_working_table[,variable:=gsub("solar_utility","Solar (utility)",variable)]
+  lf_working_table[,variable:=gsub("solar_distributed","Solar (distributed)",variable)]
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]

@@ -13,6 +13,7 @@ library(ggplot2)
 library(zoo)
 library(lubridate)
 library("Hmisc")
+library(googleway)
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))
@@ -20,6 +21,9 @@ db <- dbConnect(db_driver,user=db_user, password=ra_pwd,dbname="postgres", host=
 
 #load in metadata
 metadata <- data.table(dbGetQuery(db,"select * from metadata ;"))
+
+# Energy Efficiency dataset
+investment_by_IOUs <- data.table(dbGetQuery(db,"select * from current_ee_programs ;"))
 
 #load in capacity by fuel type data (likely will be replaced if we find better solar data)
 whole_electric_industry_capacity <- data.table(dbGetQuery(db,"select * from whole_electric_industry_capacity ;"))
@@ -89,8 +93,8 @@ table_list = data.frame(
                "oil",
                "gas",
                "nuclear",
-               "utility_solar", 
-               "distributed_solar",
+               "solar_utility", 
+               "solar_distributed",
                "hydropower",
                "wood",
                "other_biomass",
@@ -116,7 +120,7 @@ for(row in 1:nrow(table_list)){
 
 dbDisconnect(db)
 
-eia_elec_gen_sun_va_99_a[utility_solar == 0,utility_solar:=NA] #random fix for visual purposes later on
+eia_elec_gen_sun_va_99_a[solar_utility == 0,solar_utility:=NA] #random fix for visual purposes later on
 
 # Isolating renewable and carbon free generation in it's own table -----------------------------------------------
 renewable_and_carbon_free_list <- list(eia_elec_gen_nuc_va_99_a,
@@ -135,7 +139,7 @@ for(table in renewable_and_carbon_free_list){
 }
 
 va_annual_renewable_and_carbon_free_gen[is.na(va_annual_renewable_and_carbon_free_gen)]=0
-va_annual_renewable_and_carbon_free_gen[,all_solar:=distributed_solar+utility_solar]
+va_annual_renewable_and_carbon_free_gen[,all_solar:=solar_distributed+solar_utility]
 
 # Creating 'other' generation measure by combining all by fuel type generation and total generation in a table to caluclate other generation over time
 gen_by_fuel_type_list <- list(eia_elec_gen_cow_va_99_a,
@@ -159,8 +163,31 @@ for(table in gen_by_fuel_type_list){
 }
 
 va_annual_generation[is.na(va_annual_generation)]=0
-va_annual_generation[,other:=total-(coal+oil+gas+nuclear+utility_solar+distributed_solar+hydropower+wood+other_biomass)]
+va_annual_generation[,other:=total-(coal+oil+gas+nuclear+solar_utility+solar_distributed+hydropower+wood+other_biomass)]
 other_annual_generation <- va_annual_generation[,.(year,other)]
+
+# Renewable and carbon free percent gen---------------------------------------------------------------------
+lf_percent_renewable_and_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable,percent_carbon_free)],id="year")
+
+#manually creating table of overall generation goals
+VCEA_goal_percent_gen = data.table(year=c(2030,2040,2050,2060),
+                                   percent_renewable=c(30,30,30,30),
+                                   percent_carbon_free=c(NA,NA,100,100))
+lf_VCEA_goal_percent_gen <- melt(VCEA_goal_percent_gen,id="year")
+
+percent_renewable_carbon_free_combined <- merge(lf_percent_renewable_and_carbon_free[,.(year,category=variable,historic=value)],lf_VCEA_goal_percent_gen[,.(year,category=variable,goal=value)],by=c("year","category"),all=T)
+lf_percent_renewable_carbon_free_combined <- melt(percent_renewable_carbon_free_comined,id=c("year","category"))
+lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined[!is.na(value)]
+
+lf_percent_renewable_carbon_free_combined[,category:=gsub("percent_renewable","Percent renewable",category)]
+lf_percent_renewable_carbon_free_combined[,category:=gsub("percent_carbon_free","Percent carbon free",category)]
+lf_percent_renewable_carbon_free_combined[,variable:=gsub("goal","Goal",variable)]
+lf_percent_renewable_carbon_free_combined[,variable:=gsub("historic","Historic",variable)]
+
+# below code ensures that historic data will appear first then goal data
+lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined %>% 
+  arrange(desc(variable)) %>%
+  mutate_at(vars(variable), funs(factor(., levels=unique(.)))) 
 
 # Finding sum of total annual renewable generation----------------------------------------------------------------
 va_annual_renewable_and_carbon_free_gen[,renewable:=all_solar+hydropower]
@@ -275,22 +302,30 @@ va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")
 va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
 
 #isolating just county energy equity data (as there are some cities listed as well)
-energy_burden_county_expenditures_counties <- energy_burden_county_expenditures[county %like% "County"]
-energy_burden_county_percent_income_counties <- energy_burden_county_percent_income[county %like% "County"]
+#energy_burden_county_expenditures_counties <- energy_burden_county_expenditures[county %like% "County"]
+#energy_burden_county_percent_income_counties <- energy_burden_county_percent_income[county %like% "County"]
 
+va_counties <- as.data.table(va_counties)
 #adjusting county names to match format of other datasets
-va_counties$county <- paste(va_counties$county,"county")
+va_counties[,county:=paste(county,"county")]
+va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
+va_counties[county=="virginia beach county",county:="virginia beach city"]
+va_counties[county=="newport news county",county:="newport news city"]
+va_counties[county=="hampton county",county:="hampton city"]
 va_counties$county <- toTitleCase(va_counties$county)
 
+energy_burden_county_expenditures$county <- toTitleCase(energy_burden_county_expenditures$county)
+energy_burden_county_percent_income$county <- toTitleCase(energy_burden_county_percent_income$county)
 #merging county geospatial data with energy equity data
-va_energy_equity_by_county <- merge(va_counties,energy_burden_county_expenditures_counties,id="county",all=TRUE)
+va_energy_equity_by_county <- merge(va_counties,energy_burden_county_expenditures,id="county")
 va_energy_equity_by_county$avg_annual_energy_cost <- as.numeric(va_energy_equity_by_county$avg_annual_energy_cost)
-va_energy_equity_by_county <- merge(va_energy_equity_by_county,energy_burden_county_percent_income_counties,id="county",all=TRUE)
+va_energy_equity_by_county <- merge(va_energy_equity_by_county,energy_burden_county_percent_income,id="county")
 va_energy_equity_by_county$avg_energy_burden_as_percent_income <- as.numeric(va_energy_equity_by_county$avg_energy_burden_as_percent_income) 
 
 world <- ne_countries(scale = "medium", returnclass = "sf") #to get outline outside of VA
 states <- st_as_sf(map("state", plot = FALSE, fill = TRUE)) #to get  state outline
 
+va_energy_equity_by_county <- st_as_sf(va_energy_equity_by_county )
 #For energy efficiency figures--------------------------------------------------------------------------------------------
 #renaming columns so it can be accepted as input into piechart function
 setnames(virginia_annual_savings_through_2020,old=c("Company Name","MWh"),new=c("variable","value"))
@@ -330,9 +365,5 @@ colnames(virginia_emissions_electric_commas) <- c('Year','Million Metric Tons of
 va_emissions_compounds <- merge(emissions_co2_by_source_va[,.(year=year,CO2=total/1000)],emissions_no_by_source_va[,.(year=year,NO=total/1102311.31)],id="year")
 va_emissions_compounds <- merge(va_emissions_compounds,emissions_so2_by_source_va[,.(year=year,SO2=total/1102311.31)],id="year")
 va_emissions_compounds <- va_emissions_compounds[11:29,] #limit data to baseline year of 2000
-
-# Energy Efficiency dataset
-investment_by_IOUs <- data.table(dbGetQuery(db,"select * from current_ee_programs ;"))
-
 
 

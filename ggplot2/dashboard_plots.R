@@ -15,7 +15,7 @@ renewable_percent_gen_2030_goal = .3 #30% of Virginia’s electricity from renew
 renewable_ring = data.frame(category=c(" ","2019 renewable generation","goal"),
                             value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
 
-single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation","2.6% in 2019","Goal: 30% by 2030","label",c("whitesmoke","steelblue","skyblue"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a","VCEA_storage"))
+single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation","2.6% in 2019","Goal: 30% by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a","VCEA_storage"))
 single_ring_renewable_donut_p
 
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from car
 carbon_free_ring = data.frame(category=c("goal","2019 carbon free generation"),
                               value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
 
-single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","Goal: 100% by 2050","label",c("mediumseagreen","seagreen"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a","VCEA_storage"))
+single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","Goal: 100% by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a","VCEA_storage"))
 single_ring_carbon_free_donut_p
 
 #plotting donut figure of progess towards wind and solar capacity goals-----------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ sw_capacity_2024_mw_goal = 16100 #16,100 MW of solar and onshore wind by January
 sw_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                      value=c(sw_capacity_2024_mw_goal-solar_capacity_2019_mw,solar_capacity_2019_mw))
 
-single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity","701.4 MW of Solar Capacity as of 2019","Goal: 16,100 MW of Onshore Wind & Solar Capacity by 2024","label+value",c("indianred","maroon"),list("pjm_solar","pjm_wind","VCEA_storage"))
+single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity","701.4 MW of Solar Capacity as of 2019","Goal: 16,100 MW of Onshore Wind & Solar Capacity by 2024","label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
 single_ring_sw_capacity_donut_p
 
 #plotting donut figure of progress towards storage capacity
@@ -45,7 +45,7 @@ storage_capacity_2035_mw_goal = 3100
 storage_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                           value=c(storage_capacity_2035_mw_goal-storage_capacity_2019_mw,storage_capacity_2019_mw))
 
-single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","4 MW of Storage Capacity as of 2019","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("lavender","plum"),list("pjm_solar","VCEA_storage"))
+single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","4 MW of Storage Capacity as of 2019","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"))
 single_ring_storage_capacity_donut_p
 #--------------------------------------------PLOTTING GENERATION/PRODUCTION FIGURES----------------------------------------------------------------
 
@@ -124,12 +124,13 @@ percent_renewable_and_carbon_free_goal_combined_line_p
 renewable_and_carbon_free_facet_graph <- ggplot(data=lf_percent_renewable_carbon_free_combined,mapping=aes(x=year,y=value,color=variable))+
   geom_line(aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
   facet_grid(.~category,scales="free")+
-  scale_color_discrete(name=NULL)+
+  scale_color_manual(name=NULL,values=ceps_pal[1:2])+
   xlab("Year")+ylab("Percentage of Total Generation")+ylim(0,NA)+
-  labs(title="Percentage of Virginia Goal Annual Electricity Generation",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")
+  labs(title="Percentage of Virginia Goal Annual Electricity Generation",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
+  theme_ceps()
 renewable_and_carbon_free_facet_graph
 
-renewable_and_carbon_free_facet_graph_p <- subplot(percent_renewable_and_carbon_free_line_nolegend_p,percent_renewable_and_carbon_free_goal_line_p,shareY = T) %>%
+renewable_and_carbon_free_facet_graph_p <- subplot(percent_renewable_and_carbon_free_line_p,percent_renewable_and_carbon_free_goal_line_p,shareY = T) %>%
   add_annotations(x=0.5,y=-0.13,yref='paper',xref='paper',text=paste0("<sub><i>Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration"),showarrow=F,font = list(size = 14))
 renewable_and_carbon_free_facet_graph_p
 
@@ -144,7 +145,7 @@ annual_carbon_free_generation_by_type_line_p <- ggplotly_wrapper(annual_carbon_f
 annual_carbon_free_generation_by_type_line_p
 
 # Solar (broken into distributed and utility) over time
-solar_generation_time_series_line <- line_figure(list(eia_elec_gen_sun_va_99_a[utility_solar!=0],eia_elec_gen_dpv_va_99_a),
+solar_generation_time_series_line <- line_figure(list(eia_elec_gen_sun_va_99_a[solar_utility!=0],eia_elec_gen_dpv_va_99_a),
                                                  "year","Generation (GWh)","Virginia Annual Solar Electricity Generation",
                                                  list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a"),
                                                  return_static = F)
@@ -406,32 +407,44 @@ annual_savings_2022_pie_chart_p_with_legend
 
 #energy burden map showing average energy expenditures by county
 va_avg_annual_energy_cost <- ggplot() +
-  geom_sf(data = world, fill = "antiquewhite1") +
-  geom_sf(data = states, fill = NA) +
+  geom_sf(data = world, fill = "#F0F0F0") +
+  geom_sf(data = states, fill = NA,color="dimgrey") +
   geom_sf(data = va_energy_equity_by_county, aes(fill = avg_annual_energy_cost,text=paste0(county,"\nEnergy Expenditures: $",avg_annual_energy_cost))) +
-  scale_fill_viridis_c(alpha = .6,name="Average Annual Energy Cost \nin Dollars\n") + #setting alpha adds some transparency
+  scale_fill_gradientn(name="Average Annual Energy Cost \nin Dollars\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
   xlab("Longitude") + ylab("Latitude") +
   labs(title = "Virginia Energy Burden by County in Dollars", subtitle = "For Households Below the Federal Poverty Level",caption = paste0("Source: ",expenditures_source)) +
-  theme(panel.background = element_rect(fill = "aliceblue"),
+  theme(panel.background = element_rect(fill = "#B0DEFA"),
+        plot.background=element_rect(fill="#F0F0F0"),
         plot.caption=element_text(hjust = 0.5,face="italic"),
+        plot.subtitle = element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
+        plot.title =element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
         legend.title=element_text(size=7),
-        legend.text=element_text(size=7))
+        legend.text=element_text(size=7),
+        legend.justification = "center",
+        legend.background = element_rect(fill = "#F0F0F0"),
+        text = element_text(family = "Helvetica",color = "dimgrey"))
 va_avg_annual_energy_cost 
 
 #energy burden map showing average energy expenditures as percent of income by county
 va_avg_annual_energy_percent_exp <-  ggplot() +
-  geom_sf(data = world,fill = "antiquewhite1") +
-  geom_sf(data = states, fill = NA) +
+  geom_sf(data = world,fill = "#F0F0F0") +
+  geom_sf(data = states, fill = NA,color="dimgrey") +
   geom_sf(data = va_energy_equity_by_county, aes(fill = avg_energy_burden_as_percent_income,text=paste0(county,"\nEnergy Expenditures: ",avg_energy_burden_as_percent_income,"%"))) +
-  scale_fill_viridis_c(alpha = .6,name="Average Annual Energy Cost \nas Percentage of Income\n") + #setting alpha adds some transparency
+  scale_fill_gradientn(name="Average Annual Energy Cost \nas Percentage of Income\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE) +
   xlab("Longitude") + ylab("Latitude") +
   labs(title = "Virginia Energy Burden by County as Percentage of Income", subtitle = "For Households Below the Federal Poverty Level", caption = paste0("Source: ",percent_income_source)) + 
-  theme(panel.background = element_rect(fill = "aliceblue"),
+  theme(panel.background = element_rect(fill = "#B0DEFA"),
+        plot.background=element_rect(fill="#F0F0F0"),
         plot.caption=element_text(hjust = 0.5,face="italic"),
+        plot.subtitle = element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
+        plot.title =element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
         legend.title=element_text(size=7),
-        legend.text=element_text(size=7))
+        legend.text=element_text(size=7),
+        legend.justification = "center",
+        legend.background = element_rect(fill = "#F0F0F0"),
+        text = element_text(family = "Helvetica",color = "dimgrey"))
 va_avg_annual_energy_percent_exp
 
 va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "text") %>%

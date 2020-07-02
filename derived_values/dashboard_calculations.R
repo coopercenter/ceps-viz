@@ -166,38 +166,6 @@ va_annual_generation[is.na(va_annual_generation)]=0
 va_annual_generation[,other:=total-(coal+oil+gas+nuclear+solar_utility+solar_distributed+hydropower+wood+other_biomass)]
 other_annual_generation <- va_annual_generation[,.(year,other)]
 
-# Renewable and carbon free percent gen---------------------------------------------------------------------
-lf_percent_renewable_and_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable,percent_carbon_free)],id="year")
-
-#manually creating table of overall generation goals
-VCEA_goal_percent_gen = data.table(year=c(2030,2040,2050,2060),
-                                   percent_renewable=c(30,30,30,30),
-                                   percent_carbon_free=c(NA,NA,100,100))
-lf_VCEA_goal_percent_gen <- melt(VCEA_goal_percent_gen,id="year")
-
-percent_renewable_carbon_free_combined <- merge(lf_percent_renewable_and_carbon_free[,.(year,category=variable,historic=value)],lf_VCEA_goal_percent_gen[,.(year,category=variable,goal=value)],by=c("year","category"),all=T)
-lf_percent_renewable_carbon_free_combined <- melt(percent_renewable_carbon_free_comined,id=c("year","category"))
-lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined[!is.na(value)]
-
-setnames(lf_percent_renewable_carbon_free_combined,old=c("variable","category"),new=c("category","variable"))
-
-lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_renewable","Percent renewable",variable)]
-lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_carbon_free","Percent carbon free",variable)]
-lf_percent_renewable_carbon_free_combined[,category:=gsub("goal","Goal",category)]
-lf_percent_renewable_carbon_free_combined[,category:=gsub("historic","Historic",category)]
-
-VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
-                                   percent_renewable_goal=c(30,30,30,30),
-                                   percent_carbon_free_goal=c(NA,NA,100,100))
-lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
-
-lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
-
-# below code ensures that historic data will appear first then goal data
-lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined %>% 
-  arrange(desc(category)) %>%
-  mutate_at(vars(category), funs(factor(., levels=unique(.))))
-
 # Finding sum of total annual renewable generation----------------------------------------------------------------
 va_annual_renewable_and_carbon_free_gen[,renewable:=all_solar+hydropower]
 
@@ -209,6 +177,38 @@ va_annual_renewable_and_carbon_free_gen[,carbon_free:=hydropower+all_solar+nucle
 
 # Finding total annual carbon-free generation as a percent of total energy generation--------------------------------------
 va_annual_renewable_and_carbon_free_gen[,percent_carbon_free:=(carbon_free/total)*100]
+
+# Renewable and carbon free percent gen---------------------------------------------------------------------
+lf_percent_renewable_and_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable,percent_carbon_free)],id="year")
+
+#manually creating table of overall generation goals
+VCEA_goal_percent_gen = data.table(year=c(2030,2040,2050,2060),
+                                   percent_renewable=c(30,30,30,30),
+                                   percent_carbon_free=c(NA,NA,100,100))
+lf_VCEA_goal_percent_gen <- melt(VCEA_goal_percent_gen,id="year")
+
+percent_renewable_carbon_free_combined <- merge(lf_percent_renewable_and_carbon_free[,.(year,category=variable,historic=value)],lf_VCEA_goal_percent_gen[,.(year,category=variable,goal=value)],by=c("year","category"),all=T)
+lf_percent_renewable_carbon_free_combined <- melt(percent_renewable_carbon_free_combined,id=c("year","category"))
+lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined[!is.na(value)]
+
+setnames(lf_percent_renewable_carbon_free_combined,old=c("variable","category"),new=c("category","variable"))
+
+lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_renewable","Percent renewable",variable)]
+lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_carbon_free","Percent carbon free",variable)]
+lf_percent_renewable_carbon_free_combined[,category:=gsub("goal","Goal",category)]
+lf_percent_renewable_carbon_free_combined[,category:=gsub("historic","Historic",category)]
+
+VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
+                                      percent_renewable_goal=c(30,30,30,30),
+                                      percent_carbon_free_goal=c(NA,NA,100,100))
+lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
+
+lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
+
+# below code ensures that historic data will appear first then goal data
+lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined %>% 
+  arrange(desc(category)) %>%
+  mutate_at(vars(category), funs(factor(., levels=unique(.))))
 
 # Renewable versus Non-renewable Generation---------------------------------------------------------------------
 va_annual_renewable_and_carbon_free_gen[,not_renewable:=total-renewable]

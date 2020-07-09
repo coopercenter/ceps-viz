@@ -56,6 +56,9 @@ pjm_wind <- data.table(dbGetQuery(db,"select * from pjm_wind ;"))
 pjm_storage <- data.table(dbGetQuery(db,"select * from pjm_storage ;"))
 VCEA_onshore_wind_solar <- data.table(dbGetQuery(db,"select * from \"VCEA_onshore_wind_solar\" ;"))
 
+#load in APCO and Dominion historic sales
+apco_dom_sales<-data.table(dbGetQuery(db,"select * from elec_sales_through_2019 ;"))
+
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name
 fetch_time_series_from_db <- function(db_table_name, value_description, con){
   library(RPostgreSQL)
@@ -210,13 +213,48 @@ lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_co
   arrange(desc(category)) %>%
   mutate_at(vars(category), funs(factor(., levels=unique(.))))
 
-# Renewable versus Non-renewable Generation---------------------------------------------------------------------
+# APCO and Dominion historic sales vs VCEA goals----------------------------------------------------------------------------
+apco_dom_historic_sales<-apco_dom_sales[year<2020]
+lf_apco_dom_historic_sales <- melt(apco_dom_historic_sales[,.(year, apco_total_gwh,dom_total_gwh)],id="year")
+
+#manually creating table of sales goals
+VCEA_goal_sales_reduction = data.table(year=c(2025,2026,2027,2028),
+                                       apco_goal=c(14498.1494,14498.1494,14498.1494,14498.1494),
+                                       dom_goal=c(76630.2585,76630.2585,76630.2585,76630.2585))
+lf_VCEA_goal_sales_reduction <- melt(VCEA_goal_sales_reduction,id="year")
+
+apco_dom_sales_combined <- merge(lf_apco_dom_historic_sales[,.(year,category=variable,historic=value)],lf_VCEA_goal_sales_reduction[,.(year,category=variable,goal=value)],by=c("year","category"),all=T)
+lf_apco_dom_sales_combined <- melt(apco_dom_sales_combined,id=c("year","category"))
+lf_apco_dom_sales_combined <- lf_apco_dom_sales_combined[!is.na(value)]
+
+setnames(lf_apco_dom_sales_combined,old=c("variable","category"),new=c("category","variable"))
+
+lf_apco_dom_sales_combined[,variable:=gsub("apco_total_gwh","APCO total GWh",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("dom_total_gwh","Dominion total GWh",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("apco_goal","APCO total GWh",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("dom_goal","Dominion total GWh",variable)]
+lf_apco_dom_sales_combined[,category:=gsub("goal","Goal",category)]
+lf_apco_dom_sales_combined[,category:=gsub("historic","Historic",category)]
+
+VCEA_goal_sales_reduction_dt = data.table(year=c(2025,2026,2027,2028),
+                                          apco_goal=c(14498.1494,14498.1494,14498.1494,14498.1494),
+                                          dom_goal=c(76630.2585,76630.2585,76630.2585,76630.2585))
+lf_VCEA_goal_sales_reduction_dt <- melt(VCEA_goal_sales_reduction_dt,id="year")
+
+lf_apco_dom_sales_combined_dt <- merge(lf_apco_dom_historic_sales,lf_VCEA_goal_sales_reduction_dt,by=c("year","variable","value"),all=T)
+
+# below code ensures that historic data will appear first then goal data
+lf_apco_dom_sales_combined <- lf_apco_dom_sales_combined %>% 
+  arrange(desc(category)) %>%
+  mutate_at(vars(category), funs(factor(., levels=unique(.))))
+
+# Renewable versus Non-renewable Generation------------------------------------------------------------------------------------------------
 va_annual_renewable_and_carbon_free_gen[,not_renewable:=total-renewable]
 
-# Carbon versus Carbon Free Generation------------------------------------------------------------------------------
+# Carbon versus Carbon Free Generation-----------------------------------------------------------------------------------------------------
 va_annual_renewable_and_carbon_free_gen[,carbon_emitting:=total-carbon_free]
 
-# Solar & Wind Capacity vs VCEA goals -----------------------------------------------------------------------
+# Solar & Wind Capacity vs VCEA goals -----------------------------------------------------------------------------------------------------
 # Creating working versions to keep formatting of tables intact when they are uploaded to dashboard
 pjm_solar_working <- pjm_solar
 pjm_solar_names <- names(pjm_solar_working)

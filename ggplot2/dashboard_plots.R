@@ -69,6 +69,38 @@ va_annual_production_2019_pie_chart_p_with_legend <- pie_chart_figure_p(list(eia
                                                                         legend_shown = T)
 va_annual_production_2019_pie_chart_p_with_legend
 
+#APCO and Dominion historic sales vs goals
+apco_dom_historic_sales_line <- line_figure(list(lf_apco_dom_historic_sales),
+                                            "year","Sales (GWh)","APCO and Dominion Historic Sales",return_static = F)
+apco_dom_historic_sales_line
+
+apco_dom_historic_sales_line_p <- ggplotly_wrapper(apco_dom_historic_sales_line)
+apco_dom_historic_sales_line_p
+
+apco_dom_sales_goal_line <- line_figure(list(lf_VCEA_goal_sales_reduction),
+                                        "year","Sales (GWh)","APCO and Dominion VCEA Sales Goals for 2025",
+                                        return_static = F)
+apco_dom_sales_goal_line
+
+apco_dom_sales_goal_line_p <- ggplotly_wrapper(apco_dom_sales_goal_line)
+apco_dom_sales_goal_line_p
+
+apco_dom_historic_goal_sales_combined_line <- line_figure(list(lf_apco_dom_sales_combined_dt),
+                                                          "year","Sales (GWh)","APCO and Dominion Historic Sales and Goal",return_static = F)
+apco_dom_historic_goal_sales_combined_line
+
+apco_dom_historic_goal_sales_combined_line_p <- ggplotly_wrapper(apco_dom_historic_goal_sales_combined_line)
+apco_dom_historic_goal_sales_combined_line
+
+#facet grid
+apco_dom_sales_facet_graph <- ggplot(data=lf_apco_dom_sales_combined,mapping=aes(x=year,y=value,color=variable))+
+  geom_line(aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
+  facet_grid(.~category,scales="free")+
+  scale_color_manual(name=NULL,values=ceps_pal[1:2])+
+  xlab("Year")+ylab("Sales (GWh)")+ylim(0,NA)+
+  labs(title="Electricty Sales",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
+  theme_ceps()
+apco_dom_sales_facet_graph
 #--------------------------------------------PLOTTING CONSUMPTION FIGURES---------------------------------------------------------------------
 va_annual_consumption_area <- stacked_area_figure(list(eia_seds_tercb_va_a,eia_seds_teccb_va_a,eia_seds_teicb_va_a,eia_seds_teacb_va_a),
                                                   "year","Consumption (Billion Btu)","Virginia Annual Electricity Consumption by Sector",

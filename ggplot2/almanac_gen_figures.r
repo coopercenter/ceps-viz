@@ -1,125 +1,56 @@
-library(data.table)
-library(lubridate)
 library(here)
 library(ggplot2)
-library(scales)
-library(dbConnect)
-library("RPostgreSQL")
 
-db_driver = dbDriver("PostgreSQL")
-#insert your filepath here
-source(here::here("my_postgres_credentials.R"))
-db <- dbConnect(db_driver,user=db_user, password=ra_pwd,dbname="postgres", host=db_host)
+source(here::here("derived_values","almanac_gen_figures_calculations.R"))
+source(here::here("ggplot2","viz_functions.R")) #sourcing in viz functions
 
-fetch_time_series_from_db <- function(db_table_name, fuel_code, con){
-  # Fetch generation data from a specified db table; return as a data table
-  require(RPostgreSQL)
-  require(data.table)
-  
-  sql_script  <- paste0("select value, date from ",db_table_name,";")
-  dt = data.table(dbGetQuery(con, sql_script))
-  setnames(dt, "value", fuel_code)
-  
-  return(dt)
-}
+#manually pulling source for bar charts because they are not functionalized
+source <- metadata[db_table_name=="eia_elec_gen_was_va_99_a",data_source_full_name] #doesn't matter which table is used-it's all EIA data
+source_full <- paste("Source:",source)
 
-# Creating a data frame called `series_list` that includes two columns:
-#      * `table_name`: the list of db table names with data to be pulled and merged
-#      *  `fuel_code` : associated fuel type codes, e.g., "coal", "nuc"
-series_list = data.frame(
-  table_name=c("eia_elec_gen_was_va_99_m",
-               "eia_elec_gen_cow_va_99_m",
-               "eia_elec_gen_hps_va_99_m",
-               "eia_elec_gen_ng_va_99_m",
-               "eia_elec_gen_nuc_va_99_m",
-               "eia_elec_gen_aor_va_99_m",
-               "eia_elec_gen_oth_va_99_m",
-               "eia_elec_gen_pel_va_99_m",
-               "eia_elec_gen_dpv_va_99_m",
-               "eia_elec_gen_spv_va_99_m",
-               "eia_elec_gen_hyc_va_99_m",
-               "eia_elec_gen_www_va_99_m"),
-  fuel_code=c("bio","coal","hps","ng","nuc","or","other","pel","solar_d","solar_u","wat","wood")
-)
-series_list$fuel_code<-as.character(series_list$fuel_code)
-
-# Building data table `all_generation` by merging data on generation by several fuel types
-all_generation <- NULL
-
-for(row in 1:nrow(series_list)){
-  table <- series_list[row,"table_name"]
-  fuel <- series_list[row,"fuel_code"]
-  
-  dt <- fetch_time_series_from_db(table, fuel, db)
-  
-  if (is.null(all_generation))
-  {all_generation <- dt}
-  else
-  {all_generation <-  merge(all_generation, dt[], by ="date", all=TRUE)}
-}
-
-dbDisconnect(db)
-
-#to plot generation by fuel type over time
-lf_all_generation <- melt(all_generation, id="date")
-setnames(lf_all_generation, old=c("variable", "value"), new=c("fuel_type","generation"))
-
-generation_by_type <- ggplot(lf_all_generation, aes(fill=fuel_type, x=date, y=generation)) +
-  geom_line(aes(color=fuel_type)) + ylab("Generation (thousand MWhrs)") + 
-  xlab(NULL) +
-  labs(title ="VA Monthly Electricity Generation by Fuel Type") 
+generation_by_type <- line_figure(list(lf_all_generation_m), 
+                                  "date","Generation (GWh)","Virginia Monthly Electricity Generation by Fuel Type",
+                                  list("eia_elec_gen_was_va_99_m"),x_label = "Date",return_static = F) 
 generation_by_type
 
 path2graphics <- here::here("graphics")
 ggsave(path=path2graphics, filename="generation_by_type.png")
 
+generation_by_type_p <- ggplotly_wrapper(generation_by_type)
+generation_by_type_p
 
-#bar chart breaking up generation by year
-all_generation[is.na(solar_d),solar_d:=0]
-all_generation[is.na(solar_u),solar_u:=0]
-
-all_generation[,`:=`(cum_coal=cumsum(coal),
-                     cum_ng=cumsum(ng),
-                     cum_nuc=cumsum(nuc),
-                     cum_pel=cumsum(pel),
-                     cum_solar_d=cumsum(solar_d),
-                     cum_solar_u=cumsum(solar_u),
-                     cum_wat=cumsum(wat),
-                     cum_wood=cumsum(wood),
-                     cum_or=cumsum(or),
-                     cum_bio=cumsum(bio),
-                     cum_other=cumsum(other)
-),year(date)]
-
-
-lf_all_generation[, cum_generation:=cumsum(generation), by = .(year(date), fuel_type)]
-
-generation_bar <- ggplot(lf_all_generation[month(date)==12], aes(fill=fuel_type,x=date, y=cum_generation)) +
-  geom_bar(position = "dodge", stat="identity") + 
-  ylab("Generation (thousand MWhrs)") + xlab(NULL) +
-  labs(title ="VA Annual Electricity Generation by Fuel Type") +
-  scale_x_date(labels = date_format("%Y"), breaks='1 year')
+generation_bar <- ggplot(lf_all_generation_a, aes(fill=variable,x=year, y=value)) +
+  geom_bar(position = "dodge", stat="identity",aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable))) + 
+  ylab("Generation (GWh)") + xlab("Year") +
+  labs(title ="Virginia Annual Electricity Generation by Fuel Type",caption=source_full)+
+  scale_fill_manual(name=NULL,values=ceps_pal[1:12])+
+  theme_ceps()
 generation_bar
 
 ggsave(path=path2graphics, filename="generation_bar.png")
 
-generation_bar_stacked <- ggplot(lf_all_generation[month(date)==12], aes(fill=fuel_type,x=date, y=cum_generation)) +
-  geom_bar(position = "stack", stat="identity") + 
-  ylab("Generation (thousand MWhrs)") + xlab(NULL) +
-  labs(title ="VA Annual Electricity Generation by Fuel Type") +
-  scale_x_date(labels = date_format("%Y"), breaks='1 year')
+generation_bar_p <- ggplotly_wrapper(list(figure=generation_bar,x_label="Year",source_description=source_full,title_name="Virginia Annual Electricity Generation by Fuel Type",subtitle_description=NULL,y_label=NULL))
+generation_bar_p
+
+generation_bar_stacked <- ggplot(lf_all_generation_a, aes(fill=variable,x=year,y=value)) +
+  geom_bar(position = "stack", stat="identity",aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable))) + 
+  ylab("Generation (GWh)") + xlab(NULL) +
+  labs(title ="Virginia Annual Electricity Generation by Fuel Type",caption=source_full) +
+  scale_fill_manual(name=NULL,values=ceps_pal[1:12])+
+  theme_ceps()
 generation_bar_stacked
 
 ggsave(path=path2graphics, filename="generation_bar_stacked.png")
 
-generation_area_stacked <- ggplot(lf_all_generation[month(date)==12], aes(x=date, y=cum_generation)) +
-  geom_area(aes(fill=fuel_type)) + 
-  ylab("Generation (thousand MWhrs)") + xlab(NULL) +
-  labs(title ="VA Annual Electricity Generation by Fuel Type") +
-  scale_x_date(labels = date_format("%Y"), breaks='1 year')
+generation_bar_stacked_p <- ggplotly_wrapper(list(figure=generation_bar_stacked,x_label="Year",source_description=source_full,title_name="Virginia Annual Electricity Generation by Fuel Type",subtitle_description=NULL,y_label=NULL))
+generation_bar_stacked_p
+
+generation_area_stacked <- line_figure(list(lf_all_generation_a), 
+                                       "year","Generation (GWh)","Virginia Annual Electricity Generation by Fuel Type",
+                                       list("eia_elec_gen_cow_va_99_a"),return_static = F) 
 generation_area_stacked
 
 ggsave(path=path2graphics, filename="generation_area_stacked.png")
 
-
-
+generation_area_stacked_p <- ggplotly_wrapper(generation_area_stacked)
+generation_area_stacked_p

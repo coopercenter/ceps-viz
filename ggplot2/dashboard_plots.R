@@ -15,7 +15,7 @@ renewable_percent_gen_2030_goal = .3 #30% of Virginia’s electricity from renew
 renewable_ring = data.frame(category=c(" ","2019 renewable generation","goal"),
                             value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
 
-single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation","2.6% in 2019","Goal: 30% by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a","VCEA_storage"))
+single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation","2.6% in 2019","Goal: 30% by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 single_ring_renewable_donut_p
 
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from car
 carbon_free_ring = data.frame(category=c("goal","2019 carbon free generation"),
                               value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
 
-single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","Goal: 100% by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a","VCEA_storage"))
+single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","Goal: 100% by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 single_ring_carbon_free_donut_p
 
 #plotting donut figure of progess towards wind and solar capacity goals-----------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ storage_capacity_2035_mw_goal = 3100
 storage_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                           value=c(storage_capacity_2035_mw_goal-storage_capacity_2019_mw,storage_capacity_2019_mw))
 
-single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","4 MW of Storage Capacity as of 2019","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"))
+single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","4 MW of Storage Capacity as of 2019","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 single_ring_storage_capacity_donut_p
 #--------------------------------------------PLOTTING GENERATION/PRODUCTION FIGURES----------------------------------------------------------------
 

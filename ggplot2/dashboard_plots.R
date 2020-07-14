@@ -25,7 +25,7 @@ carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from car
 carbon_free_ring = data.frame(category=c("goal","2019 carbon free generation"),
                               value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
 
-single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","Goal: 100% by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a","VCEA_storage"))
+single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","Goal: 100% by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"),source_citation="Source: Virginia Clean Economy Act")
 single_ring_carbon_free_donut_p
 
 #plotting donut figure of progess towards wind and solar capacity goals-----------------------------------------------------------------------------------------

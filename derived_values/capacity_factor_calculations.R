@@ -209,7 +209,7 @@ mean_petroleum_liquids_cf_2019<- capacity_factors[year(date)==2019,mean(petroleu
 mean_hydroelctric_cf_2019<- capacity_factors[year(date)==2019,mean(hydroelctric_cf)]
 mean_wood_cf_2019<- capacity_factors[year(date)==2019,mean(wood_cf)]
 ###data table excluding biomass bc value doesn't make sense
-mean_all_cf_2019_data_table<-data.table(year=2019,variable=c("coal", "natural gas","nuclear", "petroleum liquids", "hydroelectric","wood","wind"),
+mean_all_cf_2019_data_table<-data.table(year=2019,Variable=c("Coal", "Natural Gas","Nuclear", "Petroleum Liquids", "Hydroelectric","Wood","Wind"),
                                         value=c(mean_coal_cf_2019,mean_natural_gas_cf_2019,mean_nuclear_cf_2019,mean_petroleum_liquids_cf_2019,mean_hydroelctric_cf_2019,mean_wood_cf_2019,44.8))
 
 ###Offshore wind net capacity factors over time

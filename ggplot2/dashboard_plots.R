@@ -193,7 +193,7 @@ wind_projected_generation_time_series_line_p
 
 # Projected wind capacity
 wind_projected_capacity_line <- line_figure(list(melt(total_mw_offshore_wind,id="Year")),
-                                            "Year","Projected Capacity (MW)","Virginia Projected Offshore Wind Capacity",
+                                            "Year","Projected Capacity (MW)","Coastal Virginia Offshore Wind (CVOW) Capacity",
                                             list("total_mw_offshore_wind"),
                                             return_static = F, subtitle_description = "Planned")
 wind_projected_capacity_line

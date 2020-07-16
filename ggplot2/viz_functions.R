@@ -25,7 +25,7 @@ theme_ceps <- function() {
 }
 
 #custom color palette
-ceps_pal <- c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2","#5868AC", "#91D1C2B2","#8491B4B2","#D9C6C9", "#6FB3D9","#56BD96","#99A9E2","#A94F64","#B0DEFA")
+ceps_pal <- c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#D9C6C9","#8491B4B2","#5868AC","#6FB3D9","#56BD96","#99A9E2","#A94F64","#B0DEFA","#99EEBB","#8FD3FE")
 
 #plotly donut figures with a single ring, but the data table must be built outside the function:
 single_ring_donut_figure_p <- function(data_table,description_of_goal,top_description,bottom_description,hover_info,colors_list,character_list=NULL,source_citation=NULL){

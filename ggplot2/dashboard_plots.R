@@ -15,7 +15,7 @@ renewable_percent_gen_2030_goal = .3 #30% of Virginia’s electricity from renew
 renewable_ring = data.frame(category=c(" ","2019 renewable generation","goal"),
                             value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
 
-single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation","2019 Status: 2.6% of Generation from Renewables","Goal: 30% of Generation from Renewables by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation",paste0("2019 Status: ",round(renewable_percent_gen_2019*100,1),"% of Generation from Renewables"),"Goal: 30% of Generation from Renewables by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 single_ring_renewable_donut_p
 
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------
@@ -25,28 +25,40 @@ carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from car
 carbon_free_ring = data.frame(category=c("goal","2019 carbon free generation"),
                               value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
 
-single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","2019 Status: 32.9% of Generation from Carbon-Free Sources","Goal: 100% of Generation from Carbon-Free Sources by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation",paste0("2019 Status: ",round(carbon_free_percent_gen_2019*100,1),"% of Generation from Carbon-Free Sources"),"Goal: 100% of Generation from Carbon-Free Sources by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 single_ring_carbon_free_donut_p
 
-#plotting donut figure of progess towards wind and solar capacity goals-----------------------------------------------------------------------------------------
+#plotting donut figure of progess towards onshore wind and solar capacity goals-----------------------------------------------------------------------------------------
 solar_capacity_2019_mw = pjm_solar_working[status=="In Service",sum(mfo)] #currently only solar in service, no wind
+onshore_wind_capacity_2019_mw = pjm_wind_working[fuel=="Wind"&status=="In Service",sum(mfo)]
 sw_capacity_2024_mw_goal = 16100 #16,100 MW of solar and onshore wind by January 1, 2024 (from VCEA Summary 3.0)
 
 sw_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
-                     value=c(sw_capacity_2024_mw_goal-solar_capacity_2019_mw,solar_capacity_2019_mw))
+                     value=c(sw_capacity_2024_mw_goal-(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw),solar_capacity_2019_mw+onshore_wind_capacity_2019_mw))
 
-single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity","2019 Status: 701.4 MW of Solar Capacity","Goal: 16,100 MW of Onshore Wind & Solar Capacity by 2024","label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
+single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity",paste("2019 Status:",format(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar Capacity"),paste("Goal:",format(sw_capacity_2024_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar Capacity in Operation by 2024"),"label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
 single_ring_sw_capacity_donut_p
 
-#plotting donut figure of progress towards storage capacity
+#plotting donut figure of progress towards storage capacity------------------------------------------------------------------------------------------
 storage_capacity_2019_mw = pjm_storage_working[status=="In Service",sum(mfo)]
 storage_capacity_2035_mw_goal = 3100
 
 storage_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                           value=c(storage_capacity_2035_mw_goal-storage_capacity_2019_mw,storage_capacity_2019_mw))
 
-single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","2019 Status: 4 MW of Storage Capacity","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity",paste("2019 Status:",format(storage_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Storage Capacity"),paste("Goal:",format(storage_capacity_2035_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Storage Capacity in Operation by 2035"),"label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"))
 single_ring_storage_capacity_donut_p
+
+#plotting donut figure of progress towards offshore wind--------------------------------------------------------------------------------------------------------------
+offshore_wind_current_mw = pjm_wind_working[fuel=="Offshore Wind"&status=="In Service",sum(mfo)]
+offshore_wind_2034_mw_goal = 5200 #Requires Dominion to develop 5,200 MW of offshore wind by Jan. 1, 2034 (from VCEA Summary 3.0)
+
+offshore_wind_ring = data.frame(category=c("additional capacity necessary to reach goal","current capacity"),
+                                value=c(offshore_wind_2034_mw_goal-offshore_wind_current_mw,offshore_wind_current_mw))
+
+single_ring_offshore_wind_capacity_donut_p <- single_ring_donut_figure_p(offshore_wind_ring,"Offshore Wind Capacity",paste("2019 Status:",format(offshore_wind_current_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Offshore Wind Capacity"),paste("Goal:",format(offshore_wind_2034_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Offshore Wind Capacity in Operation by 2034"),"label+value",c("#8491B4B2","#99A9E2"),list("pjm_solar","VCEA_storage"))
+single_ring_offshore_wind_capacity_donut_p
+
 #--------------------------------------------PLOTTING GENERATION/PRODUCTION FIGURES----------------------------------------------------------------
 
 va_annual_production_area <- stacked_area_figure(list(eia_elec_gen_cow_va_99_a,eia_elec_gen_pel_va_99_a,eia_elec_gen_ng_va_99_a,eia_elec_gen_nuc_va_99_a,eia_elec_gen_sun_va_99_a,eia_elec_gen_dpv_va_99_a,eia_elec_gen_hyc_va_99_a,eia_elec_gen_www_va_99_a,eia_elec_gen_was_va_99_a,other_annual_generation),
@@ -166,7 +178,7 @@ wood_generation_time_series_line_p
 
 # Projected wind generation overtime
 wind_projected_generation_time_series_line <- line_figure(list(melt(total_production_forecast_offshore_wind,id="Year")),
-                                                          "Year","Projected Generation (GWh)","Virginia Projected Annual Offshore Wind Electricity Generation",
+                                                          "Year","Projected Generation (GWh)","Virginia Projected Offshore Wind Electricity Generation",
                                                           list("total_production_forecast_offshore_wind"),
                                                           return_static = F, modifications =  theme(legend.position = "none"), subtitle_description = "Planned")
 wind_projected_generation_time_series_line
@@ -191,7 +203,7 @@ wind_projected_capacity_line_p
 
 #Stacked Annual Carbon Free Generation Broken Out by Type
 carbon_free_generation_by_type_stacked <- stacked_area_figure(list(eia_elec_gen_nuc_va_99_a,eia_elec_gen_sun_va_99_a,eia_elec_gen_dpv_va_99_a,eia_elec_gen_hyc_va_99_a),
-                                                              "year","Generation (GWh)","Virginia Carbon-Free Electricity Generation",
+                                                              "year","Generation (GWh)","Virginia Carbon-Free Electricity Generation by Source",
                                                               list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                               return_static = F)
 carbon_free_generation_by_type_stacked
@@ -325,7 +337,7 @@ co2_combined_emissions_line_p
 # Emissions by compound
 # note: to convert from short tons to million metric tons, divide short tons by 1102311.31 & to convert from thousand metric tons to million metric tons, divide by 1000
 emissions_line <- line_figure(list(emissions_co2_by_source_va[,.(year=year,CO2=total/1000)],emissions_no_by_source_va[,.(year=year,NO=total/1102311.31)],emissions_so2_by_source_va[,.(year=year,SO2=total/1102311.31)]),
-                              "year","Emissions (million metric tons)","Virginia Annual Emissions",
+                              "year","Emissions (million metric tons)","Virginia Emissions",
                               list("emissions_co2_by_source_va","emissions_no_by_source_va","emissions_so2_by_source_va"),
                               return_static = F)
 emissions_line
@@ -417,22 +429,22 @@ apco_dom_sales_facet_graph
 
 #Note: below figures come from ACEEE data - no metadata entries yet so manual citations are used
 annual_savings_2020_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
-                                                                  title_name = "Virginia Annual Savings through 2020 (MWh)",
+                                                                  title_name = "Virginia Savings through 2020 (MWh)",
                                                                   character_list = list("virginia_annual_savings_through_2020"),source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2020_pie_chart_p
 
 annual_savings_2020_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
-                                                      title_name = "Virginia Annual Savings through 2020 (MWh)",
+                                                      title_name = "Virginia Savings through 2020 (MWh)",
                                                       character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2020_pie_chart_p_with_legend
 
 annual_savings_2022_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savings_through_2022[variable!="Total Needed"]),
-                                                      title_name = "Virginia Annual Savings through 2022 (MWh)",
+                                                      title_name = "Virginia Savings through 2022 (MWh)",
                                                       character_list = list("virginia_annual_savings_through_2020"),source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2022_pie_chart_p
 
 annual_savings_2022_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_annual_savings_through_2022[variable!="Total Needed"]),
-                                                                  title_name = "Virginia Annual Savings through 2022 (MWh)",
+                                                                  title_name = "Virginia Savings through 2022 (MWh)",
                                                                   character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2022_pie_chart_p_with_legend
 

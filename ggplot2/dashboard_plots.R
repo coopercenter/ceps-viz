@@ -15,7 +15,7 @@ renewable_percent_gen_2030_goal = .3 #30% of Virginia’s electricity from renew
 renewable_ring = data.frame(category=c(" ","2019 renewable generation","goal"),
                             value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
 
-single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation","2.6% in 2019","Goal: 30% by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation","2019 Status: 2.6% of Generation from Renewables","Goal: 30% of Generation from Renewables by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 single_ring_renewable_donut_p
 
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from car
 carbon_free_ring = data.frame(category=c("goal","2019 carbon free generation"),
                               value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
 
-single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","32.9% in 2019","Goal: 100% by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation","2019 Status: 32.9% of Generation from Carbon-Free Sources","Goal: 100% of Generation from Carbon-Free Sources by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 single_ring_carbon_free_donut_p
 
 #plotting donut figure of progess towards wind and solar capacity goals-----------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ sw_capacity_2024_mw_goal = 16100 #16,100 MW of solar and onshore wind by January
 sw_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                      value=c(sw_capacity_2024_mw_goal-solar_capacity_2019_mw,solar_capacity_2019_mw))
 
-single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity","701.4 MW of Solar Capacity as of 2019","Goal: 16,100 MW of Onshore Wind & Solar Capacity by 2024","label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
+single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity","2019 Status: 701.4 MW of Solar Capacity","Goal: 16,100 MW of Onshore Wind & Solar Capacity by 2024","label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
 single_ring_sw_capacity_donut_p
 
 #plotting donut figure of progress towards storage capacity
@@ -45,12 +45,12 @@ storage_capacity_2035_mw_goal = 3100
 storage_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                           value=c(storage_capacity_2035_mw_goal-storage_capacity_2019_mw,storage_capacity_2019_mw))
 
-single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","4 MW of Storage Capacity as of 2019","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity","2019 Status: 4 MW of Storage Capacity","Goal: 3,100 MW of Storage Capacity by 2035","label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 single_ring_storage_capacity_donut_p
 #--------------------------------------------PLOTTING GENERATION/PRODUCTION FIGURES----------------------------------------------------------------
 
 va_annual_production_area <- stacked_area_figure(list(eia_elec_gen_cow_va_99_a,eia_elec_gen_pel_va_99_a,eia_elec_gen_ng_va_99_a,eia_elec_gen_nuc_va_99_a,eia_elec_gen_sun_va_99_a,eia_elec_gen_dpv_va_99_a,eia_elec_gen_hyc_va_99_a,eia_elec_gen_www_va_99_a,eia_elec_gen_was_va_99_a,other_annual_generation),
-                                                 "year","Generation (GWh)","Virginia Annual Electricity Generation by Fuel Type",
+                                                 "year","Generation (GWh)","Virginia Electricity Generation by Fuel Type",
                                                  list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                                  lower_limit = -1900,return_static = F)
 va_annual_production_area
@@ -69,41 +69,9 @@ va_annual_production_2019_pie_chart_p_with_legend <- pie_chart_figure_p(list(eia
                                                                         legend_shown = T)
 va_annual_production_2019_pie_chart_p_with_legend
 
-#APCO and Dominion historic sales vs goals
-apco_dom_historic_sales_line <- line_figure(list(lf_apco_dom_historic_sales),
-                                            "year","Sales (GWh)","APCO and Dominion Historic Sales",return_static = F)
-apco_dom_historic_sales_line
-
-apco_dom_historic_sales_line_p <- ggplotly_wrapper(apco_dom_historic_sales_line)
-apco_dom_historic_sales_line_p
-
-apco_dom_sales_goal_line <- line_figure(list(lf_VCEA_goal_sales_reduction),
-                                        "year","Sales (GWh)","APCO and Dominion VCEA Sales Goals for 2025",
-                                        return_static = F)
-apco_dom_sales_goal_line
-
-apco_dom_sales_goal_line_p <- ggplotly_wrapper(apco_dom_sales_goal_line)
-apco_dom_sales_goal_line_p
-
-apco_dom_historic_goal_sales_combined_line <- line_figure(list(lf_apco_dom_sales_combined_dt),
-                                                          "year","Sales (GWh)","APCO and Dominion Historic Sales and Goal",return_static = F)
-apco_dom_historic_goal_sales_combined_line
-
-apco_dom_historic_goal_sales_combined_line_p <- ggplotly_wrapper(apco_dom_historic_goal_sales_combined_line)
-apco_dom_historic_goal_sales_combined_line
-
-#facet grid
-apco_dom_sales_facet_graph <- ggplot(data=lf_apco_dom_sales_combined,mapping=aes(x=year,y=value,color=variable))+
-  geom_line(aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
-  facet_grid(.~category,scales="free")+
-  scale_color_manual(name=NULL,values=ceps_pal[1:2])+
-  xlab("Year")+ylab("Sales (GWh)")+ylim(0,NA)+
-  labs(title="Electricty Sales",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
-  theme_ceps()
-apco_dom_sales_facet_graph
 #--------------------------------------------PLOTTING CONSUMPTION FIGURES---------------------------------------------------------------------
 va_annual_consumption_area <- stacked_area_figure(list(eia_seds_tercb_va_a,eia_seds_teccb_va_a,eia_seds_teicb_va_a,eia_seds_teacb_va_a),
-                                                  "year","Consumption (Billion Btu)","Virginia Annual Electricity Consumption by Sector",
+                                                  "year","Consumption (Billion Btu)","Virginia Electricity Consumption by Sector",
                                                   list("eia_seds_tercb_va_a","eia_seds_teccb_va_a","eia_seds_teicb_va_a","eia_seds_teacb_va_a"),
                                                   return_static = F, modifications = scale_y_continuous(labels = comma))
 va_annual_consumption_area
@@ -126,27 +94,27 @@ va_annual_consumption_2018_pie_chart_p_with_legend
 
 # Graphing % of VA power generation (in GWh/yr) from renewables & carbon-free sources 
 percent_renewable_and_carbon_free_line <- line_figure(list(lf_percent_renewable_and_carbon_free),
-                                                      "year","Percentage of Total Generation","Percentage of Virginia Annual Electricity Generation",
+                                                      "year","Percentage of Total Generation","Virginia Electricity Generation",
                                                       list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
-                                                      return_static = F,upper_limit = 100)
+                                                      return_static = F,upper_limit = 100, subtitle_description = "Renewable and Carbon-Free")
 percent_renewable_and_carbon_free_line
 
 percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line)
 percent_renewable_and_carbon_free_line_p
 
 percent_renewable_and_carbon_free_goal_line <- line_figure(list(lf_VCEA_goal_percent_gen),
-                                                      "year","Percentage of Total Generation","Percentage of Virginia Annual Electricity Generation",
+                                                      "year","Percentage of Total Generation","Virginia Electricity Generation",
                                                       list("VCEA_storage"),
-                                                      return_static = F)
+                                                      return_static = F,subtitle_description = "Renewable and Carbon-Free")
 percent_renewable_and_carbon_free_goal_line 
 
 percent_renewable_and_carbon_free_goal_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_line)
 percent_renewable_and_carbon_free_goal_line_p
 
 percent_renewable_and_carbon_free_goal_combined_line <- line_figure(list(lf_percent_renewable_carbon_free_combined_dt),
-                                                      "year","Percentage of Total Generation","Percentage of Virginia Annual Electricity Generation",
+                                                      "year","Percentage of Total Generation","Virginia Electricity Generation",
                                                       list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","VCEA_storage"),
-                                                      return_static = F)
+                                                      return_static = F,subtitle_description="Renewable and Carbon Free")
 percent_renewable_and_carbon_free_goal_combined_line
 
 percent_renewable_and_carbon_free_goal_combined_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_combined_line)
@@ -158,7 +126,7 @@ renewable_and_carbon_free_facet_graph <- ggplot(data=lf_percent_renewable_carbon
   facet_grid(.~category,scales="free")+
   scale_color_manual(name=NULL,values=ceps_pal[1:2])+
   xlab("Year")+ylab("Percentage of Total Generation")+ylim(0,NA)+
-  labs(title="Percentage of Virginia Goal Annual Electricity Generation",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
+  labs(title="Virginia Electricity Generation, Renewable and Carbon-Free",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
   theme_ceps()
 renewable_and_carbon_free_facet_graph
 
@@ -168,7 +136,7 @@ renewable_and_carbon_free_facet_graph_p
 
 # Solar, Hydro, and Nuclear Generation over Time
 annual_carbon_free_generation_by_type_line <- line_figure(list(eia_elec_gen_nuc_va_99_a,eia_elec_gen_sun_va_99_a,eia_elec_gen_dpv_va_99_a,eia_elec_gen_hyc_va_99_a),
-                                                          "year","Generation (GWh)","Virginia Annual Carbon-Free Electricity Generation",
+                                                          "year","Generation (GWh)","Virginia Carbon-Free Electricity Generation",
                                                           list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                           return_static = F)
 annual_carbon_free_generation_by_type_line
@@ -178,9 +146,9 @@ annual_carbon_free_generation_by_type_line_p
 
 # Solar (broken into distributed and utility) over time
 solar_generation_time_series_line <- line_figure(list(eia_elec_gen_sun_va_99_a[solar_utility!=0],eia_elec_gen_dpv_va_99_a),
-                                                 "year","Generation (GWh)","Virginia Annual Solar Electricity Generation",
+                                                 "year","Generation (GWh)","Virginia Solar Electricity Generation",
                                                  list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a"),
-                                                 return_static = F)
+                                                 return_static = F,subtitle_description="Utility Scale and Distributed")
 solar_generation_time_series_line
 
 solar_generation_time_series_line_p <- ggplotly_wrapper(solar_generation_time_series_line)
@@ -188,7 +156,7 @@ solar_generation_time_series_line_p
 
 # Wood generation over time
 wood_generation_time_series_line <- line_figure(list(melt(eia_elec_gen_www_va_99_a,id="year")),
-                                                "year","Generation (GWh)","Virginia Annual Electricity Generation from Wood",
+                                                "year","Generation (GWh)","Virginia Electricity Generation from Wood",
                                                 list("eia_elec_gen_www_va_99_a"),
                                                 return_static = F, modifications = theme(legend.position = "none"))
 wood_generation_time_series_line
@@ -200,7 +168,7 @@ wood_generation_time_series_line_p
 wind_projected_generation_time_series_line <- line_figure(list(melt(total_production_forecast_offshore_wind,id="Year")),
                                                           "Year","Projected Generation (GWh)","Virginia Projected Annual Offshore Wind Electricity Generation",
                                                           list("total_production_forecast_offshore_wind"),
-                                                          return_static = F, modifications =  theme(legend.position = "none"), subtitle_description = "Forecast")
+                                                          return_static = F, modifications =  theme(legend.position = "none"), subtitle_description = "Planned")
 wind_projected_generation_time_series_line
 
 #manually re-scaling y-axis so that value of 44 doesn't look like 0
@@ -215,7 +183,7 @@ wind_projected_generation_time_series_line_p
 wind_projected_capacity_line <- line_figure(list(melt(total_mw_offshore_wind,id="Year")),
                                             "Year","Projected Capacity (MW)","Virginia Projected Offshore Wind Capacity",
                                             list("total_mw_offshore_wind"),
-                                            return_static = F, subtitle_description = "Forecast")
+                                            return_static = F, subtitle_description = "Planned")
 wind_projected_capacity_line
 
 wind_projected_capacity_line_p <- ggplotly_wrapper(wind_projected_capacity_line)
@@ -223,7 +191,7 @@ wind_projected_capacity_line_p
 
 #Stacked Annual Carbon Free Generation Broken Out by Type
 carbon_free_generation_by_type_stacked <- stacked_area_figure(list(eia_elec_gen_nuc_va_99_a,eia_elec_gen_sun_va_99_a,eia_elec_gen_dpv_va_99_a,eia_elec_gen_hyc_va_99_a),
-                                                              "year","Generation (GWh)","Virginia Annual Carbon-Free Electricity Generation",
+                                                              "year","Generation (GWh)","Virginia Carbon-Free Electricity Generation",
                                                               list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                               return_static = F)
 carbon_free_generation_by_type_stacked
@@ -233,7 +201,7 @@ carbon_free_generation_by_type_stacked_p
 
 # Stacked Annual Renewable Generation Broken Out by Type (hydro, utility solar, distributed solar)
 renewable_generation_by_type_stacked <- stacked_area_figure(list(eia_elec_gen_sun_va_99_a,eia_elec_gen_dpv_va_99_a,eia_elec_gen_hyc_va_99_a),
-                                                            "year","Generation (GWh)","Virginia Annual Renewable Electricity Generation",
+                                                            "year","Generation (GWh)","Virginia Renewable Electricity Generation",
                                                             list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                             return_static = F)
 renewable_generation_by_type_stacked
@@ -245,7 +213,7 @@ renewable_generation_by_type_stacked_p
 renewable_vs_non_renewable<-melt(va_annual_renewable_and_carbon_free_gen[,.(year,renewable,not_renewable)],id="year")
 
 renewable_versus_non_renewable_stacked <- stacked_area_figure(list(renewable_vs_non_renewable),
-                                                              "year","Generation (GWh)","Virginia Annual Renewable and Non-Renewable Electricity Generation",
+                                                              "year","Generation (GWh)","Virginia Renewable and Non-Renewable Electricity Generation",
                                                               list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                                               return_static = F)
 renewable_versus_non_renewable_stacked
@@ -257,7 +225,7 @@ renewable_versus_non_renewable_stacked_p
 carbon_vs_carbon_free<-melt(va_annual_renewable_and_carbon_free_gen[,.(year,carbon_free,carbon_emitting)],id="year")
 
 carbon_versus_carbon_free_stacked <- stacked_area_figure(list(carbon_vs_carbon_free),
-                                                         "year","Generation (GWh)","Virginia Annual Carbon Emitting and Carbon-Free Electricity Generation",
+                                                         "year","Generation (GWh)","Virginia Carbon Emitting and Carbon-Free Electricity Generation",
                                                          list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                                          return_static = F)
 carbon_versus_carbon_free_stacked
@@ -269,7 +237,7 @@ carbon_versus_carbon_free_stacked_p
 renewable_and_carbon_free<-melt(va_annual_renewable_and_carbon_free_gen[,.(year,carbon_free,renewable,total)],id="year")
 
 renewable_and_carbon_free_line <- line_figure(list(renewable_and_carbon_free),
-                                              "year","Generation (GWh)","Virginia Annual Renewable and Carbon-Free Electricity Generation",
+                                              "year","Generation (GWh)","Virginia Renewable and Carbon-Free Electricity Generation",
                                               list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                               return_static = F)
 renewable_and_carbon_free_line
@@ -346,7 +314,7 @@ storage_projected_capacity_line_p
 
 # CO2 total emissions & CO2 emissions from electric sector on same figure
 co2_combined_emissions_line <- line_figure(list(eia_emiss_co2_totv_ec_to_va_a,eia_emiss_co2_totv_tt_to_va_a),
-                                           "year","Emissions (million metric tons CO2)","Virginia Annual CO2 Emissions",
+                                           "year","Emissions (million metric tons CO2)","Virginia CO2 Emissions from Electricity Production",
                                            list("eia_emiss_co2_totv_ec_to_va_a","eia_emiss_co2_totv_tt_to_va_a"),
                                            return_static = F)
 co2_combined_emissions_line
@@ -367,7 +335,7 @@ emissions_line_p
 
 # CO2 emissions by fuel type
 carbon_by_fuel_emissions_stacked <- stacked_area_figure(list(melt(emissions_co2_by_source_va[,.(year,coal=coal/1000,natural_gas=natural_gas/1000,petroleum=petroleum/1000,other=other/1000)],id="year")),
-                                                        "year","Emissions (million metric tons)","Virginia Annual CO2 Emissions By Fuel Type",
+                                                        "year","Emissions (million metric tons)","Virginia CO2 Emissions From Electricity Production By Fuel Type",
                                                         list("emissions_co2_by_source_va"),
                                                         return_static = F)
 carbon_by_fuel_emissions_stacked
@@ -412,6 +380,40 @@ emissions_per_capita_line
 
 emissions_per_capita_line_p <- ggplotly_wrapper(emissions_per_capita_line)
 emissions_per_capita_line_p
+
+#APCO and Dominion historic sales vs goals
+apco_dom_historic_sales_line <- line_figure(list(lf_apco_dom_historic_sales),
+                                            "year","Sales (GWh)","APCO and Dominion Historic Sales",return_static = F)
+apco_dom_historic_sales_line
+
+apco_dom_historic_sales_line_p <- ggplotly_wrapper(apco_dom_historic_sales_line)
+apco_dom_historic_sales_line_p
+
+apco_dom_sales_goal_line <- line_figure(list(lf_VCEA_goal_sales_reduction),
+                                        "year","Sales (GWh)","APCO and Dominion VCEA Sales Goals for 2025",
+                                        return_static = F)
+apco_dom_sales_goal_line
+
+apco_dom_sales_goal_line_p <- ggplotly_wrapper(apco_dom_sales_goal_line)
+apco_dom_sales_goal_line_p
+
+apco_dom_historic_goal_sales_combined_line <- line_figure(list(lf_apco_dom_sales_combined_dt),
+                                                          "year","Sales (GWh)","APCO and Dominion Historic Sales and Goal",return_static = F)
+apco_dom_historic_goal_sales_combined_line
+
+apco_dom_historic_goal_sales_combined_line_p <- ggplotly_wrapper(apco_dom_historic_goal_sales_combined_line)
+apco_dom_historic_goal_sales_combined_line
+
+#facet grid
+apco_dom_sales_facet_graph <- ggplot(data=lf_apco_dom_sales_combined,mapping=aes(x=year,y=value,color=variable))+
+  geom_line(aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
+  facet_grid(.~category,scales="free")+
+  scale_color_manual(name=NULL,values=ceps_pal[1:2])+
+  xlab("Year")+ylab("Sales (GWh)")+ylim(0,NA)+
+  labs(title="Electricty Sales",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
+  theme_ceps()
+apco_dom_sales_facet_graph
+
 
 #Note: below figures come from ACEEE data - no metadata entries yet so manual citations are used
 annual_savings_2020_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),

@@ -5,7 +5,7 @@ theme_ceps <- function() {
     text = element_text(family = "Helvetica",color = "dimgrey"),
     # title 
     plot.title =element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
-    plot.caption =element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
+    plot.caption =element_text(family="Helvetica",hjust=0.5,color="dimgrey",face = "italic"),
     plot.subtitle = element_text(family="Helvetica",hjust=0.5,color="dimgrey"),
     # color background 
     panel.background = element_rect(fill = "#F0F0F0"),
@@ -25,7 +25,7 @@ theme_ceps <- function() {
 }
 
 #custom color palette
-ceps_pal <- c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2","#5868AC", "#91D1C2B2","#8491B4B2","#D9C6C9", "#6FB3D9","#56BD96","#99A9E2","#A94F64","#B0DEFA")
+ceps_pal <- c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#D9C6C9","#8491B4B2","#5868AC","#6FB3D9","#56BD96","#99A9E2","#A94F64","#B0DEFA","#99EEBB","#8FD3FE")
 
 #plotly donut figures with a single ring, but the data table must be built outside the function:
 single_ring_donut_figure_p <- function(data_table,description_of_goal,top_description,bottom_description,hover_info,colors_list,character_list=NULL,source_citation=NULL){
@@ -74,7 +74,8 @@ single_ring_donut_figure_p <- function(data_table,description_of_goal,top_descri
             domain = list(x = c(0, 1), y = c(0, 1)),
             marker=list(colors=colors_list,
                         line=list(color="white",width=1))) %>%
-    layout(title=list(text=top_description,font = list(color="dimgrey",size = 14,family = "Helvetica"),x=0.55),showlegend = F,
+    layout(title=list(text=top_description,font = list(color="dimgrey",size = 14,family = "Helvetica",face="bold"),x=0.55),showlegend = F,
+           font = list(family="Helvetica",color="dimgrey",size=14),
            paper_bgcolor="#F0F0F0", plot_bgcolor="#F0F0F0") %>%
     add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "dimgrey",size = 14,family = "Helvetica")) %>%
     add_annotations(x=0.5,y=-0.13,text=paste0(bottom_description,"<br>","<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,font = list(color = "dimgrey",size = 14,family = "Helvetica"))%>%
@@ -122,12 +123,12 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   
   lf_working_table[,variable:=as.character(variable)]
   lf_working_table <- lf_working_table[order(variable)] #alphabetizes variable elements
-  lf_working_table[,variable:=gsub("solar_utility","Solar (utility)",variable)]
-  lf_working_table[,variable:=gsub("solar_distributed","Solar (distributed)",variable)]
+  lf_working_table[,variable:=gsub("solar_utility","Solar, utility",variable)]
+  lf_working_table[,variable:=gsub("solar_distributed","Solar, distributed",variable)]
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
-  lf_working_table[,variable:=gsub("^ros$","Rest of state",variable)]
+  lf_working_table[,variable:=gsub("^ros","Rest of state",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
@@ -163,7 +164,7 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   
   if (legend_shown==FALSE){
     figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
-      layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper',font=list(size=15,family = "Helvetica",color="dimgrey")),
+      layout(title=list(text=title_name,x=0,xref='paper',yref='paper',font=list(size=15,family = "Helvetica",color="dimgrey")),
              showlegend=F,
              annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=14,family = "Helvetica",color="dimgrey")),
              font = list(family="Helvetica",color="dimgrey"),
@@ -173,7 +174,7 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   }
   else{
     figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
-      layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper',font=list(size=15,family = "Helvetica",color="dimgrey")),
+      layout(title=list(text=title_name,x=0,xref='paper',yref='paper',font=list(size=15,family = "Helvetica",color="dimgrey")),
              annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=14,family = "Helvetica",color="dimgrey")),
              font = list(family="Helvetica",color="dimgrey"),
              paper_bgcolor="#F0F0F0", plot_bgcolor="#F0F0F0",
@@ -244,12 +245,12 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   
   lf_working_table[,variable:=as.character(variable)]
   lf_working_table <- lf_working_table[order(variable)] #alphabetizes variable elements
-  lf_working_table[,variable:=gsub("solar_utility","Solar (utility)",variable)]
-  lf_working_table[,variable:=gsub("solar_distributed","Solar (distributed)",variable)]
+  lf_working_table[,variable:=gsub("solar_utility","Solar, utility",variable)]
+  lf_working_table[,variable:=gsub("solar_distributed","Solar, distributed",variable)]
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
-  lf_working_table[,variable:=gsub("^ros$","Rest of State",variable)]
+  lf_working_table[,variable:=gsub("^ros","Rest of State",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
@@ -340,12 +341,12 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   
   lf_working_table[,variable:=as.character(variable)]
   lf_working_table <- lf_working_table[order(variable)] #alphabetizes variable elements
-  lf_working_table[,variable:=gsub("solar_utility","Solar (utility)",variable)]
-  lf_working_table[,variable:=gsub("solar_distributed","Solar (distributed)",variable)]
+  lf_working_table[,variable:=gsub("solar_utility","Solar, utility",variable)]
+  lf_working_table[,variable:=gsub("solar_distributed","Solar, distributed",variable)]
   lf_working_table[,variable:=gsub("_"," ",variable)] #subtitutes "_" from variable name with a space to create legend labels
   lf_working_table[,variable:=gsub("apco","APCO",variable)] #deals with specific case if "apco" is included in a variable name, APCO will be used in the legend label
   lf_working_table[,variable:=gsub("dom","Dominion",variable)]
-  lf_working_table[,variable:=gsub("^ros$","Rest of State",variable)]
+  lf_working_table[,variable:=gsub("^ros","Rest of State",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels

@@ -8,8 +8,19 @@ library(jsonlite)
 library(data.table)
 library(ggplot2)
 library(eia)
+library(RPostgres)
+
+db_driver = dbDriver("PostgreSQL")
+source(here::here("my_postgres_credentials.R"))
+db <- dbConnect(db_driver,user=db_user, password=ra_pwd,dbname="postgres", host=db_host)
+
+#load in metadata
+metadata <- data.table(dbGetQuery(db,"select * from metadata ;"))
+
+dbDisconnect(db)
 
 source(here::here("my_eia_api_key.R"))
+source(here::here("ggplot2","viz_functions.R"))
 
 get_EIA_series <- function(eiaKey,series_id) {
   require(jsonlite)
@@ -78,8 +89,8 @@ for(state in states){
            "gas",
            "nuclear",
            "wind",
-           "utility_solar", #note utility_solar currently includes all utility-scale solar but this can be changed to just utility-scale PV if needed
-           "distributed_solar",
+           "solar_utility", #note utility_solar currently includes all utility-scale solar but this can be changed to just utility-scale PV if needed
+           "solar_distributed",
            "hydropower",
            "wood",
            "other_biomass",
@@ -118,22 +129,17 @@ for(state in states){
   all_generation[,other:=total-rowSums(.SD),.SDcols=2:(col_count-1)] 
   
   lf_all_generation <- melt(all_generation, id="year")
-  setnames(lf_all_generation, old=c("variable", "value"), new=c("fuel_type","generation"))
   
-  generation_by_type_line <- ggplot(lf_all_generation[year<=2019], aes(fill=fuel_type, x=year, y=generation)) +
-    geom_line(aes(color=fuel_type)) + ylab("generation (GWh)") + 
-    xlab(NULL) +
-    labs(title =paste(state,"Annual Electricity Generation By Fuel Type"),subtitle="2001-2019") 
-  generation_by_type_line
+  generation_by_type_line <- line_figure(list(lf_all_generation),
+                                         "year","Generation (GWh)",paste(state,"Annual Electricity Generation by Fuel Type"),
+                                         list("eia_elec_gen_nuc_va_99_m"),modifications = scale_y_continuous(labels = comma)) #same source for all, so choosing random data table that will pull correct source for all
   
   line_name <- str_to_lower(paste(state,"gen_by_fuel_type_line",sep="_"))
   assign(line_name,generation_by_type_line) #could eventually utilize ggsave() here, but wanted to wait until code was finalized
   
-  generation_by_type_area <- ggplot(lf_all_generation[fuel_type!="total"&year<=2019], aes(x=year, y=generation)) +
-    geom_area(aes(fill=fuel_type)) + 
-    ylab("generation (GWh)") + xlab(NULL) +
-    labs(title =paste(state,"Annual Electricity Generation By Fuel Type"),subtitle="2001-2019") 
-  generation_by_type_area
+  generation_by_type_area <- stacked_area_figure(list(lf_all_generation),
+                                                 "year","Generation (GWh)",paste(state,"Annual Electricity Generation by Fuel Type"),
+                                                 list("eia_elec_gen_nuc_va_99_m"),modifications = scale_y_continuous(labels = comma))
   
   area_name <- str_to_lower(paste(state,"gen_by_fuel_type_area",sep="_"))
   assign(area_name,generation_by_type_area)
@@ -141,5 +147,3 @@ for(state in states){
   dt_name <- str_to_lower(paste("eia_elec_gen",state,"a",sep="_"))
   assign(dt_name,all_generation)
 }
-
-

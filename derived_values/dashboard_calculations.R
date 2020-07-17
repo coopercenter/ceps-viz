@@ -13,7 +13,6 @@ library(ggplot2)
 library(zoo)
 library(lubridate)
 library("Hmisc")
-library(googleway)
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))

@@ -395,22 +395,24 @@ emissions_per_capita_line_p
 
 #APCO and Dominion historic sales vs goals
 apco_dom_historic_sales_line <- line_figure(list(lf_apco_dom_historic_sales),
-                                            "year","Sales (GWh)","APCO and Dominion Historic Sales",return_static = F)
+                                            "year","Sales (GWh)","APCO and Dominion Historic Sales",
+                                            return_static = F,source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 apco_dom_historic_sales_line
 
 apco_dom_historic_sales_line_p <- ggplotly_wrapper(apco_dom_historic_sales_line)
 apco_dom_historic_sales_line_p
 
 apco_dom_sales_goal_line <- line_figure(list(lf_VCEA_goal_sales_reduction),
-                                        "year","Sales (GWh)","APCO and Dominion VCEA Sales Goals for 2025",
-                                        return_static = F)
+                                        "year","Sales (GWh)","APCO and Dominion VCEA Sales Goals, 2022-2025",
+                                        return_static = F,source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 apco_dom_sales_goal_line
 
 apco_dom_sales_goal_line_p <- ggplotly_wrapper(apco_dom_sales_goal_line)
 apco_dom_sales_goal_line_p
 
 apco_dom_historic_goal_sales_combined_line <- line_figure(list(lf_apco_dom_sales_combined_dt),
-                                                          "year","Sales (GWh)","APCO and Dominion Historic Sales and Goal",return_static = F)
+                                                          "year","Sales (GWh)","APCO and Dominion Historic Sales vs VCEA Goals",
+                                                          return_static = F,source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 apco_dom_historic_goal_sales_combined_line
 
 apco_dom_historic_goal_sales_combined_line_p <- ggplotly_wrapper(apco_dom_historic_goal_sales_combined_line)
@@ -422,7 +424,7 @@ apco_dom_sales_facet_graph <- ggplot(data=lf_apco_dom_sales_combined,mapping=aes
   facet_grid(.~category,scales="free")+
   scale_color_manual(name=NULL,values=ceps_pal[1:2])+
   xlab("Year")+ylab("Sales (GWh)")+ylim(0,NA)+
-  labs(title="Electricty Sales",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
+  labs(title="Electricty Sales",subtitle="Historic vs Goal",caption="Source:  U.S. Energy Information Administration, Virginia Clean Economy Act")+
   theme_ceps()
 apco_dom_sales_facet_graph
 

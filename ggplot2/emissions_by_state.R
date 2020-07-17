@@ -8,7 +8,7 @@ library(jsonlite)
 library(data.table)
 library(ggplot2)
 library(eia)
-library(RPostgres)
+library(RPostgreSQL)
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))

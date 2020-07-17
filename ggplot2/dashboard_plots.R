@@ -15,7 +15,7 @@ renewable_percent_gen_2030_goal = .3 #30% of Virginia’s electricity from renew
 renewable_ring = data.frame(category=c(" ","2019 renewable generation","goal"),
                             value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
 
-single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation",paste0("2019 Status: ",round(renewable_percent_gen_2019*100,1),"% of Generation from Renewables"),"Goal: 30% of Generation from Renewables by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation",paste0("2019 Status: ",round(renewable_percent_gen_2019*100,1),"% of Generation from Renewables"),"Goal: 30% of Generation from<br>Renewables by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","VCEA_storage"))
 single_ring_renewable_donut_p
 
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from car
 carbon_free_ring = data.frame(category=c("goal","2019 carbon free generation"),
                               value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
 
-single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation",paste0("2019 Status: ",round(carbon_free_percent_gen_2019*100,1),"% of Generation from Carbon-Free Sources"),"Goal: 100% of Generation from Carbon-Free Sources by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_all_va_99_a"), source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation",paste0("2019 Status: ",round(carbon_free_percent_gen_2019*100,1),"% of Generation from Carbon-Free Sources"),"Goal: 100% of Generation from<br>Carbon-Free Sources by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","VCEA_storage"))
 single_ring_carbon_free_donut_p
 
 #plotting donut figure of progess towards onshore wind and solar capacity goals-----------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ sw_capacity_2024_mw_goal = 16100 #16,100 MW of solar and onshore wind by January
 sw_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                      value=c(sw_capacity_2024_mw_goal-(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw),solar_capacity_2019_mw+onshore_wind_capacity_2019_mw))
 
-single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity",paste("2019 Status:",format(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar Capacity"),paste("Goal:",format(sw_capacity_2024_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar Capacity in Operation by 2024"),"label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
+single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity",paste("2019 Status:",format(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar Capacity"),paste("Goal:",format(sw_capacity_2024_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar<br>Capacity in Operation by 2024"),"label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
 single_ring_sw_capacity_donut_p
 
 #plotting donut figure of progress towards storage capacity------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ storage_capacity_2035_mw_goal = 3100
 storage_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
                           value=c(storage_capacity_2035_mw_goal-storage_capacity_2019_mw,storage_capacity_2019_mw))
 
-single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity",paste("2019 Status:",format(storage_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Storage Capacity"),paste("Goal:",format(storage_capacity_2035_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Storage Capacity in Operation by 2035"),"label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"))
+single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity",paste("2019 Status:",format(storage_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Storage Capacity"),paste("Goal:",format(storage_capacity_2035_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Storage Capacity<br>in Operation by 2035"),"label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"))
 single_ring_storage_capacity_donut_p
 
 #plotting donut figure of progress towards offshore wind--------------------------------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@ offshore_wind_2034_mw_goal = 5200 #Requires Dominion to develop 5,200 MW of offs
 offshore_wind_ring = data.frame(category=c("additional capacity necessary to reach goal","current capacity"),
                                 value=c(offshore_wind_2034_mw_goal-offshore_wind_current_mw,offshore_wind_current_mw))
 
-single_ring_offshore_wind_capacity_donut_p <- single_ring_donut_figure_p(offshore_wind_ring,"Offshore Wind Capacity",paste("2019 Status:",format(offshore_wind_current_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Offshore Wind Capacity"),paste("Goal:",format(offshore_wind_2034_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Offshore Wind Capacity in Operation by 2034"),"label+value",c("#8491B4B2","#99A9E2"),list("pjm_solar","VCEA_storage"))
+single_ring_offshore_wind_capacity_donut_p <- single_ring_donut_figure_p(offshore_wind_ring,"Offshore Wind Capacity",paste("2019 Status:",format(offshore_wind_current_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Offshore Wind Capacity"),paste("Goal:",format(offshore_wind_2034_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Offshore Wind<br>Capacity in Operation by 2034"),"label+value",c("#8491B4B2","#99A9E2"),list("pjm_solar","VCEA_storage"))
 single_ring_offshore_wind_capacity_donut_p
 
 #--------------------------------------------PLOTTING GENERATION/PRODUCTION FIGURES----------------------------------------------------------------

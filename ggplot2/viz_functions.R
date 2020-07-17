@@ -74,11 +74,11 @@ single_ring_donut_figure_p <- function(data_table,description_of_goal,top_descri
             domain = list(x = c(0, 1), y = c(0, 1)),
             marker=list(colors=colors_list,
                         line=list(color="white",width=1))) %>%
-    layout(title=list(text=top_description,font = list(color="dimgrey",size = 14,family = "Helvetica",face="bold"),x=0.55),showlegend = F,
+    layout(title=list(text=top_description,font = list(color="dimgrey",size=14,family = "Helvetica"),x=0.55),showlegend = F,
            font = list(family="Helvetica",color="dimgrey",size=14),
            paper_bgcolor="#F0F0F0", plot_bgcolor="#F0F0F0") %>%
-    add_annotations(x=0.5,y=0.5,text=description_of_goal,showarrow=F,font = list(color = "dimgrey",size = 14,family = "Helvetica")) %>%
-    add_annotations(x=0.5,y=-0.13,text=paste0(bottom_description,"<br>","<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,font = list(color = "dimgrey",size = 14,family = "Helvetica"))%>%
+    add_annotations(x=0.5,y=0.5,text=paste0(description_of_goal,"<br>","<sub>",bottom_description),showarrow=F,font = list(color = "dimgrey",size = 14,family = "Helvetica")) %>%
+    add_annotations(x=0.5,y=-0.09,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,font = list(color = "dimgrey",size = 14,family = "Helvetica"))%>%
     config(displaylogo = FALSE,
            modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d"))
   figure
@@ -162,8 +162,15 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   category_count <- length(lf_working_table$variable) #counts number of categories being graphed
   theme_colors <- ceps_pal[1:category_count] #generates a list of that many colors to be assigned to each color (for now from ggplot default color palette)
   
+  # Create sector labels
+  total_sum <- lf_working_table[value>=0,sum(value)]
+  pct <- lf_working_table[,round(value/total_sum,3)]
+  pct[pct<0.1] <- 0  # Anything less than 10% should be blank
+  pct <- paste0(pct*100, "%")
+  pct <- gsub("^0%","",pct)
+  
   if (legend_shown==FALSE){
-    figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent+label",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
+    figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F,textinfo = "label+percent") %>%
       layout(title=list(text=title_name,x=0,xref='paper',yref='paper',font=list(size=15,family = "Helvetica",color="dimgrey")),
              showlegend=F,
              annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=14,family = "Helvetica",color="dimgrey")),
@@ -173,8 +180,8 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
              modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d")) 
   }
   else{
-    figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F) %>%
-      layout(title=list(text=title_name,x=0,xref='paper',yref='paper',font=list(size=15,family = "Helvetica",color="dimgrey")),
+    figure <- plot_ly(lf_working_table,labels=~variable,values=~value,type='pie',hoverinfo="percent+label",marker=list(colors=theme_colors),sort=F,text=pct,textposition = "inside",textinfo = "text") %>%
+      layout(title=list(text=title_name,x=0.5,xref='paper',yref='paper',font=list(size=15,family = "Helvetica",color="dimgrey")),
              annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_description,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=14,family = "Helvetica",color="dimgrey")),
              font = list(family="Helvetica",color="dimgrey"),
              paper_bgcolor="#F0F0F0", plot_bgcolor="#F0F0F0",

@@ -511,3 +511,61 @@ va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_percent_exp_p
 
+#Saving only the plopts that the dashboard uses.
+
+save(single_ring_renewable_donut_p,
+     single_ring_carbon_free_donut_p,
+     single_ring_renewable_donut_p,
+     single_ring_carbon_free_donut_p,
+     va_annual_production_area_p,
+     va_annual_production_2019_pie_chart_p_with_legend,
+     co2_combined_emissions_line_p,
+     co2_combined_emissions_line_p,
+     carbon_by_fuel_emissions_stacked_p,
+     va_annual_consumption_area_p,
+     va_annual_consumption_area_p,
+     va_annual_consumption_2018_pie_chart_p_with_legend,
+     percent_renewable_and_carbon_free_line_p,
+     va_gen_w_commas,
+     virginia_emissions_electric_commas,
+     single_ring_sw_capacity_donut_p,
+     percent_renewable_and_carbon_free_goal_combined_line_p,
+     annual_carbon_free_generation_by_type_line_p,
+     solar_generation_time_series_line_p,
+     wind_projected_generation_time_series_line_p,
+     wind_projected_capacity_line_p,
+     single_ring_offshore_wind_capacity_donut_p,
+     va_avg_annual_energy_cost_p,
+     va_avg_annual_energy_percent_exp_p,
+     pjm_solar,
+     investment_by_IOUs,
+     pjm_storage,
+     single_ring_storage_capacity_donut_p,
+     consumption_per_capita_line_p,
+     consumption_per_gdp_line_p,
+     emissions_per_capita_line_p,
+     emissions_per_gdp_line_p,
+     pjm_wind,
+     annual_savings_2022_pie_chart_p_with_legend,
+     annual_savings_2020_pie_chart_p_with_legend,
+     va_avg_annual_energy_cost_p,
+     va_avg_annual_energy_percent_exp_p,
+     file="dashboard_output_test.RData") 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

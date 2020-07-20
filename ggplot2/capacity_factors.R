@@ -26,28 +26,26 @@ source(here::here("derived_values","capacity_factor_calculations.R"))
 #-------------------------------PLOTTING CAPACITY FACTORS VISUALLY-----------------------------------------------
 
 source(here::here("ggplot2","viz_functions.R"))
-source <- metadata[db_table_name=="eia_elec_gen_cow_va_99_m",data_source_full_name] #doesn't matter which table is used-it's all EIA data
+source <- metadata[db_table_name=="eia_elec_gen_cow_va_99_m",data_source_full_name]
 source_full <- paste("Source:",source)
 
 ####2019 Coal Average Capacity Factor Pie chart
 title_name<- "Coal Average Capacity Factor 2019"
-theme_colors <- c("orange","white")
+theme_colors <- c("#00A087B2","white")
 coal_cf_2019_piechart <- plot_ly(mean_coal_cf_2019_data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="none",insidetextfont = list(color = 'white'),marker=list(colors=theme_colors),sort=F) %>%
-  layout(title=list(text=title_name,x=0.55),showlegend=F,
-add_annotations(x=0.5,y=-0.13,text=paste0(bottom_description,"<br>","<i>","<sub>",source_full,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
+  layout(title=list(text=title_name,x=0.5,font=list(size=15,family = "Helvetica",color="dimgrey")), showlegend=F,
+         annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_full,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=14,family = "Helvetica",color="dimgrey")),
+         font = list(family="Helvetica",color="dimgrey"),paper_bgcolor="#F0F0F0", plot_bgcolor="#F0F0F0")
 coal_cf_2019_piechart
-path2graphics <- here::here("graphics")
-ggsave(path=path2graphics, filename="capacity_factor_coal_2019.png")
 
 ######2014 Pie chart
 title_name<- "Coal Average Capacity Factor 2014"
-theme_colors <- c("orange","white")
+theme_colors <- c("#00A087B2","white")
 coal_cf_2014_piechart <- plot_ly(mean_coal_cf_2014_data_table,labels=~variable,values=~value,type='pie',textinfo="percent",hoverinfo="none",insidetextfont = list(color = 'white'),marker=list(colors=theme_colors),sort=F) %>%
-  layout(title=list(text=title_name,x=0.55),showlegend=F,
-         add_annotations(x=0.5,y=-0.13,text=paste0(bottom_description,"<br>","<i>","<sub>",source_full,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=10))) 
+  layout(title=list(text=title_name,x=0.5,font=list(size=15,family = "Helvetica",color="dimgrey")),showlegend=F,
+         annotations=list(x=0.5,y=-0.1,text=paste0("<i>","<sub>",source_full,"<sub>","</i>"),showarrow=F,xref='paper',yref='paper',font=list(size=14,family = "Helvetica",color="dimgrey")),
+         font = list(family="Helvetica",color="dimgrey"),paper_bgcolor="#F0F0F0", plot_bgcolor="#F0F0F0")
 coal_cf_2014_piechart
-path2graphics <- here::here("graphics")
-ggsave(path=path2graphics, filename="capacity_factor_coal_2014.png")
 
 #######Coal and Natural Gas Capacity Factors Over Time
 coal_cf_and_gas_cf_over_time<-line_figure(list(lf_coal_cf_and_gas_cf),"date","Capacity Factor","Coal and Natural Gas Capacity Factors Over Time",
@@ -59,10 +57,12 @@ path2graphics <- here::here("graphics")
 ggsave(path=path2graphics, filename="coal_gas_capacity_factors.png")
 
 ###bar graph of average capacity factor of all fuel types in 2019
-capicity_factors_2019_bar<-ggplot(data=mean_all_cf_2019_data_table, aes(x=Variable, y=value, fill=Variable)) + 
-  geom_bar(stat="identity")+xlab("Fuel Type")+ylab("Capacity Factor")+
-  labs(title="Average Capacity Factor in 2019",caption=source_full,subtitle="Wind data is estimated")
-capicity_factors_2019_bar
+capacity_factors_2019_bar <- ggplot(mean_all_cf_2019_data_table, aes(fill=Variable,x=Variable, y=value)) +
+  geom_bar(position = "dodge", stat="identity", show.legend =FALSE)+xlab("Fuel Type")+ylab("Capacity Factor")+
+  labs(title="Average Capacity Factor in 2019",caption=source_full,subtitle="Wind data is estimated")+
+  scale_fill_manual(name=NULL,values=ceps_pal[1:12])+
+  theme_ceps()
+capacity_factors_2019_bar
 path2graphics <- here::here("graphics")
 ggsave(path=path2graphics, filename="capacity_factors_2019_bar.png")
 

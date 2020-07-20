@@ -68,7 +68,7 @@ states = c("AK","AL","AR","AZ","CA",
            "VT","WA","WI","WV","WY")
 
 #I used just the first two states below to test the code while I was writing it to avoid waiting for all the datasets to be retrieved from EIA
-#states = c("AK","AL") 
+states = c("AK","AL") 
 
 for(state in states){
   #series_list contains the EIA series id for each fuel type that was specificied on Basecamp as well as for total generation
@@ -138,7 +138,7 @@ for(state in states){
   line_name <- str_to_lower(paste(state,"gen_by_fuel_type_line",sep="_"))
   assign(line_name,generation_by_type_line) #could eventually utilize ggsave() here, but wanted to wait until code was finalized
   
-  generation_by_type_area <- stacked_area_figure(list(lf_all_generation),
+  generation_by_type_area <- stacked_area_figure(list(lf_all_generation[variable!="total"]),
                                                  "year","Generation (GWh)",paste(state,"Annual Electricity Generation by Fuel Type"),
                                                  list("eia_elec_gen_nuc_va_99_m"),modifications = scale_y_continuous(labels = comma))
   
@@ -148,3 +148,8 @@ for(state in states){
   dt_name <- str_to_lower(paste("eia_elec_gen",state,"a",sep="_"))
   assign(dt_name,all_generation)
 }
+
+al_gen_by_fuel_type_area
+al_gen_by_fuel_type_line
+ak_gen_by_fuel_type_line
+ak_gen_by_fuel_type_area

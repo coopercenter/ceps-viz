@@ -511,8 +511,8 @@ va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_percent_exp_p
 
-#Saving only the plopts that the dashboard uses.
-
+#Saving only the plopts that the dashboard uses. This will save R image file into cep-viz folder. Move that R image file into the dashboard file and 
+#open those objects into the global environment in the dashboard project.
 save(single_ring_renewable_donut_p,
      single_ring_carbon_free_donut_p,
      single_ring_renewable_donut_p,
@@ -527,6 +527,7 @@ save(single_ring_renewable_donut_p,
      va_annual_consumption_2018_pie_chart_p_with_legend,
      percent_renewable_and_carbon_free_line_p,
      va_gen_w_commas,
+     va_con_w_commas,
      virginia_emissions_electric_commas,
      single_ring_sw_capacity_donut_p,
      percent_renewable_and_carbon_free_goal_combined_line_p,
@@ -550,6 +551,8 @@ save(single_ring_renewable_donut_p,
      annual_savings_2020_pie_chart_p_with_legend,
      va_avg_annual_energy_cost_p,
      va_avg_annual_energy_percent_exp_p,
+     va_avg_annual_energy_cost,
+     va_avg_annual_energy_percent_exp,
      file="dashboard_output_test.RData") 
 
 

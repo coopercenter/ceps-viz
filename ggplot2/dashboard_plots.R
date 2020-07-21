@@ -17,6 +17,8 @@ renewable_ring = data.frame(category=c(" ","2019 renewable generation","goal"),
 
 single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation",paste0("2019 Status: ",round(renewable_percent_gen_2019*100,1),"% of Generation from Renewables"),"Goal: 30% of Generation from<br>Renewables by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","VCEA_storage"))
 single_ring_renewable_donut_p
+path2graphics <- here::here("graphics")
+ggsave(path=path2graphics, filename="single_ring_renewable_donut_p.png")
 
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------
 carbon_free_percent_gen_2019 = va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower+nuclear)/total]
@@ -27,6 +29,7 @@ carbon_free_ring = data.frame(category=c("goal","2019 carbon free generation"),
 
 single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation",paste0("2019 Status: ",round(carbon_free_percent_gen_2019*100,1),"% of Generation from Carbon-Free Sources"),"Goal: 100% of Generation from<br>Carbon-Free Sources by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","VCEA_storage"))
 single_ring_carbon_free_donut_p
+ggsave(path=path2graphics, filename="single_ring_carbon_free_donut_p.png")
 
 #plotting donut figure of progess towards onshore wind and solar capacity goals-----------------------------------------------------------------------------------------
 solar_capacity_2019_mw = pjm_solar_working[status=="In Service",sum(mfo)] #currently only solar in service, no wind
@@ -38,6 +41,7 @@ sw_ring = data.frame(category=c("additional capacity necessary to reach goal","2
 
 single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity",paste("2019 Status:",format(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar Capacity"),paste("Goal:",format(sw_capacity_2024_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar<br>Capacity in Operation by 2024"),"label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
 single_ring_sw_capacity_donut_p
+ggsave(path=path2graphics, filename="single_ring_sw_capacity_donut_p.png")
 
 #plotting donut figure of progress towards storage capacity------------------------------------------------------------------------------------------
 storage_capacity_2019_mw = pjm_storage_working[status=="In Service",sum(mfo)]
@@ -48,6 +52,7 @@ storage_ring = data.frame(category=c("additional capacity necessary to reach goa
 
 single_ring_storage_capacity_donut_p <- single_ring_donut_figure_p(storage_ring,"Energy Storage Capacity",paste("2019 Status:",format(storage_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Storage Capacity"),paste("Goal:",format(storage_capacity_2035_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Storage Capacity<br>in Operation by 2035"),"label+value",c("#B0DEFA","#6FB3D9"),list("pjm_solar","VCEA_storage"))
 single_ring_storage_capacity_donut_p
+ggsave(path=path2graphics, filename="single_ring_storage_capacity_donut_p.png")
 
 #plotting donut figure of progress towards offshore wind--------------------------------------------------------------------------------------------------------------
 offshore_wind_current_mw = pjm_wind_working[fuel=="Offshore Wind"&status=="In Service",sum(mfo)]
@@ -58,6 +63,7 @@ offshore_wind_ring = data.frame(category=c("additional capacity necessary to rea
 
 single_ring_offshore_wind_capacity_donut_p <- single_ring_donut_figure_p(offshore_wind_ring,"Offshore Wind Capacity",paste("2019 Status:",format(offshore_wind_current_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Offshore Wind Capacity"),paste("Goal:",format(offshore_wind_2034_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Offshore Wind<br>Capacity in Operation by 2034"),"label+value",c("#8491B4B2","#99A9E2"),list("pjm_solar","VCEA_storage"))
 single_ring_offshore_wind_capacity_donut_p
+ggsave(path=path2graphics, filename="single_ring_offshore_wind_capacity_donut_p.png")
 
 #--------------------------------------------PLOTTING GENERATION/PRODUCTION FIGURES----------------------------------------------------------------
 
@@ -66,6 +72,7 @@ va_annual_production_area <- stacked_area_figure(list(eia_elec_gen_cow_va_99_a,e
                                                  list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                                  lower_limit = -1900,return_static = F)
 va_annual_production_area
+ggsave(path=path2graphics, filename="va_annual_production_area.png")
 
 va_annual_production_area_p <- ggplotly_wrapper(va_annual_production_area) 
 va_annual_production_area_p
@@ -80,6 +87,7 @@ va_annual_production_2019_pie_chart_p_with_legend <- pie_chart_figure_p(list(eia
                                                                         list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                                                         legend_shown = T)
 va_annual_production_2019_pie_chart_p_with_legend
+ggsave(path=path2graphics, filename="va_annual_production_2019_pie_chart_p_with_legend.png")
 
 #--------------------------------------------PLOTTING CONSUMPTION FIGURES---------------------------------------------------------------------
 va_annual_consumption_area <- stacked_area_figure(list(eia_seds_tercb_va_a,eia_seds_teccb_va_a,eia_seds_teicb_va_a,eia_seds_teacb_va_a),
@@ -87,6 +95,7 @@ va_annual_consumption_area <- stacked_area_figure(list(eia_seds_tercb_va_a,eia_s
                                                   list("eia_seds_tercb_va_a","eia_seds_teccb_va_a","eia_seds_teicb_va_a","eia_seds_teacb_va_a"),
                                                   return_static = F, modifications = scale_y_continuous(labels = comma))
 va_annual_consumption_area
+ggsave(path=path2graphics, filename="va_annual_consumption_area.png")
 
 va_annual_consumption_area_p <- ggplotly_wrapper(va_annual_consumption_area)
 va_annual_consumption_area_p
@@ -101,6 +110,7 @@ va_annual_consumption_2018_pie_chart_p_with_legend <-  pie_chart_figure_p(list(e
                                                                           list("eia_seds_tercb_va_a","eia_seds_teccb_va_a","eia_seds_teicb_va_a","eia_seds_teacb_va_a"),
                                                                           legend_shown = T)
 va_annual_consumption_2018_pie_chart_p_with_legend
+ggsave(path=path2graphics, filename="va_annual_consumption_2018_pie_chart_p_with_legend.png")
 
 #--------------------------------PLOTTING RENEWABLE & CARBON-FREE GENERATION IN PARTICULAR-----------------------------------------------------
 
@@ -110,6 +120,7 @@ percent_renewable_and_carbon_free_line <- line_figure(list(lf_percent_renewable_
                                                       list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                       return_static = F,upper_limit = 100, subtitle_description = "Renewable and Carbon-Free")
 percent_renewable_and_carbon_free_line
+ggsave(path=path2graphics, filename="percent_renewable_and_carbon_free_line.png")
 
 percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line)
 percent_renewable_and_carbon_free_line_p
@@ -128,6 +139,7 @@ percent_renewable_and_carbon_free_goal_combined_line <- line_figure(list(lf_perc
                                                       list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","VCEA_storage"),
                                                       return_static = F,subtitle_description="Renewable and Carbon Free")
 percent_renewable_and_carbon_free_goal_combined_line
+ggsave(path=path2graphics, filename="percent_renewable_and_carbon_free_goal_combined_line.png")
 
 percent_renewable_and_carbon_free_goal_combined_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_combined_line)
 percent_renewable_and_carbon_free_goal_combined_line_p
@@ -141,6 +153,7 @@ renewable_and_carbon_free_facet_graph <- ggplot(data=lf_percent_renewable_carbon
   labs(title="Virginia Electricity Generation, Renewable and Carbon-Free",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
   theme_ceps()
 renewable_and_carbon_free_facet_graph
+ggsave(path=path2graphics, filename="renewable_and_carbon_free_facet_graph.png")
 
 renewable_and_carbon_free_facet_graph_p <- subplot(percent_renewable_and_carbon_free_line_p,percent_renewable_and_carbon_free_goal_line_p,shareY = T) %>%
   add_annotations(x=0.5,y=-0.13,yref='paper',xref='paper',text=paste0("<sub><i>Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration"),showarrow=F,font = list(size = 14))
@@ -152,6 +165,7 @@ annual_carbon_free_generation_by_type_line <- line_figure(list(eia_elec_gen_nuc_
                                                           list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                           return_static = F)
 annual_carbon_free_generation_by_type_line
+ggsave(path=path2graphics, filename="annual_carbon_free_generation_by_type_line.png")
 
 annual_carbon_free_generation_by_type_line_p <- ggplotly_wrapper(annual_carbon_free_generation_by_type_line)
 annual_carbon_free_generation_by_type_line_p
@@ -162,6 +176,7 @@ solar_generation_time_series_line <- line_figure(list(eia_elec_gen_sun_va_99_a[s
                                                  list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a"),
                                                  return_static = F,subtitle_description="Utility Scale and Distributed")
 solar_generation_time_series_line
+ggsave(path=path2graphics, filename="solar_generation_time_series_line.png")
 
 solar_generation_time_series_line_p <- ggplotly_wrapper(solar_generation_time_series_line)
 solar_generation_time_series_line_p
@@ -172,6 +187,7 @@ wood_generation_time_series_line <- line_figure(list(melt(eia_elec_gen_www_va_99
                                                 list("eia_elec_gen_www_va_99_a"),
                                                 return_static = F, modifications = theme(legend.position = "none"))
 wood_generation_time_series_line
+ggsave(path=path2graphics, filename="wood_generation_time_series_line.png")
 
 wood_generation_time_series_line_p <- ggplotly_wrapper(wood_generation_time_series_line)
 wood_generation_time_series_line_p
@@ -183,10 +199,12 @@ wind_projected_generation_time_series_line <- line_figure(list(melt(total_produc
                                                           return_static = F, modifications =  theme(legend.position = "none"), subtitle_description = "Planned")
 wind_projected_generation_time_series_line
 
+
 #manually re-scaling y-axis so that value of 44 doesn't look like 0
 wind_projected_generation_time_series_line$figure <- wind_projected_generation_time_series_line$figure +
   scale_y_continuous(breaks = c(44,2500,5000,7500), labels = c("44","2500","5000","7500")) 
 wind_projected_generation_time_series_line
+ggsave(path=path2graphics, filename="wind_projected_generation_time_series_line.png")
 
 wind_projected_generation_time_series_line_p <- ggplotly_wrapper(wind_projected_generation_time_series_line)
 wind_projected_generation_time_series_line_p
@@ -197,6 +215,7 @@ wind_projected_capacity_line <- line_figure(list(melt(total_mw_offshore_wind,id=
                                             list("total_mw_offshore_wind"),
                                             return_static = F, subtitle_description = "Planned")
 wind_projected_capacity_line
+ggsave(path=path2graphics, filename="wind_projected_capacity_line.png")
 
 wind_projected_capacity_line_p <- ggplotly_wrapper(wind_projected_capacity_line)
 wind_projected_capacity_line_p
@@ -207,6 +226,7 @@ carbon_free_generation_by_type_stacked <- stacked_area_figure(list(eia_elec_gen_
                                                               list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                               return_static = F)
 carbon_free_generation_by_type_stacked
+ggsave(path=path2graphics, filename="carbon_free_generation_by_type_stacked.png")
 
 carbon_free_generation_by_type_stacked_p <- ggplotly_wrapper(carbon_free_generation_by_type_stacked)
 carbon_free_generation_by_type_stacked_p
@@ -217,6 +237,7 @@ renewable_generation_by_type_stacked <- stacked_area_figure(list(eia_elec_gen_su
                                                             list("eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                             return_static = F)
 renewable_generation_by_type_stacked
+ggsave(path=path2graphics, filename="renewable_generation_by_type_stacked.png")
 
 renewable_generation_by_type_stacked_p <- ggplotly_wrapper(renewable_generation_by_type_stacked)
 renewable_generation_by_type_stacked_p
@@ -229,6 +250,7 @@ renewable_versus_non_renewable_stacked <- stacked_area_figure(list(renewable_vs_
                                                               list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                                               return_static = F)
 renewable_versus_non_renewable_stacked
+ggsave(path=path2graphics, filename="renewable_versus_non_renewable_stacked.png")
 
 renewable_versus_non_renewable_stacked_p <- ggplotly_wrapper(renewable_versus_non_renewable_stacked)
 renewable_versus_non_renewable_stacked_p
@@ -241,6 +263,7 @@ carbon_versus_carbon_free_stacked <- stacked_area_figure(list(carbon_vs_carbon_f
                                                          list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                                          return_static = F)
 carbon_versus_carbon_free_stacked
+ggsave(path=path2graphics, filename="carbon_versus_carbon_free_stacked.png")
 
 carbon_versus_carbon_free_stacked_p <- ggplotly_wrapper(carbon_versus_carbon_free_stacked)
 carbon_versus_carbon_free_stacked_p
@@ -253,6 +276,7 @@ renewable_and_carbon_free_line <- line_figure(list(renewable_and_carbon_free),
                                               list("eia_elec_gen_cow_va_99_a","eia_elec_gen_pel_va_99_a","eia_elec_gen_ng_va_99_a","eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","eia_elec_gen_www_va_99_a","eia_elec_gen_was_va_99_a"),
                                               return_static = F)
 renewable_and_carbon_free_line
+ggsave(path=path2graphics, filename="renewable_and_carbon_free_line.png")
 
 renewable_and_carbon_free_line_p <- ggplotly_wrapper(renewable_and_carbon_free_line)
 renewable_and_carbon_free_line_p
@@ -264,6 +288,7 @@ apco_dom_target_vs_projected_capacity <- line_figure(list(lf_apco_dom_onwind_and
                                                      list("pjm_solar","pjm_wind","VCEA_onshore_wind_solar"),
                                                      return_static = F, subtitle_description = "Current and Projected Capacity vs VCEA Target Capacity",x_label = "Date")
 apco_dom_target_vs_projected_capacity
+ggsave(path=path2graphics, filename="apco_dom_target_vs_projected_capacity.png")
 
 apco_dom_target_vs_projected_capacity_p <- ggplotly_wrapper(apco_dom_target_vs_projected_capacity)
 apco_dom_target_vs_projected_capacity_p
@@ -273,6 +298,7 @@ apco_dom_projected_capacity <- line_figure(list(lf_apco_dom_onwind_and_solar[var
                                         list("pjm_solar","pjm_wind"),
                                         return_static = F,subtitle_description = "Current and Projected Capacity",x_label = "Date")
 apco_dom_projected_capacity
+ggsave(path=path2graphics, filename="apco_dom_projected_capacity.png")
 
 apco_dom_projected_capacity_p <- ggplotly_wrapper(apco_dom_projected_capacity)
 apco_dom_projected_capacity_p
@@ -282,6 +308,7 @@ apco_dom_target_capacity <- line_figure(list(melt(VCEA_onshore_wind_solar[,.(yea
                                         list("VCEA_onshore_wind_solar"),
                                         return_static = F,subtitle_description = "VCEA Target Capacity",x_label = "Year")
 apco_dom_target_capacity
+ggsave(path=path2graphics, filename="apco_dom_target_capacity.png")
 
 apco_dom_target_capacity_p <- ggplotly_wrapper(apco_dom_target_capacity)
 apco_dom_target_capacity_p
@@ -291,6 +318,7 @@ on_off_wind_solar_line <- line_figure(list(lf_wind_and_solar_capacity_projection
                                       list("pjm_wind","pjm_solar"),
                                       return_static = F,x_label = "Date")
 on_off_wind_solar_line
+ggsave(path=path2graphics, filename="on_off_wind_solar_line.png")
 
 on_off_wind_solar_line_p <- ggplotly_wrapper(on_off_wind_solar_line)
 on_off_wind_solar_line_p
@@ -300,6 +328,7 @@ on_off_wind_solar_area <- stacked_area_figure(list(lf_wind_and_solar_capacity_pr
                                               list("pjm_wind","pjm_solar"),
                                               return_static = F,x_label = "Date")
 on_off_wind_solar_area
+ggsave(path=path2graphics, filename="on_off_wind_solar_area.png")
 
 on_off_wind_solar_area_p <- ggplotly_wrapper(on_off_wind_solar_area)
 on_off_wind_solar_area_p
@@ -309,6 +338,7 @@ dominion_offshore_wind_projected_capacity <- line_figure(list(lf_wind_and_solar_
                                                          list("pjm_wind","VCEA_onshore_wind_solar"),
                                                          return_static = F,x_label="Date",subtitle_description = "Note: VCEA requires Dominion to develop 5,200 MW of offshore wind by 2034",modifications = theme(legend.position = "none"))
 dominion_offshore_wind_projected_capacity
+ggsave(path=path2graphics, filename="dominion_offshore_wind_projected_capacity.png")
 
 dominion_offshore_wind_projected_capacity_p <- ggplotly_wrapper(dominion_offshore_wind_projected_capacity)
 dominion_offshore_wind_projected_capacity_p
@@ -318,6 +348,7 @@ storage_projected_capacity_line <-line_figure(list(lf_storage_capacity_projectio
                                               list("pjm_solar"), #using pjm_solar instead of pjm_storage because its not yet in metadata
                                               return_static = F,modifications = theme(legend.position = "none"),x_label = "Date")
 storage_projected_capacity_line
+ggsave(path=path2graphics, filename="storage_projected_capacity_line.png")
 
 storage_projected_capacity_line_p <- ggplotly_wrapper(storage_projected_capacity_line)
 storage_projected_capacity_line_p
@@ -330,6 +361,7 @@ co2_combined_emissions_line <- line_figure(list(eia_emiss_co2_totv_ec_to_va_a,ei
                                            list("eia_emiss_co2_totv_ec_to_va_a","eia_emiss_co2_totv_tt_to_va_a"),
                                            return_static = F)
 co2_combined_emissions_line
+ggsave(path=path2graphics, filename="co2_combined_emissions_line.png")
 
 co2_combined_emissions_line_p <- ggplotly_wrapper(co2_combined_emissions_line)
 co2_combined_emissions_line_p
@@ -341,6 +373,7 @@ emissions_line <- line_figure(list(emissions_co2_by_source_va[,.(year=year,CO2=t
                               list("emissions_co2_by_source_va","emissions_no_by_source_va","emissions_so2_by_source_va"),
                               return_static = F)
 emissions_line
+ggsave(path=path2graphics, filename="emissions_line.png")
 
 emissions_line_p <- ggplotly_wrapper(emissions_line)
 emissions_line_p
@@ -351,6 +384,7 @@ carbon_by_fuel_emissions_stacked <- stacked_area_figure(list(melt(emissions_co2_
                                                         list("emissions_co2_by_source_va"),
                                                         return_static = F)
 carbon_by_fuel_emissions_stacked
+ggsave(path=path2graphics, filename="carbon_by_fuel_emissions_stacked.png")
 
 carbon_by_fuel_emissions_stacked_p <- ggplotly_wrapper(carbon_by_fuel_emissions_stacked)
 carbon_by_fuel_emissions_stacked_p 
@@ -362,6 +396,7 @@ consumption_per_gdp_line <- line_figure(list(melt(energy_consumption_per_unit_gd
                                         list("fred_vangsp","eia_seds_tetcb_va_a"), #for now, may change to derived values table name at some point 
                                         return_static = F, modifications = theme(legend.position = "none"))
 consumption_per_gdp_line
+ggsave(path=path2graphics, filename="consumption_per_gdp_line.png")
 
 consumption_per_gdp_line_p <- ggplotly_wrapper(consumption_per_gdp_line)
 consumption_per_gdp_line_p
@@ -371,6 +406,7 @@ consumption_per_capita_line <- line_figure(list(melt(energy_consumption_per_capi
                                            list("residential_population_va","eia_seds_tetcb_va_a"), #for now, may change to derived values table names at some point 
                                            return_static = F, modifications = theme(legend.position = "none"))
 consumption_per_capita_line
+ggsave(path=path2graphics, filename="consumption_per_capita_line.png")
 
 consumption_per_capita_line_p <- ggplotly_wrapper(consumption_per_capita_line)
 consumption_per_capita_line_p
@@ -380,6 +416,7 @@ emissions_per_gdp_line <- line_figure(list(melt(co2_emission_per_thousand_dollar
                                       list("eia_emiss_co2_totv_tt_to_va_a","fred_vangsp"),
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_gdp_line
+ggsave(path=path2graphics, filename="emissions_per_gdp_line.png")
 
 emissions_per_gdp_line_p <- ggplotly_wrapper(emissions_per_gdp_line)
 emissions_per_gdp_line_p
@@ -389,6 +426,7 @@ emissions_per_capita_line <- line_figure(list(melt(co2_emission_per_capita_va,id
                                       list("eia_emiss_co2_totv_tt_to_va_a","residential_population_va"),
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_capita_line
+ggsave(path=path2graphics, filename="emissions_per_capita_line.png")
 
 emissions_per_capita_line_p <- ggplotly_wrapper(emissions_per_capita_line)
 emissions_per_capita_line_p
@@ -398,6 +436,7 @@ apco_dom_historic_sales_line <- line_figure(list(lf_apco_dom_historic_sales),
                                             "year","Sales (GWh)","APCO and Dominion Historic Sales",
                                             return_static = F,source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 apco_dom_historic_sales_line
+ggsave(path=path2graphics, filename="apco_dom_historic_sales_line.png")
 
 apco_dom_historic_sales_line_p <- ggplotly_wrapper(apco_dom_historic_sales_line)
 apco_dom_historic_sales_line_p
@@ -414,6 +453,7 @@ apco_dom_historic_goal_sales_combined_line <- line_figure(list(lf_apco_dom_sales
                                                           "year","Sales (GWh)","APCO and Dominion Historic Sales vs VCEA Goals",
                                                           return_static = F,source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
 apco_dom_historic_goal_sales_combined_line
+ggsave(path=path2graphics, filename="apco_dom_historic_goal_sales_combined_line.png")
 
 apco_dom_historic_goal_sales_combined_line_p <- ggplotly_wrapper(apco_dom_historic_goal_sales_combined_line)
 apco_dom_historic_goal_sales_combined_line
@@ -427,6 +467,7 @@ apco_dom_sales_facet_graph <- ggplot(data=lf_apco_dom_sales_combined,mapping=aes
   labs(title="Electricty Sales",subtitle="Historic vs Goal",caption="Source:  U.S. Energy Information Administration, Virginia Clean Economy Act")+
   theme_ceps()
 apco_dom_sales_facet_graph
+ggsave(path=path2graphics, filename="apco_dom_sales_facet_graph.png")
 
 
 #Note: below figures come from ACEEE data - no metadata entries yet so manual citations are used
@@ -439,6 +480,7 @@ annual_savings_2020_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_
                                                       title_name = "Virginia Savings through 2020 (MWh)",
                                                       character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2020_pie_chart_p_with_legend
+ggsave(path=path2graphics, filename="annual_savings_2020_pie_chart_p_with_legend.png")
 
 annual_savings_2022_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savings_through_2022[variable!="Total Needed"]),
                                                       title_name = "Virginia Savings through 2022 (MWh)",
@@ -449,6 +491,7 @@ annual_savings_2022_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_
                                                                   title_name = "Virginia Savings through 2022 (MWh)",
                                                                   character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2022_pie_chart_p_with_legend
+ggsave(path=path2graphics, filename="annual_savings_2022_pie_chart_p_with_legend.png")
 
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
 #energy equity figures
@@ -473,6 +516,7 @@ va_avg_annual_energy_cost <- ggplot() +
         legend.background = element_rect(fill = "#F0F0F0"),
         text = element_text(family = "Helvetica",color = "dimgrey"))
 va_avg_annual_energy_cost 
+ggsave(path=path2graphics, filename="va_avg_annual_energy_cost.png")
 
 #energy burden map showing average energy expenditures as percent of income by county
 va_avg_annual_energy_percent_exp <-  ggplot() +
@@ -494,6 +538,7 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
         legend.background = element_rect(fill = "#F0F0F0"),
         text = element_text(family = "Helvetica",color = "dimgrey"))
 va_avg_annual_energy_percent_exp
+ggsave(path=path2graphics, filename="va_avg_annual_energy_percent_exp.png")
 
 va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "text") %>%
   layout(title = list(text=paste0("Virginia Energy Burden by County in Dollars","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=15)),
@@ -511,7 +556,7 @@ va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_percent_exp_p
 
-#Saving only the plopts that the dashboard uses.
+#Saving only the plots that the dashboard uses.
 
 save(single_ring_renewable_donut_p,
      single_ring_carbon_free_donut_p,

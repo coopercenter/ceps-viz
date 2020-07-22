@@ -229,10 +229,10 @@ lf_apco_dom_sales_combined <- lf_apco_dom_sales_combined[!is.na(value)]
 
 setnames(lf_apco_dom_sales_combined,old=c("variable","category"),new=c("category","variable"))
 
-lf_apco_dom_sales_combined[,variable:=gsub("apco_total_gwh","APCO total GWh",variable)]
-lf_apco_dom_sales_combined[,variable:=gsub("dom_total_gwh","Dominion total GWh",variable)]
-lf_apco_dom_sales_combined[,variable:=gsub("apco_goal","APCO total GWh",variable)]
-lf_apco_dom_sales_combined[,variable:=gsub("dom_goal","Dominion total GWh",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("apco_total_gwh","APCO, historic",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("dom_total_gwh","Dominion, historic",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("apco_goal","APCO, goal",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("dom_goal","Dominion, goal",variable)]
 lf_apco_dom_sales_combined[,category:=gsub("goal","Goal",category)]
 lf_apco_dom_sales_combined[,category:=gsub("historic","Historic",category)]
 
@@ -242,6 +242,10 @@ VCEA_goal_sales_reduction_dt = data.table(year=c(2022,2023,2024,2025),
 lf_VCEA_goal_sales_reduction_dt <- melt(VCEA_goal_sales_reduction_dt,id="year")
 
 lf_apco_dom_sales_combined_dt <- merge(lf_apco_dom_historic_sales,lf_VCEA_goal_sales_reduction_dt,by=c("year","variable","value"),all=T)
+lf_apco_dom_sales_combined_dt[,variable:=gsub("apco_total_gwh","APCO, historic",variable)]
+lf_apco_dom_sales_combined_dt[,variable:=gsub("dom_total_gwh","Dominion, historic",variable)]
+lf_apco_dom_sales_combined_dt[,variable:=gsub("apco_goal","APCO, goal",variable)]
+lf_apco_dom_sales_combined_dt[,variable:=gsub("dom_goal","Dominion, goal",variable)]
 
 # below code ensures that historic data will appear first then goal data
 lf_apco_dom_sales_combined <- lf_apco_dom_sales_combined %>% 

@@ -411,8 +411,9 @@ apco_dom_sales_goal_line_p <- ggplotly_wrapper(apco_dom_sales_goal_line)
 apco_dom_sales_goal_line_p
 
 apco_dom_historic_goal_sales_combined_line <- line_figure(list(lf_apco_dom_sales_combined_dt),
-                                                          "year","Sales (GWh)","APCO and Dominion Historic Sales vs VCEA Goals",
-                                                          return_static = F,source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+                                                          "year","Total Retail Sales (GWh/year)","Mandated Electricity Reduction Under Virginia Clean Economy Act",
+                                                          return_static = F,source_citation = "Source: U.S. Energy Information Administration, Dominion Energy Inc.",
+                                                          modifications= guides(col = guide_legend(reverse = TRUE)))
 apco_dom_historic_goal_sales_combined_line
 
 apco_dom_historic_goal_sales_combined_line_p <- ggplotly_wrapper(apco_dom_historic_goal_sales_combined_line)
@@ -459,7 +460,7 @@ annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_
   geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2)+
   scale_x_continuous(breaks=c(2020,2022))+
   scale_y_continuous(breaks=c(4332882,5929921,10670000),labels = comma)+
-  labs(x="Year",y="Savings (MWh)",title="Virginia Energy Savings through 2020 and 2022")+
+  labs(x="Year",y="Savings (MWh)",title="Virginia Energy Savings through 2020 and 2022",caption="Source: The American Council for an Energy-Efficient Economy")+
   theme(legend.title = element_blank())+
   guides(fill = guide_legend(reverse = TRUE))+
   scale_fill_manual(values = c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#FFFFFF00"))+

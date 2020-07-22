@@ -229,10 +229,10 @@ lf_apco_dom_sales_combined <- lf_apco_dom_sales_combined[!is.na(value)]
 
 setnames(lf_apco_dom_sales_combined,old=c("variable","category"),new=c("category","variable"))
 
-lf_apco_dom_sales_combined[,variable:=gsub("apco_total_gwh","APCO total GWh",variable)]
-lf_apco_dom_sales_combined[,variable:=gsub("dom_total_gwh","Dominion total GWh",variable)]
-lf_apco_dom_sales_combined[,variable:=gsub("apco_goal","APCO total GWh",variable)]
-lf_apco_dom_sales_combined[,variable:=gsub("dom_goal","Dominion total GWh",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("apco_total_gwh","APCO, historic",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("dom_total_gwh","Dominion, historic",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("apco_goal","APCO, goal",variable)]
+lf_apco_dom_sales_combined[,variable:=gsub("dom_goal","Dominion, goal",variable)]
 lf_apco_dom_sales_combined[,category:=gsub("goal","Goal",category)]
 lf_apco_dom_sales_combined[,category:=gsub("historic","Historic",category)]
 
@@ -242,6 +242,10 @@ VCEA_goal_sales_reduction_dt = data.table(year=c(2022,2023,2024,2025),
 lf_VCEA_goal_sales_reduction_dt <- melt(VCEA_goal_sales_reduction_dt,id="year")
 
 lf_apco_dom_sales_combined_dt <- merge(lf_apco_dom_historic_sales,lf_VCEA_goal_sales_reduction_dt,by=c("year","variable","value"),all=T)
+lf_apco_dom_sales_combined_dt[,variable:=gsub("apco_total_gwh","APCO, historic",variable)]
+lf_apco_dom_sales_combined_dt[,variable:=gsub("dom_total_gwh","Dominion, historic",variable)]
+lf_apco_dom_sales_combined_dt[,variable:=gsub("apco_goal","APCO, goal",variable)]
+lf_apco_dom_sales_combined_dt[,variable:=gsub("dom_goal","Dominion, goal",variable)]
 
 # below code ensures that historic data will appear first then goal data
 lf_apco_dom_sales_combined <- lf_apco_dom_sales_combined %>% 
@@ -377,6 +381,17 @@ va_energy_equity_by_county <- st_as_sf(va_energy_equity_by_county )
 #renaming columns so it can be accepted as input into piechart function
 setnames(virginia_annual_savings_through_2020,old=c("Company Name","MWh"),new=c("variable","value"))
 setnames(virginia_annual_savings_through_2022,old=c("Company Name","MWh"),new=c("variable","value"))
+
+#manipulating datasets for stacked bar chart
+virginia_annual_savings_through_2020_2 <-virginia_annual_savings_through_2020 %>%
+  mutate(year=c(2020,2020,2020,2020,2020,2020,2020,2020)) %>%
+  filter(variable!=c("Total Needed"))
+
+virginia_annual_savings_through_2022_2 <-virginia_annual_savings_through_2022 %>%
+  mutate(year=c(2022,2022,2022,2022,2022,2022,2022,2022)) %>%
+  filter(variable!=c("Total Needed"))
+virginia_annual_savings_through_2022_2[6,1]="Dominion (Gross savings)"
+virginia_annual_savings_2020_2022<-rbind(virginia_annual_savings_through_2020_2,virginia_annual_savings_through_2022_2)
 
 #-----------------------------------------REFORMATTING DATASETS--------------------------------------------------------------------
 

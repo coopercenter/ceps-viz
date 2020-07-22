@@ -131,6 +131,7 @@ pie_chart_figure_p <- function(data_table_list,merge_variable=NULL,title_name=NU
   lf_working_table[,variable:=gsub("^ros","Rest of state",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
+  lf_working_table[,variable:=gsub("gwh","GWh",variable)] 
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   #building source citation if no source citation is given as an input
@@ -260,6 +261,7 @@ stacked_area_figure <- function(data_table_list,merge_variable,value_unit,title_
   lf_working_table[,variable:=gsub("^ros","Rest of State",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
+  lf_working_table[,variable:=gsub("gwh","GWh",variable)] 
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   setnames(lf_working_table,merge_variable,"x_unit")
@@ -356,6 +358,7 @@ line_figure <- function(data_table_list,merge_variable,value_unit,title_name,cha
   lf_working_table[,variable:=gsub("^ros","Rest of State",variable)]
   lf_working_table[,variable:=gsub("co2","CO2",variable)] #specific CO2 case
   lf_working_table[,variable:=gsub("gdp","GDP",variable)] #specific GDP case
+  lf_working_table[,variable:=gsub("gwh","GWh",variable)] 
   lf_working_table[,variable:=capitalize(variable)] #capitalizes first word of legend labels
   
   setnames(lf_working_table,merge_variable,"x_unit")

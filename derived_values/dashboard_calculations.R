@@ -378,6 +378,17 @@ va_energy_equity_by_county <- st_as_sf(va_energy_equity_by_county )
 setnames(virginia_annual_savings_through_2020,old=c("Company Name","MWh"),new=c("variable","value"))
 setnames(virginia_annual_savings_through_2022,old=c("Company Name","MWh"),new=c("variable","value"))
 
+#manipulating datasets for stacked bar chart
+virginia_annual_savings_through_2020_2 <-virginia_annual_savings_through_2020 %>%
+  mutate(year=c(2020,2020,2020,2020,2020,2020,2020,2020)) %>%
+  filter(variable!=c("Total Needed"))
+
+virginia_annual_savings_through_2022_2 <-virginia_annual_savings_through_2022 %>%
+  mutate(year=c(2022,2022,2022,2022,2022,2022,2022,2022)) %>%
+  filter(variable!=c("Total Needed"))
+virginia_annual_savings_through_2022_2[6,1]="Dominion (Gross savings)"
+virginia_annual_savings_2020_2022<-rbind(virginia_annual_savings_through_2020_2,virginia_annual_savings_through_2022_2)
+
 #-----------------------------------------REFORMATTING DATASETS--------------------------------------------------------------------
 
 # reformatting the generation dataset

@@ -435,6 +435,11 @@ annual_savings_2020_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savin
                                                                   character_list = list("virginia_annual_savings_through_2020"),source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2020_pie_chart_p
 
+annual_savings_2020_stacked_area <-stacked_area_figure(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
+                                                       title_name = "Virginia Savings through 2020 (MWh)",
+                                                       character_list = list("virginia_annual_savings_through_2020"),source_citation = "Source: The American Council for an Energy-Efficient Economy")
+annual_savings_2020_stacked_area
+
 annual_savings_2020_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
                                                       title_name = "Virginia Savings through 2020 (MWh)",
                                                       character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
@@ -449,6 +454,17 @@ annual_savings_2022_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_
                                                                   title_name = "Virginia Savings through 2022 (MWh)",
                                                                   character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2022_pie_chart_p_with_legend
+
+annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_2022, mapping=aes(fill=variable, y=value, x=year)) + 
+  geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2)+
+  scale_x_continuous(breaks=c(2020,2022))+
+  scale_y_continuous(breaks=c(4332882,5929921,10670000),labels = comma)+
+  labs(x="Year",y="Savings (MWh)",title="Virginia Energy Savings through 2020 and 2022")+
+  theme(legend.title = element_blank())+
+  guides(fill = guide_legend(reverse = TRUE))+
+  scale_fill_manual(values = c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#FFFFFF00"))+
+  theme_ceps()
+annual_savings_2020_2022_stacked_bar_chart
 
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
 #energy equity figures

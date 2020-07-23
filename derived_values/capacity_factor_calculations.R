@@ -197,7 +197,7 @@ mean_coal_cf_2019_data_table<-data.table(year=2019,variable=c("coal", " "),value
 mean_coal_cf_2014_data_table<-data.table(year=2014,variable=c("coal", " "),value=c(mean_coal_cf_2014, 100-mean_coal_cf_2014))
 
 #######Coal and Natural Gas Capacity Factors Over Time
-lf_coal_cf_and_gas_cf<- melt(capacity_factors[,.(date,coal_cf,natural_gas_cf)],id="date")
+lf_coal_cf_and_gas_cf<- melt(capacity_factors[,.(date,coal=coal_cf,natural_gas=natural_gas_cf)],id="date")
 
 ######means of all capacity factors in 2019
 lf_all_capacity_factors<-melt(capacity_factors[,.(date,biomass_cf,coal_cf,natural_gas_cf,nuclear_cf,petroleum_liquids_cf,hydroelctric_cf, wood_cf)],id="date")

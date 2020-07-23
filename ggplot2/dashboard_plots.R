@@ -457,7 +457,7 @@ annual_savings_2022_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_
 annual_savings_2022_pie_chart_p_with_legend
 
 annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_2022, mapping=aes(fill=variable, y=value, x=year)) + 
-  geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2)+
+  geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2,aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
   scale_x_continuous(breaks=c(2020,2022))+
   scale_y_continuous(breaks=c(4332882,5929921,10670000),labels = comma)+
   labs(x="Year",y="Savings (MWh)",title="Virginia Energy Savings through 2020 and 2022",caption="Source: The American Council for an Energy-Efficient Economy")+
@@ -466,6 +466,9 @@ annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_
   scale_fill_manual(values = c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#FFFFFF00"))+
   theme_ceps()
 annual_savings_2020_2022_stacked_bar_chart
+
+annual_savings_2020_2022_stacked_bar_chart_p <- ggplotly_wrapper(list(figure=annual_savings_2020_2022_stacked_bar_chart,x_label="Year",source_description="Source: The American Council for an Energy-Efficient Economy",title_name="Virginia Energy Savings through 2020 and 2022",subtitle_description=NULL,y_label="Savings (MWh)")) 
+annual_savings_2020_2022_stacked_bar_chart_p
 
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
 #energy equity figures
@@ -527,4 +530,116 @@ va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,
   config(displaylogo = FALSE,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_percent_exp_p
+
+#creating reference figures
+#data not currently in db, so assigning values manually
+#monthly avg electricty spending from EIA data (https://www.eia.gov/electricity/sales_revenue_price/pdf/table5_a.pdf)
+#median income from Census data (https://www.census.gov/search-results.html?q=2018+income&page=1&stateGeo=none&searchtype=web&cssp=SERP&_charset_=UTF-8)
+virginia_monthly_elec_bill = 136.59
+us_monthly_elec_bill = 117.65
+
+virginia_annual_elec_bill = 12*virginia_monthly_elec_bill
+us_annual_elec_bill = 12*us_monthly_elec_bill
+
+virginia_median_income = 71564
+us_median_income = 60293
+
+dollar_reference_table <- data.table(category=c("Virginia","U.S."),
+                                     value=c(virginia_annual_elec_bill,us_annual_elec_bill))
+
+percentage_of_income_reference_table <- data.table(category=c("Virginia","U.S."),
+                                                   value=c(virginia_annual_elec_bill/virginia_median_income*100,us_annual_elec_bill/us_median_income*100))
+
+dollar_reference_figure <- ggplot(dollar_reference_table,mapping=aes(x=category,y=value,fill=category))+
+  geom_bar(position="dodge",stat="identity",aes(group=category,text=paste0("Value: ",value,"\n","Variable: ",category))) +
+  xlab(NULL)+ylab("Energy Cost (Dollars)")+
+  labs(title="2018 Average Electricity Cost",caption="Source: U.S. Energy Information Administration")+
+  scale_fill_manual(values=ceps_pal[1:2])+
+  theme_ceps()+
+  theme(legend.position = "none")
+dollar_reference_figure
+
+dollar_reference_figure_p <- ggplotly_wrapper(list(figure=dollar_reference_figure,x_label=NULL,source_description="Source: U.S. Energy Information Administration",title_name="2018 Average Electricity Cost",subtitle_description=NULL,y_label="Energy Cost (Dollars)"))
+dollar_reference_figure_p 
+
+percent_income_reference_figure <- ggplot(percentage_of_income_reference_table,mapping=aes(x=category,y=value,fill=category))+
+  geom_bar(position="dodge",stat="identity",aes(group=category,text=paste0("Value: ",round(value,3),"\n","Variable: ",category))) +
+  xlab(NULL)+ylab("Energy Cost (Percentage of Income)")+
+  labs(title="2018 Average Electricity Cost",caption="Source: U.S. Census Bureau, U.S. Energy Information Administration")+
+  scale_fill_manual(values=ceps_pal[1:2])+
+  theme_ceps()+
+  theme(legend.position = "none")
+percent_income_reference_figure
+
+percent_income_reference_figure_p <- ggplotly_wrapper(list(figure=percent_income_reference_figure,x_label=NULL,source_description="Source: U.S. Census Bureau, U.S. Energy Information Administration",title_name="2018 Average Electricity Cost",subtitle_description=NULL,y_label="Energy Cost (Percentage of Income)"))
+percent_income_reference_figure_p
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------
+#Saving only the plopts that the dashboard uses. This will save R image file into cep-viz folder. Move that R image file into the dashboard file and 
+#open those objects into the global environment in the dashboard project.
+save(single_ring_renewable_donut_p,
+     single_ring_carbon_free_donut_p,
+     single_ring_renewable_donut_p,
+     single_ring_carbon_free_donut_p,
+     va_annual_production_area_p,
+     va_annual_production_2019_pie_chart_p_with_legend,
+     co2_combined_emissions_line_p,
+     co2_combined_emissions_line_p,
+     carbon_by_fuel_emissions_stacked_p,
+     va_annual_consumption_area_p,
+     va_annual_consumption_area_p,
+     va_annual_consumption_2018_pie_chart_p_with_legend,
+     percent_renewable_and_carbon_free_line_p,
+     va_gen_w_commas,
+     va_con_w_commas,
+     virginia_emissions_electric_commas,
+     single_ring_sw_capacity_donut_p,
+     percent_renewable_and_carbon_free_goal_combined_line_p,
+     annual_carbon_free_generation_by_type_line_p,
+     solar_generation_time_series_line_p,
+     wind_projected_generation_time_series_line_p,
+     wind_projected_capacity_line_p,
+     single_ring_offshore_wind_capacity_donut_p,
+     va_avg_annual_energy_cost_p,
+     va_avg_annual_energy_percent_exp_p,
+     pjm_solar,
+     investment_by_IOUs,
+     pjm_storage,
+     single_ring_storage_capacity_donut_p,
+     consumption_per_capita_line_p,
+     consumption_per_gdp_line_p,
+     emissions_per_capita_line_p,
+     emissions_per_gdp_line_p,
+     pjm_wind,
+  
+     va_avg_annual_energy_cost_p,
+     va_avg_annual_energy_percent_exp_p,
+     va_avg_annual_energy_cost,
+     va_avg_annual_energy_percent_exp,
+     
+     dollar_reference_figure,
+     dollar_reference_figure_p,
+     percent_income_reference_figure,
+     percent_income_reference_figure_p,
+     
+     annual_savings_2020_2022_stacked_bar_chart,
+     annual_savings_2020_2022_stacked_bar_chart_p,
+     apco_dom_historic_goal_sales_combined_line_p,
+     file="dashboard_output_test.RData") 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

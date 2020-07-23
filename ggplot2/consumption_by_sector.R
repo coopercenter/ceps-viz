@@ -12,6 +12,8 @@ consumption_by_sector_monthly_line<-line_figure(list(lf_consumption_by_sector_mo
                                                 return_static = F,
                                                 subtitle_description="2001-2019")
 consumption_by_sector_monthly_line
+path2graphics <- here::here("graphics")
+ggsave(path=path2graphics, filename="consumption_by_sector_monthly_line.png")
 
 consumption_by_sector_monthly_stacked_area<-stacked_area_figure(list(lf_consumption_by_sector_monthly),
                                                                 merge_variable = "date",
@@ -20,7 +22,7 @@ consumption_by_sector_monthly_stacked_area<-stacked_area_figure(list(lf_consumpt
                                                                 return_static = F,
                                                                 subtitle_description="2001-2019")
 consumption_by_sector_monthly_stacked_area
- 
+ggsave(path=path2graphics, filename="consumption_by_sector_monthly_stacked_area.png")
 
 #plotting annual consumption by sector
 consumption_by_sector_annual_line<-line_figure(list(lf_consumption_by_sector_annual),
@@ -30,6 +32,7 @@ consumption_by_sector_annual_line<-line_figure(list(lf_consumption_by_sector_ann
                                                 return_static = F,
                                                 subtitle_description="2001-2018")
 consumption_by_sector_annual_line 
+ggsave(path=path2graphics, filename="consumption_by_sector_annual_line.png")
 
 consumption_by_sector_annual_stacked_area<-stacked_area_figure(list(lf_consumption_by_sector_annual),
                                                                 merge_variable = "year",
@@ -38,7 +41,7 @@ consumption_by_sector_annual_stacked_area<-stacked_area_figure(list(lf_consumpti
                                                                 return_static = F,
                                                                 subtitle_description="2001-2018")
 consumption_by_sector_annual_stacked_area
-
+ggsave(path=path2graphics, filename="consumption_by_sector_annual_stacked_area.png")
 
 #plotting 2019 monthly consumption by sector
 consumption_by_sector_2019_line<-line_figure(list(lf_consumption_by_sector_monthly[year(date)=="2019"]),
@@ -48,6 +51,7 @@ consumption_by_sector_2019_line<-line_figure(list(lf_consumption_by_sector_month
                                                x_label="Date",
                                                return_static = F)
 consumption_by_sector_2019_line
+ggsave(path=path2graphics, filename="consumption_by_sector_2019_line.png")
 
 consumption_by_sector_2019_stacked_area<-stacked_area_figure(list(lf_consumption_by_sector_monthly[year(date)=="2019"]),
                                              merge_variable = "date",
@@ -56,6 +60,7 @@ consumption_by_sector_2019_stacked_area<-stacked_area_figure(list(lf_consumption
                                              x_label="Date",
                                              return_static = F)
 consumption_by_sector_2019_stacked_area
+ggsave(path=path2graphics, filename="consumption_by_sector_2019_stacked_area.png")
 
 
 

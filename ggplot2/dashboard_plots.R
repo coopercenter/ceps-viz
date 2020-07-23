@@ -459,8 +459,8 @@ annual_savings_2022_pie_chart_p_with_legend
 annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_2022, mapping=aes(fill=variable, y=value, x=year)) + 
   geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2,aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
   scale_x_continuous(breaks=c(2020,2022))+
-  scale_y_continuous(breaks=c(4332882,5929921,10670000),labels = comma)+
-  labs(x="Year",y="Savings (MWh)",title="Virginia Energy Savings through 2020 and 2022",caption="Source: The American Council for an Energy-Efficient Economy")+
+  scale_y_continuous(labels = comma)+
+  labs(x="Year",y="Savings (MWh)",title="Virginia Energy Savings through 2020 and 2022",subtitle="Mandated",caption="Source: The American Council for an Energy-Efficient Economy")+
   theme(legend.title = element_blank())+
   guides(fill = guide_legend(reverse = TRUE))+
   scale_fill_manual(values = c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#FFFFFF00"))+
@@ -559,7 +559,7 @@ dollar_reference_figure <- ggplot(dollar_reference_table,mapping=aes(x=category,
   theme(legend.position = "none")
 dollar_reference_figure
 
-dollar_reference_figure_p <- ggplotly_wrapper(list(figure=dollar_reference_figure,x_label=NULL,source_description="Source: U.S. Energy Information Administration",title_name="2018 Average Electricity Cost",subtitle_description=NULL,y_label="Energy Cost (Dollars)"))
+dollar_reference_figure_p <- ggplotly_wrapper(list(figure=dollar_reference_figure,x_label=NULL,source_description="Source: U.S. Energy Information Administration",title_name="2018 Average Household Electricity Expenditure in Dollars",subtitle_description="U.S. vs Virginia",y_label="Energy Cost (Dollars)"))
 dollar_reference_figure_p 
 
 percent_income_reference_figure <- ggplot(percentage_of_income_reference_table,mapping=aes(x=category,y=value,fill=category))+
@@ -571,7 +571,7 @@ percent_income_reference_figure <- ggplot(percentage_of_income_reference_table,m
   theme(legend.position = "none")
 percent_income_reference_figure
 
-percent_income_reference_figure_p <- ggplotly_wrapper(list(figure=percent_income_reference_figure,x_label=NULL,source_description="Source: U.S. Census Bureau, U.S. Energy Information Administration",title_name="2018 Average Electricity Cost",subtitle_description=NULL,y_label="Energy Cost (Percentage of Income)"))
+percent_income_reference_figure_p <- ggplotly_wrapper(list(figure=percent_income_reference_figure,x_label=NULL,source_description="Source: U.S. Census Bureau, U.S. Energy Information Administration",title_name="2018 Average Household Electricity Expenditure as a Percentage of Income",subtitle_description="U.S. vs Virginia",y_label="Energy Cost (Percentage of Income)"))
 percent_income_reference_figure_p
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------

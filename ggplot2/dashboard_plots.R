@@ -616,6 +616,12 @@ save(single_ring_renewable_donut_p,
      va_avg_annual_energy_percent_exp_p,
      va_avg_annual_energy_cost,
      va_avg_annual_energy_percent_exp,
+     
+     dollar_reference_figure,
+     dollar_reference_figure_p,
+     percent_income_reference_figure,
+     percent_income_reference_figure_p,
+     
      annual_savings_2020_2022_stacked_bar_chart,
      annual_savings_2020_2022_stacked_bar_chart_p,
      apco_dom_historic_goal_sales_combined_line_p,

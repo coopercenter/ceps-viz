@@ -611,15 +611,15 @@ save(single_ring_renewable_donut_p,
      emissions_per_capita_line_p,
      emissions_per_gdp_line_p,
      pjm_wind,
-     annual_savings_2020_2022_stacked_bar_chart_p,
+  
      va_avg_annual_energy_cost_p,
      va_avg_annual_energy_percent_exp_p,
      va_avg_annual_energy_cost,
      va_avg_annual_energy_percent_exp,
-     dollar_reference_figure_p,
-     percent_income_reference_figure_p,
+     annual_savings_2020_2022_stacked_bar_chart,
+     annual_savings_2020_2022_stacked_bar_chart_p,
+     apco_dom_historic_goal_sales_combined_line_p,
      file="dashboard_output_test.RData") 
-
 
 
 

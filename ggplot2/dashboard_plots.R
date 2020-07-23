@@ -417,7 +417,7 @@ apco_dom_historic_goal_sales_combined_line <- line_figure(list(lf_apco_dom_sales
 apco_dom_historic_goal_sales_combined_line
 
 apco_dom_historic_goal_sales_combined_line_p <- ggplotly_wrapper(apco_dom_historic_goal_sales_combined_line)
-apco_dom_historic_goal_sales_combined_line
+apco_dom_historic_goal_sales_combined_line_p
 
 #facet grid
 apco_dom_sales_facet_graph <- ggplot(data=lf_apco_dom_sales_combined,mapping=aes(x=year,y=value,color=variable))+

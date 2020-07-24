@@ -464,7 +464,7 @@ annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_
   labs(x="Year",y="Projected energy savings (MWh)",title="Projected Future Savings From Energy Efficiency Programs",caption="Source: The American Council for an Energy-Efficient Economy")+
   theme(legend.title = element_blank())+
   guides(fill = guide_legend(reverse = TRUE))+
-  scale_fill_manual(values = c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#FFFFFF00"))+
+  scale_fill_manual(values = c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#D3D3D3"))+
   theme_ceps()
 annual_savings_2020_2022_stacked_bar_chart
 

@@ -117,7 +117,8 @@ percent_renewable_and_carbon_free_line_p
 percent_renewable_and_carbon_free_goal_line <- line_figure(list(lf_VCEA_goal_percent_gen),
                                                       "year","Percentage of Total Generation","Virginia Electricity Generation",
                                                       list("VCEA_storage"),
-                                                      return_static = F,subtitle_description = "Renewable and Carbon-Free")
+                                                      return_static = F,subtitle_description = "Renewable and Carbon-Free",
+                                                      modifications = geom_line(linetype="dashed",size=1.3))
 percent_renewable_and_carbon_free_goal_line 
 
 percent_renewable_and_carbon_free_goal_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_line)
@@ -192,9 +193,8 @@ wind_projected_generation_time_series_line_p <- ggplotly_wrapper(wind_projected_
 wind_projected_generation_time_series_line_p
 
 # Projected wind capacity
-wind_projected_capacity_line <- line_figure(list(melt(total_mw_offshore_wind,id="Year")),
+wind_projected_capacity_line <- line_figure(list(total_mw_offshore_wind),
                                             "Year","Projected Capacity (MW)","Coastal Virginia Offshore Wind (CVOW) Capacity",
-                                            list("total_mw_offshore_wind"),
                                             return_static = F, subtitle_description = "Planned")
 wind_projected_capacity_line
 
@@ -376,7 +376,7 @@ consumption_per_capita_line_p <- ggplotly_wrapper(consumption_per_capita_line)
 consumption_per_capita_line_p
 
 emissions_per_gdp_line <- line_figure(list(melt(co2_emission_per_thousand_dollars_of_gdp_va,id="year")),
-                                      "year","Emissions per GDP (Metric Tons/Thousand $)","Virginia CO2 Emissions per GDP",
+                                      "year","Emissions/GDP (Metric Tons/Thousand $)","Virginia CO2 Emissions per unit of GDP",
                                       list("eia_emiss_co2_totv_tt_to_va_a","fred_vangsp"),
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_gdp_line
@@ -404,7 +404,8 @@ apco_dom_historic_sales_line_p
 
 apco_dom_sales_goal_line <- line_figure(list(lf_VCEA_goal_sales_reduction),
                                         "year","Sales (GWh)","APCO and Dominion VCEA Sales Goals, 2022-2025",
-                                        return_static = F,source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act")
+                                        return_static = F,source_citation = "Source: U.S. Energy Information Administration, Virgina Clean Economy Act",
+                                        modifications = geom_line(linetype="dashed",size=1.3))
 apco_dom_sales_goal_line
 
 apco_dom_sales_goal_line_p <- ggplotly_wrapper(apco_dom_sales_goal_line)
@@ -460,7 +461,7 @@ annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_
   geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2,aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
   scale_x_continuous(breaks=c(2020,2022))+
   scale_y_continuous(labels = comma)+
-  labs(x="Year",y="Savings (MWh)",title="Virginia Energy Savings through 2020 and 2022",subtitle="Mandated",caption="Source: The American Council for an Energy-Efficient Economy")+
+  labs(x="Year",y="Projected energy savings (MWh)",title="Projected Future Savings From Energy Efficiency Programs",caption="Source: The American Council for an Energy-Efficient Economy")+
   theme(legend.title = element_blank())+
   guides(fill = guide_legend(reverse = TRUE))+
   scale_fill_manual(values = c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#FFFFFF00"))+

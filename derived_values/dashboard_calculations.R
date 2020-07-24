@@ -196,8 +196,8 @@ lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_co
 
 setnames(lf_percent_renewable_carbon_free_combined,old=c("variable","category"),new=c("category","variable"))
 
-lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_renewable","Percent renewable",variable)]
-lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_carbon_free","Percent carbon free",variable)]
+lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_renewable","Renewable",variable)]
+lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_carbon_free","Carbon free",variable)]
 lf_percent_renewable_carbon_free_combined[,category:=gsub("goal","Goal",category)]
 lf_percent_renewable_carbon_free_combined[,category:=gsub("historic","Historic",category)]
 
@@ -207,6 +207,11 @@ VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
 lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
 
 lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
+
+lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_renewable","Renewable",variable)]
+lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_carbon_free","Carbon free",variable)]
+lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_carbon_free_goal","Carbon free goal",variable)]
+lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_renewable_goal","Renewable goal",variable)]
 
 # below code ensures that historic data will appear first then goal data
 lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined %>% 
@@ -324,6 +329,14 @@ wind_and_solar_capacity_projections <- wind_and_solar_capacity_projections[,.(da
 wind_and_solar_capacity_projections[wind_and_solar_capacity_projections==0]=NA #making 0 values NA for graphing purposes
 
 lf_wind_and_solar_capacity_projections <-melt(wind_and_solar_capacity_projections,id="date")
+
+# Projected Wind Capacity
+total_mw_offshore_wind<-melt(total_mw_offshore_wind,id="Year")
+total_mw_offshore_wind[,variable:=gsub("CVOW_Pilot","CVOW Pilot",variable)]
+total_mw_offshore_wind[,variable:=gsub("CVOW_Commercial_Stage_I","CVOW Stage I",variable)]
+total_mw_offshore_wind[,variable:=gsub("CVOW_Commercial_Stage_II","CVOW Stage II",variable)]
+total_mw_offshore_wind[,variable:=gsub("CVOW_Commercial_Stage_III","CVOW Stage III",variable)]
+
 
 #Energy Storage
 pjm_storage_working <- pjm_storage

@@ -257,6 +257,15 @@ renewable_and_carbon_free_line
 renewable_and_carbon_free_line_p <- ggplotly_wrapper(renewable_and_carbon_free_line)
 renewable_and_carbon_free_line_p
 
+# VA Electricity Net Imports
+va_elec_net_imports_line<-line_figure(list(melt(va_elec_import,id="year")),
+                                  "year","Interstate Electricity Flow (GWh)","Virginia Net Interstate Electricity Flow",
+                                  return_static = F, source_citation ="Source: U.S. Energy Information Administration", subtitle_description = "Positive Values = Imports",
+                                 modifications = theme(legend.position = "none"))
+va_elec_net_imports_line
+
+va_elec_net_imports_line_p<-ggplotly_wrapper(va_elec_net_imports_line)
+va_elec_net_imports_line_p
 #--------------------------PLOTTING WIND AND SOLAR PROJECTED CAPACITY ADDITIONS (AND STORAGE)----------------------------------
 
 apco_dom_target_vs_projected_capacity <- line_figure(list(lf_apco_dom_onwind_and_solar[date<='2040-01-01']),
@@ -576,7 +585,7 @@ percent_income_reference_figure_p <- ggplotly_wrapper(list(figure=percent_income
 percent_income_reference_figure_p
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------
-#Saving only the plopts that the dashboard uses. This will save R image file into cep-viz folder. Move that R image file into the dashboard file and 
+#Saving only the plots that the dashboard uses. This will save R image file into cep-viz folder. Move that R image file into the dashboard file and 
 #open those objects into the global environment in the dashboard project.
 save(single_ring_renewable_donut_p,
      single_ring_carbon_free_donut_p,
@@ -612,6 +621,7 @@ save(single_ring_renewable_donut_p,
      emissions_per_capita_line_p,
      emissions_per_gdp_line_p,
      pjm_wind,
+     va_elec_net_imports_line_p,
   
      va_avg_annual_energy_cost_p,
      va_avg_annual_energy_percent_exp_p,

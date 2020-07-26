@@ -59,6 +59,9 @@ VCEA_onshore_wind_solar <- data.table(dbGetQuery(db,"select * from \"VCEA_onshor
 #load in APCO and Dominion historic sales
 apco_dom_sales<-data.table(dbGetQuery(db,"select * from elec_sales_through_2019 ;"))
 
+#load in VA electricity imports
+va_elec_import<-data.table(dbGetQuery(db,"select * from eia_seds_elisp_va_a ;"))
+
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name
 fetch_time_series_from_db <- function(db_table_name, value_description, con){
   library(RPostgreSQL)
@@ -354,6 +357,9 @@ storage_capacity_projections <- storage_capacity_projections[,.(storage=sum(stor
 storage_capacity_projections <- storage_capacity_projections[,.(date,storage=cumsum(storage))]
 
 lf_storage_capacity_projections <- melt(storage_capacity_projections,id="date")
+
+# Virginia Electricity Imports
+va_elec_import<-subset(va_elec_import,select=-c(date))
 
 # For energy equity figures------------------------------------------------------------------------------------------------
 #getting citation information from metadata table

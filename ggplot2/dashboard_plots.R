@@ -488,7 +488,7 @@ va_avg_annual_energy_cost <- ggplot() +
   geom_sf(data = world, fill = "#F0F0F0") +
   geom_sf(data = states, fill = NA,color="dimgrey") +
   geom_sf(data = va_energy_equity_by_county, aes(fill = avg_annual_energy_cost,text=paste0(county,"\nEnergy Expenditures: $",avg_annual_energy_cost))) +
-  scale_fill_gradientn(name="Average Annual Energy Cost \nin Dollars\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
+  scale_fill_gradientn(name="Average Annual Electricity Cost \nin Dollars\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
   xlab("Longitude") + ylab("Latitude") +
   labs(title = "Virginia Energy Burden by County in Dollars", subtitle = "For Households Below the Federal Poverty Level",caption = paste0("Source: ",expenditures_source)) +
@@ -509,7 +509,7 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
   geom_sf(data = world,fill = "#F0F0F0") +
   geom_sf(data = states, fill = NA,color="dimgrey") +
   geom_sf(data = va_energy_equity_by_county, aes(fill = avg_energy_burden_as_percent_income,text=paste0(county,"\nEnergy Expenditures: ",avg_energy_burden_as_percent_income,"%"))) +
-  scale_fill_gradientn(name="Average Annual Energy Cost \nas Percentage of Income\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
+  scale_fill_gradientn(name="Average Annual Electricity Cost \nas Percentage of Income\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE) +
   xlab("Longitude") + ylab("Latitude") +
   labs(title = "Virginia Energy Burden by County as Percentage of Income", subtitle = "For Households Below the Federal Poverty Level", caption = paste0("Source: ",percent_income_source)) + 

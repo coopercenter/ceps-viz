@@ -115,10 +115,9 @@ percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_a
 percent_renewable_and_carbon_free_line_p
 
 percent_renewable_and_carbon_free_goal_line <- line_figure(list(lf_VCEA_goal_percent_gen),
-                                                      "year","Percentage of Total Generation","Virginia Electricity Generation",
+                                                      "year","Percentage of Total Generation","Virginia Electricity Generation Goals",
                                                       list("VCEA_storage"),
-                                                      return_static = F,subtitle_description = "Renewable and Carbon-Free",
-                                                      modifications = geom_line(linetype="dashed",size=1.3))
+                                                      return_static = F,subtitle_description = "Renewable and Carbon-Free")
 percent_renewable_and_carbon_free_goal_line 
 
 percent_renewable_and_carbon_free_goal_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_line)
@@ -127,7 +126,7 @@ percent_renewable_and_carbon_free_goal_line_p
 percent_renewable_and_carbon_free_goal_combined_line <- line_figure(list(lf_percent_renewable_carbon_free_combined_dt),
                                                       "year","Percentage of Total Generation","Virginia Electricity Generation",
                                                       list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","VCEA_storage"),
-                                                      return_static = F,subtitle_description="Renewable and Carbon Free")
+                                                      return_static = F,subtitle_description="Renewable and Carbon Free",future_date = 2020)
 percent_renewable_and_carbon_free_goal_combined_line
 
 percent_renewable_and_carbon_free_goal_combined_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_combined_line)
@@ -139,12 +138,12 @@ renewable_and_carbon_free_facet_graph <- ggplot(data=lf_percent_renewable_carbon
   facet_grid(.~category,scales="free")+
   scale_color_manual(name=NULL,values=ceps_pal[1:2])+
   xlab("Year")+ylab("Percentage of Total Generation")+ylim(0,NA)+
-  labs(title="Virginia Electricity Generation, Renewable and Carbon-Free",subtitle="Historic vs Goal",caption="Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration")+
+  labs(title="Virginia Electricity Generation, Renewable and Carbon-Free",subtitle="Historic vs Goal",caption="Source: U.S. Energy Information Administration, Virginia Clean Economy Act")+
   theme_ceps()
 renewable_and_carbon_free_facet_graph
 
 renewable_and_carbon_free_facet_graph_p <- subplot(percent_renewable_and_carbon_free_line_p,percent_renewable_and_carbon_free_goal_line_p,shareY = T) %>%
-  add_annotations(x=0.5,y=-0.13,yref='paper',xref='paper',text=paste0("<sub><i>Source: Environmental Law and Regulatory Clinic at the University of Virginia, U.S. Energy Information Administration"),showarrow=F,font = list(size = 14))
+  add_annotations(x=0.5,y=-0.13,yref='paper',xref='paper',text=paste0("<sub><i>Source: U.S. Energy Information Administration, Virginia Clean Economy Act"),showarrow=F,font = list(size = 14))
 renewable_and_carbon_free_facet_graph_p
 
 # Solar, Hydro, and Nuclear Generation over Time
@@ -433,7 +432,7 @@ apco_dom_historic_goal_sales_combined_line_p
 apco_dom_sales_facet_graph <- ggplot(data=lf_apco_dom_sales_combined,mapping=aes(x=year,y=value,color=variable))+
   geom_line(aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
   facet_grid(.~category,scales="free")+
-  scale_color_manual(name=NULL,values=ceps_pal[1:2])+
+  scale_color_manual(name=NULL,values=ceps_pal[1:4])+
   xlab("Year")+ylab("Sales (GWh)")+ylim(0,NA)+
   labs(title="Electricty Sales",subtitle="Historic vs Goal",caption="Source:  U.S. Energy Information Administration, Virginia Clean Economy Act")+
   theme_ceps()
@@ -445,11 +444,6 @@ annual_savings_2020_pie_chart_p <- pie_chart_figure_p(list(virginia_annual_savin
                                                                   title_name = "Virginia Savings through 2020 (MWh)",
                                                                   character_list = list("virginia_annual_savings_through_2020"),source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2020_pie_chart_p
-
-annual_savings_2020_stacked_area <-stacked_area_figure(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
-                                                       title_name = "Virginia Savings through 2020 (MWh)",
-                                                       character_list = list("virginia_annual_savings_through_2020"),source_citation = "Source: The American Council for an Energy-Efficient Economy")
-annual_savings_2020_stacked_area
 
 annual_savings_2020_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_annual_savings_through_2020[variable!="Total Needed"]),
                                                       title_name = "Virginia Savings through 2020 (MWh)",
@@ -467,7 +461,7 @@ annual_savings_2022_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_
 annual_savings_2022_pie_chart_p_with_legend
 
 annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_2022, mapping=aes(fill=variable, y=value, x=year)) + 
-  geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2,aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",value,"\n","Variable: ",variable)))+
+  geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2,aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",round(value,4),"\n","Variable: ",variable)))+
   scale_x_continuous(breaks=c(2020,2022))+
   scale_y_continuous(labels = comma)+
   labs(x="Year",y="Projected energy savings (MWh)",title="Projected Future Savings From Energy Efficiency Programs",caption="Source: The American Council for an Energy-Efficient Economy")+
@@ -488,7 +482,7 @@ va_avg_annual_energy_cost <- ggplot() +
   geom_sf(data = world, fill = "#F0F0F0") +
   geom_sf(data = states, fill = NA,color="dimgrey") +
   geom_sf(data = va_energy_equity_by_county, aes(fill = avg_annual_energy_cost,text=paste0(county,"\nEnergy Expenditures: $",avg_annual_energy_cost))) +
-  scale_fill_gradientn(name="Average Annual Electricity Cost \nin Dollars\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
+  scale_fill_gradientn(name="Average Annual Energy Cost \nin Dollars\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
   xlab("Longitude") + ylab("Latitude") +
   labs(title = "Virginia Energy Burden by County in Dollars", subtitle = "For Households Below the Federal Poverty Level",caption = paste0("Source: ",expenditures_source)) +
@@ -509,7 +503,7 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
   geom_sf(data = world,fill = "#F0F0F0") +
   geom_sf(data = states, fill = NA,color="dimgrey") +
   geom_sf(data = va_energy_equity_by_county, aes(fill = avg_energy_burden_as_percent_income,text=paste0(county,"\nEnergy Expenditures: ",avg_energy_burden_as_percent_income,"%"))) +
-  scale_fill_gradientn(name="Average Annual Electricity Cost \nas Percentage of Income\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
+  scale_fill_gradientn(name="Average Annual Energy Cost \nas Percentage of Income\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE) +
   xlab("Longitude") + ylab("Latitude") +
   labs(title = "Virginia Energy Burden by County as Percentage of Income", subtitle = "For Households Below the Federal Poverty Level", caption = paste0("Source: ",percent_income_source)) + 
@@ -525,7 +519,7 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
         text = element_text(family = "Helvetica",color = "dimgrey"))
 va_avg_annual_energy_percent_exp
 
-va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "text") %>%
+va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "text",width = 600, height = 320,automargin=T) %>%
   layout(title = list(text=paste0("Virginia Energy Burden by County in Dollars","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=15)),
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
          yaxis=list(title="Latitude",titlefont=list(size=14)))%>%
@@ -533,7 +527,7 @@ va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "tex
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_cost_p
 
-va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = "text") %>%
+va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = "text",width = 600, height = 320,automargin=T) %>%
   layout(title = list(text=paste0("Virginia Energy Burden by County as Percentage of Income","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=15)),
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
          yaxis=list(title="Latitude",titlefont=list(size=14)))%>%
@@ -543,45 +537,42 @@ va_avg_annual_energy_percent_exp_p
 
 #creating reference figures
 #data not currently in db, so assigning values manually
-#monthly avg electricty spending from EIA data (https://www.eia.gov/electricity/sales_revenue_price/pdf/table5_a.pdf)
+#2018 energy expenditure per capita from EIA data (https://www.eia.gov/state/seds/data.php?incfile=/state/seds/sep_sum/html/rank_pr.html&sid=US)
 #median income from Census data (https://www.census.gov/search-results.html?q=2018+income&page=1&stateGeo=none&searchtype=web&cssp=SERP&_charset_=UTF-8)
-virginia_monthly_elec_bill = 136.59
-us_monthly_elec_bill = 117.65
-
-virginia_annual_elec_bill = 12*virginia_monthly_elec_bill
-us_annual_elec_bill = 12*us_monthly_elec_bill
+virginia_2018_energy_expenditures_per_capita = 3601
+us_2018_energy_expenditures_per_capita = 3891
 
 virginia_median_income = 71564
 us_median_income = 60293
 
 dollar_reference_table <- data.table(category=c("Virginia","U.S."),
-                                     value=c(virginia_annual_elec_bill,us_annual_elec_bill))
+                                     value=c(virginia_2018_energy_expenditures_per_capita,us_2018_energy_expenditures_per_capita))
 
 percentage_of_income_reference_table <- data.table(category=c("Virginia","U.S."),
-                                                   value=c(virginia_annual_elec_bill/virginia_median_income*100,us_annual_elec_bill/us_median_income*100))
+                                                   value=c(virginia_2018_energy_expenditures_per_capita/virginia_median_income*100,us_2018_energy_expenditures_per_capita/us_median_income*100))
 
 dollar_reference_figure <- ggplot(dollar_reference_table,mapping=aes(x=category,y=value,fill=category))+
   geom_bar(position="dodge",stat="identity",aes(group=category,text=paste0("Value: ",value,"\n","Variable: ",category))) +
   xlab(NULL)+ylab("Energy Cost (Dollars)")+
-  labs(title="2018 Average Electricity Cost",caption="Source: U.S. Energy Information Administration")+
+  labs(title="2018 Energy Expenditures per Capita in Dollars",caption="Source: U.S. Energy Information Administration",subtitle="U.S. vs Virginia")+
   scale_fill_manual(values=ceps_pal[1:2])+
   theme_ceps()+
   theme(legend.position = "none")
 dollar_reference_figure
 
-dollar_reference_figure_p <- ggplotly_wrapper(list(figure=dollar_reference_figure,x_label=NULL,source_description="Source: U.S. Energy Information Administration",title_name="2018 Average Household Electricity Expenditure in Dollars",subtitle_description="U.S. vs Virginia",y_label="Energy Cost (Dollars)"))
+dollar_reference_figure_p <- ggplotly_wrapper(list(figure=dollar_reference_figure,x_label=NULL,source_description="Source: U.S. Energy Information Administration",title_name="2018 Energy Expenditures per Capita in Dollars",subtitle_description="U.S. vs Virginia",y_label="Energy Cost (Dollars)"))
 dollar_reference_figure_p 
 
 percent_income_reference_figure <- ggplot(percentage_of_income_reference_table,mapping=aes(x=category,y=value,fill=category))+
   geom_bar(position="dodge",stat="identity",aes(group=category,text=paste0("Value: ",round(value,3),"\n","Variable: ",category))) +
   xlab(NULL)+ylab("Energy Cost (Percentage of Income)")+
-  labs(title="2018 Average Electricity Cost",caption="Source: U.S. Census Bureau, U.S. Energy Information Administration")+
+  labs(title="2018 Energy Expenditures per Capita as a Percentage of Median Income",caption="Source: U.S. Census Bureau, U.S. Energy Information Administration",subtitle="U.S. vs Virginia")+
   scale_fill_manual(values=ceps_pal[1:2])+
   theme_ceps()+
   theme(legend.position = "none")
 percent_income_reference_figure
 
-percent_income_reference_figure_p <- ggplotly_wrapper(list(figure=percent_income_reference_figure,x_label=NULL,source_description="Source: U.S. Census Bureau, U.S. Energy Information Administration",title_name="2018 Average Household Electricity Expenditure as a Percentage of Income",subtitle_description="U.S. vs Virginia",y_label="Energy Cost (Percentage of Income)"))
+percent_income_reference_figure_p <- ggplotly_wrapper(list(figure=percent_income_reference_figure,x_label=NULL,source_description="Source: U.S. Census Bureau, U.S. Energy Information Administration",title_name="2018 Energy Expenditures per Capita as a Percentage of Median Income",subtitle_description="U.S. vs Virginia",y_label="Energy Cost (Percentage of Income)"))
 percent_income_reference_figure_p
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------

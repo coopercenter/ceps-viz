@@ -62,6 +62,9 @@ apco_dom_sales<-data.table(dbGetQuery(db,"select * from elec_sales_through_2019 
 #load in VA electricity imports
 va_elec_import<-data.table(dbGetQuery(db,"select * from eia_seds_elisp_va_a ;"))
 
+#load in APCO & Dom RPS
+VCEA_renewable_portfolio_standards<-data.table(dbGetQuery(db,"select * from \"VCEA_renewable_portfolio_standards\" ;"))
+
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name
 fetch_time_series_from_db <- function(db_table_name, value_description, con){
   library(RPostgreSQL)
@@ -188,8 +191,9 @@ va_annual_renewable_and_carbon_free_gen[,percent_carbon_free:=(carbon_free/total
 lf_percent_renewable_and_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable,percent_carbon_free)],id="year")
 
 #manually creating table of overall generation goals
-VCEA_goal_percent_gen = data.table(year=c(2030,2040,2050,2053),
-                                   percent_renewable=c(30,30,30,NA),
+#creating table for facet grid 
+VCEA_goal_percent_gen = data.table(year=c(2030,2040,2050,2060),
+                                   percent_renewable=c(30,30,30,30),
                                    percent_carbon_free=c(NA,NA,100,100))
 lf_VCEA_goal_percent_gen <- melt(VCEA_goal_percent_gen,id="year")
 
@@ -204,22 +208,32 @@ lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_carbon_free",
 lf_percent_renewable_carbon_free_combined[,category:=gsub("goal","Goal",category)]
 lf_percent_renewable_carbon_free_combined[,category:=gsub("historic","Historic",category)]
 
-VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2053),
-                                      percent_renewable_goal=c(30,30,30,NA),
-                                      percent_carbon_free_goal=c(NA,NA,100,100))
-lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
-
-lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
-
-lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_renewable","Renewable",variable)]
-lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_carbon_free","Carbon free",variable)]
-lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_carbon_free_goal","Carbon free goal",variable)]
-lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_renewable_goal","Renewable goal",variable)]
-
 # below code ensures that historic data will appear first then goal data
 lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined %>% 
   arrange(desc(category)) %>%
   mutate_at(vars(category), funs(factor(., levels=unique(.))))
+
+#creating table for regular line plot 
+VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
+                                      percent_renewable_goal=c(30,30,30,30),
+                                      percent_carbon_free_goal=c(NA,NA,100,100))
+lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
+
+#calculating percent share of Dom & Apco sales of total sales in 2019
+dom_percent_share = apco_dom_sales[year==2019,dom_total_gwh]/eia_elec_gen_all_va_99_a[year==2019,total]
+apco_percent_share = apco_dom_sales[year==2019,apco_total_gwh]/eia_elec_gen_all_va_99_a[year==2019,total]
+#calculating weighted average of Dom and APCO rps
+VCEA_renewable_portfolio_standards[,`:=`(apco_rps=apco_rps*100,
+                                         dominion_rps=dominion_rps*100)]#converting to percent rather than decimal for consistency with other data
+VCEA_renewable_portfolio_standards[,dom_and_apco_renewable:=dominion_rps*dom_percent_share+apco_rps*apco_percent_share]
+VCEA_renewable_portfolio_standards <- rbind(VCEA_renewable_portfolio_standards,list(2019,NA,NA,NA)) #adding a NA historic value so plot legend label is solid instead of dashed
+lf_dom_apco_rps <- melt (VCEA_renewable_portfolio_standards[,.(year,dom_and_apco_renewable)],id="year")
+
+lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
+lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_carbon_free_combined_dt,lf_dom_apco_rps,by=c("year","variable","value"),all=T)
+
+lf_percent_renewable_carbon_free_combined_dt[variable=="percent_renewable"|variable=="percent_renewable_goal",variable:="VA renewable"]
+lf_percent_renewable_carbon_free_combined_dt[variable=="percent_carbon_free"|variable=="percent_carbon_free_goal",variable:="VA carbon free"]
 
 # APCO and Dominion historic sales vs VCEA goals----------------------------------------------------------------------------
 apco_dom_historic_sales<-apco_dom_sales[year<2020]

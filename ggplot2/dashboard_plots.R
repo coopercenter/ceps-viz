@@ -422,7 +422,7 @@ apco_dom_sales_goal_line_p
 apco_dom_historic_goal_sales_combined_line <- line_figure(list(lf_apco_dom_sales_combined_dt),
                                                           "year","Total Retail Sales (GWh/year)","Mandated Electricity Reduction Under Virginia Clean Economy Act",
                                                           return_static = F,source_citation = "Source: U.S. Energy Information Administration, Dominion Energy Inc.",
-                                                          modifications= guides(col = guide_legend(reverse = TRUE)))
+                                                          future_date = 2020)
 apco_dom_historic_goal_sales_combined_line
 
 apco_dom_historic_goal_sales_combined_line_p <- ggplotly_wrapper(apco_dom_historic_goal_sales_combined_line)

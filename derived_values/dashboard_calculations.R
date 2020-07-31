@@ -57,7 +57,7 @@ pjm_storage <- data.table(dbGetQuery(db,"select * from pjm_storage ;"))
 VCEA_onshore_wind_solar <- data.table(dbGetQuery(db,"select * from \"VCEA_onshore_wind_solar\" ;"))
 
 #load in APCO and Dominion historic sales
-apco_dom_sales<-data.table(dbGetQuery(db,"select * from elec_sales_through_2019 ;"))
+apco_dom_sales<-data.table(dbGetQuery(db,"select * from elec_sales_through_2019_annual ;"))
 
 #load in VA electricity imports
 va_elec_import<-data.table(dbGetQuery(db,"select * from eia_seds_elisp_va_a ;"))
@@ -227,7 +227,7 @@ VCEA_renewable_portfolio_standards[,`:=`(apco_rps=apco_rps*100,
                                          dominion_rps=dominion_rps*100)]#converting to percent rather than decimal for consistency with other data
 VCEA_renewable_portfolio_standards[,dom_and_apco_renewable:=dominion_rps*dom_percent_share+apco_rps*apco_percent_share]
 VCEA_renewable_portfolio_standards <- rbind(VCEA_renewable_portfolio_standards,list(2019,NA,NA,NA)) #adding a NA historic value so plot legend label is solid instead of dashed
-lf_dom_apco_rps <- melt (VCEA_renewable_portfolio_standards[,.(year,dom_and_apco_renewable)],id="year")
+lf_dom_apco_rps <- melt (VCEA_renewable_portfolio_standards[year<=2030,.(year,dom_and_apco_renewable)],id="year")
 
 lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
 lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_carbon_free_combined_dt,lf_dom_apco_rps,by=c("year","variable","value"),all=T)
@@ -264,10 +264,8 @@ VCEA_goal_sales_reduction_dt = data.table(year=c(2022,2023,2024,2025),
 lf_VCEA_goal_sales_reduction_dt <- melt(VCEA_goal_sales_reduction_dt,id="year")
 
 lf_apco_dom_sales_combined_dt <- merge(lf_apco_dom_historic_sales,lf_VCEA_goal_sales_reduction_dt,by=c("year","variable","value"),all=T)
-lf_apco_dom_sales_combined_dt[,variable:=gsub("apco_total_gwh","APCO, historic",variable)]
-lf_apco_dom_sales_combined_dt[,variable:=gsub("dom_total_gwh","Dominion, historic",variable)]
-lf_apco_dom_sales_combined_dt[,variable:=gsub("apco_goal","APCO, goal",variable)]
-lf_apco_dom_sales_combined_dt[,variable:=gsub("dom_goal","Dominion, goal",variable)]
+lf_apco_dom_sales_combined_dt[variable=="apco_total_gwh"|variable=="apco_goal",variable:="APCO"]
+lf_apco_dom_sales_combined_dt[variable=="dom_total_gwh"|variable=="dom_goal",variable:="Dominion"]
 
 # below code ensures that historic data will appear first then goal data
 lf_apco_dom_sales_combined <- lf_apco_dom_sales_combined %>% 

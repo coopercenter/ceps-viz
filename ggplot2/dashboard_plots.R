@@ -485,7 +485,7 @@ va_avg_annual_energy_cost <- ggplot() +
   scale_fill_gradientn(name="Average Annual Energy Cost \nin Dollars\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
   xlab("Longitude") + ylab("Latitude") +
-  labs(title = "Virginia Energy Burden by County in Dollars", subtitle = "For Households Below the Federal Poverty Level",caption = paste0("Source: ",expenditures_source)) +
+  labs(title = "Average Annual Energy Cost ($) for Counties in Virginia", caption = paste0("Source: ",expenditures_source)) +
   theme(panel.background = element_rect(fill = "#B0DEFA"),
         plot.background=element_rect(fill="#F0F0F0"),
         plot.caption=element_text(hjust = 0.5,face="italic"),
@@ -506,7 +506,7 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
   scale_fill_gradientn(name="Average Annual Energy Cost \nas Percentage of Income\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE) +
   xlab("Longitude") + ylab("Latitude") +
-  labs(title = "Virginia Energy Burden by County as Percentage of Income", subtitle = "For Households Below the Federal Poverty Level", caption = paste0("Source: ",percent_income_source)) + 
+  labs(title = "Average Energy Burden (% income) for Counties in Virginia", caption = paste0("Source: ",percent_income_source)) + 
   theme(panel.background = element_rect(fill = "#B0DEFA"),
         plot.background=element_rect(fill="#F0F0F0"),
         plot.caption=element_text(hjust = 0.5,face="italic"),
@@ -519,16 +519,16 @@ va_avg_annual_energy_percent_exp <-  ggplot() +
         text = element_text(family = "Helvetica",color = "dimgrey"))
 va_avg_annual_energy_percent_exp
 
-va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "text",width = 600, height = 320,automargin=T) %>%
-  layout(title = list(text=paste0("Virginia Energy Burden by County in Dollars","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=15)),
+va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "text") %>%
+  layout(title = list(text=paste0("Average Annual Energy Cost ($) for Counties in Virginia"),titlefont=list(size=15)),
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
          yaxis=list(title="Latitude",titlefont=list(size=14)))%>%
   config(displaylogo = FALSE,
          modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_cost_p
 
-va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = "text",width = 600, height = 320,automargin=T) %>%
-  layout(title = list(text=paste0("Virginia Energy Burden by County as Percentage of Income","<br>","<sup>","For Households Below the Federal Poverty Level","</sup>"),titlefont=list(size=15)),
+va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = "text") %>%
+  layout(title = list(text=paste0("Average Energy Burden (% income) for Counties in Virginia"),titlefont=list(size=15)),
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
          yaxis=list(title="Latitude",titlefont=list(size=14)))%>%
   config(displaylogo = FALSE,

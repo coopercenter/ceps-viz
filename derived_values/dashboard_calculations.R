@@ -385,10 +385,6 @@ va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")
 
 va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
 
-#isolating just county energy equity data (as there are some cities listed as well)
-#energy_burden_county_expenditures_counties <- energy_burden_county_expenditures[county %like% "County"]
-#energy_burden_county_percent_income_counties <- energy_burden_county_percent_income[county %like% "County"]
-
 va_counties <- as.data.table(va_counties)
 #adjusting county names to match format of other datasets
 va_counties[,county:=paste(county,"county")]

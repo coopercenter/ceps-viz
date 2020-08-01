@@ -125,7 +125,7 @@ percent_renewable_and_carbon_free_goal_line_p
 
 percent_renewable_and_carbon_free_goal_combined_line <- line_figure(list(lf_percent_renewable_carbon_free_combined_dt),
                                                       "year","Percentage of Total Generation","Virginia Electricity Generation",
-                                                      list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","VCEA_storage"),
+                                                      list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","VCEA_storage","va_utility_sales"),
                                                       return_static = F,subtitle_description="Renewable and Carbon Free",future_date = 2020)
 percent_renewable_and_carbon_free_goal_combined_line
 
@@ -524,7 +524,7 @@ va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "tex
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
          yaxis=list(title="Latitude",titlefont=list(size=14)))%>%
   config(displaylogo = FALSE,
-         modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
+         modeBarButtonsToRemove = c("pan2d","select2d","lasso2d","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_cost_p
 
 va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = "text") %>%
@@ -532,7 +532,7 @@ va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,
          xaxis=list(title = paste0("Longitude","<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)),
          yaxis=list(title="Latitude",titlefont=list(size=14)))%>%
   config(displaylogo = FALSE,
-         modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d","pan2d","select2d","lasso2d","hoverClosestCartesian","hoverCompareCartesian","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
+         modeBarButtonsToRemove = c("pan2d","select2d","lasso2d","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_percent_exp_p
 
 #creating reference figures

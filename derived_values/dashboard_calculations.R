@@ -13,6 +13,7 @@ library(ggplot2)
 library(zoo)
 library(lubridate)
 library("Hmisc")
+library(here)
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))
@@ -64,6 +65,9 @@ va_elec_import<-data.table(dbGetQuery(db,"select * from eia_seds_elisp_va_a ;"))
 
 #load in APCO & Dom RPS
 VCEA_renewable_portfolio_standards<-data.table(dbGetQuery(db,"select * from \"VCEA_renewable_portfolio_standards\" ;"))
+
+#load in utility sales data
+va_utility_sales <- data.table(dbGetQuery(db,"select * from va_utility_sales ;"))
 
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name
 fetch_time_series_from_db <- function(db_table_name, value_description, con){
@@ -220,8 +224,9 @@ VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
 lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
 
 #calculating percent share of Dom & Apco sales of total sales in 2019
-dom_percent_share = apco_dom_sales[year==2019,dom_total_gwh]/eia_elec_gen_all_va_99_a[year==2019,total]
-apco_percent_share = apco_dom_sales[year==2019,apco_total_gwh]/eia_elec_gen_all_va_99_a[year==2019,total]
+total_sales = va_utility_sales[year==2019,sum(tot_sales_mwh)]
+dom_percent_share = va_utility_sales[year==2019&utility_name=="dominion",sum(tot_sales_mwh)]/total_sales
+apco_percent_share = va_utility_sales[year==2019&utility_name=="apco",sum(tot_sales_mwh)]/total_sales
 #calculating weighted average of Dom and APCO rps
 VCEA_renewable_portfolio_standards[,`:=`(apco_rps=apco_rps*100,
                                          dominion_rps=dominion_rps*100)]#converting to percent rather than decimal for consistency with other data
@@ -378,22 +383,41 @@ va_elec_import<-subset(va_elec_import,select=-c(date))
 expenditures_source <- metadata[db_table_name=="energy_burden_county_expenditures",data_source_full_name]
 percent_income_source <- metadata[db_table_name=="energy_burden_county_percent_income",data_source_full_name]
 
-counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
-va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
+#Below there are 3 options to get the 'va_counties' geospatial dataset ready to be merged with the energy equity data
+#I have commented out options B & C, but included them for reference as none of the three options are ideal
 
-va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
-
+#OPTION A - successfully shows all city and county boundaries EXCEPT Accomack and Northampton
+va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary"),layer="VirginiaCounty")
 va_counties <- as.data.table(va_counties)
+setnames(va_counties,old="NAMELSAD",new="county")#renaming county column to match other datasets
+va_counties$county <- toTitleCase(as.character(va_counties$county))
+#---------------------------------------------------------------------
+#OR
+#OPTION B - I was able to load this on my computer but both viewing and using this data to plot took so long that I was never able to successfully reach either outcome
+#va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary_ClippedToShoreline"),layer="VirginiaCounty_ClippedToShoreline")
+#va_counties <- as.data.table(va_counties)
+#setnames(va_counties,old="NAMELSAD",new="county")#renaming county column to match other datasets
+#va_counties$county <- toTitleCase(as.character(va_counties$county))
+#------------------------------------------------------------------------
+#OR
+#OPTION C - does not contain most cities' geospatial data but Accomack and Northampton counties appear as they should 
+#counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
+#va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
+#va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
+#va_counties <- as.data.table(va_counties)
+
 #adjusting county names to match format of other datasets
-va_counties[,county:=paste(county,"county")]
-va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
-va_counties[county=="virginia beach county",county:="virginia beach city"]
-va_counties[county=="newport news county",county:="newport news city"]
-va_counties[county=="hampton county",county:="hampton city"]
-va_counties$county <- toTitleCase(va_counties$county)
+#va_counties[,county:=paste(county,"county")]
+#va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
+#va_counties[county=="virginia beach county",county:="virginia beach city"]
+#va_counties[county=="newport news county",county:="newport news city"]
+#va_counties[county=="hampton county",county:="hampton city"]
+#va_counties$county <- toTitleCase(va_counties$county)
+#------------------------------------------------------------------------
 
 energy_burden_county_expenditures$county <- toTitleCase(energy_burden_county_expenditures$county)
 energy_burden_county_percent_income$county <- toTitleCase(energy_burden_county_percent_income$county)
+
 #merging county geospatial data with energy equity data
 va_energy_equity_by_county <- merge(va_counties,energy_burden_county_expenditures,id="county")
 va_energy_equity_by_county$avg_annual_energy_cost <- as.numeric(va_energy_equity_by_county$avg_annual_energy_cost)

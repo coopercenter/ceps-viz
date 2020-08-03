@@ -13,6 +13,7 @@ library(ggplot2)
 library(zoo)
 library(lubridate)
 library("Hmisc")
+library(here)
 
 db_driver = dbDriver("PostgreSQL")
 source(here::here("my_postgres_credentials.R"))
@@ -57,10 +58,16 @@ pjm_storage <- data.table(dbGetQuery(db,"select * from pjm_storage ;"))
 VCEA_onshore_wind_solar <- data.table(dbGetQuery(db,"select * from \"VCEA_onshore_wind_solar\" ;"))
 
 #load in APCO and Dominion historic sales
-apco_dom_sales<-data.table(dbGetQuery(db,"select * from elec_sales_through_2019 ;"))
+apco_dom_sales<-data.table(dbGetQuery(db,"select * from elec_sales_through_2019_annual ;"))
 
 #load in VA electricity imports
 va_elec_import<-data.table(dbGetQuery(db,"select * from eia_seds_elisp_va_a ;"))
+
+#load in APCO & Dom RPS
+VCEA_renewable_portfolio_standards<-data.table(dbGetQuery(db,"select * from \"VCEA_renewable_portfolio_standards\" ;"))
+
+#load in utility sales data
+va_utility_sales <- data.table(dbGetQuery(db,"select * from va_utility_sales ;"))
 
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name
 fetch_time_series_from_db <- function(db_table_name, value_description, con){
@@ -188,8 +195,9 @@ va_annual_renewable_and_carbon_free_gen[,percent_carbon_free:=(carbon_free/total
 lf_percent_renewable_and_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable,percent_carbon_free)],id="year")
 
 #manually creating table of overall generation goals
-VCEA_goal_percent_gen = data.table(year=c(2030,2040,2050,2053),
-                                   percent_renewable=c(30,30,30,NA),
+#creating table for facet grid 
+VCEA_goal_percent_gen = data.table(year=c(2030,2040,2050,2060),
+                                   percent_renewable=c(30,30,30,30),
                                    percent_carbon_free=c(NA,NA,100,100))
 lf_VCEA_goal_percent_gen <- melt(VCEA_goal_percent_gen,id="year")
 
@@ -204,22 +212,33 @@ lf_percent_renewable_carbon_free_combined[,variable:=gsub("percent_carbon_free",
 lf_percent_renewable_carbon_free_combined[,category:=gsub("goal","Goal",category)]
 lf_percent_renewable_carbon_free_combined[,category:=gsub("historic","Historic",category)]
 
-VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2053),
-                                      percent_renewable_goal=c(30,30,30,NA),
-                                      percent_carbon_free_goal=c(NA,NA,100,100))
-lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
-
-lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
-
-lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_renewable","Renewable",variable)]
-lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_carbon_free","Carbon free",variable)]
-lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_carbon_free_goal","Carbon free goal",variable)]
-lf_percent_renewable_carbon_free_combined_dt[,variable:=gsub("percent_renewable_goal","Renewable goal",variable)]
-
 # below code ensures that historic data will appear first then goal data
 lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_combined %>% 
   arrange(desc(category)) %>%
   mutate_at(vars(category), funs(factor(., levels=unique(.))))
+
+#creating table for regular line plot 
+VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
+                                      percent_renewable_goal=c(30,30,30,30),
+                                      percent_carbon_free_goal=c(NA,NA,100,100))
+lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
+
+#calculating percent share of Dom & Apco sales of total sales in 2019
+total_sales = va_utility_sales[year==2019,sum(tot_sales_mwh)]
+dom_percent_share = va_utility_sales[year==2019&utility_name=="dominion",sum(tot_sales_mwh)]/total_sales
+apco_percent_share = va_utility_sales[year==2019&utility_name=="apco",sum(tot_sales_mwh)]/total_sales
+#calculating weighted average of Dom and APCO rps
+VCEA_renewable_portfolio_standards[,`:=`(apco_rps=apco_rps*100,
+                                         dominion_rps=dominion_rps*100)]#converting to percent rather than decimal for consistency with other data
+VCEA_renewable_portfolio_standards[,dom_and_apco_renewable:=dominion_rps*dom_percent_share+apco_rps*apco_percent_share]
+VCEA_renewable_portfolio_standards <- rbind(VCEA_renewable_portfolio_standards,list(2019,NA,NA,NA)) #adding a NA historic value so plot legend label is solid instead of dashed
+lf_dom_apco_rps <- melt (VCEA_renewable_portfolio_standards[year<=2030,.(year,dom_and_apco_renewable)],id="year")
+
+lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_and_carbon_free,lf_VCEA_goal_percent_gen_dt,by=c("year","variable","value"),all=T)
+lf_percent_renewable_carbon_free_combined_dt <- merge(lf_percent_renewable_carbon_free_combined_dt,lf_dom_apco_rps,by=c("year","variable","value"),all=T)
+
+lf_percent_renewable_carbon_free_combined_dt[variable=="percent_renewable"|variable=="percent_renewable_goal",variable:="VA renewable"]
+lf_percent_renewable_carbon_free_combined_dt[variable=="percent_carbon_free"|variable=="percent_carbon_free_goal",variable:="VA carbon free"]
 
 # APCO and Dominion historic sales vs VCEA goals----------------------------------------------------------------------------
 apco_dom_historic_sales<-apco_dom_sales[year<2020]
@@ -250,10 +269,8 @@ VCEA_goal_sales_reduction_dt = data.table(year=c(2022,2023,2024,2025),
 lf_VCEA_goal_sales_reduction_dt <- melt(VCEA_goal_sales_reduction_dt,id="year")
 
 lf_apco_dom_sales_combined_dt <- merge(lf_apco_dom_historic_sales,lf_VCEA_goal_sales_reduction_dt,by=c("year","variable","value"),all=T)
-lf_apco_dom_sales_combined_dt[,variable:=gsub("apco_total_gwh","APCO, historic",variable)]
-lf_apco_dom_sales_combined_dt[,variable:=gsub("dom_total_gwh","Dominion, historic",variable)]
-lf_apco_dom_sales_combined_dt[,variable:=gsub("apco_goal","APCO, goal",variable)]
-lf_apco_dom_sales_combined_dt[,variable:=gsub("dom_goal","Dominion, goal",variable)]
+lf_apco_dom_sales_combined_dt[variable=="apco_total_gwh"|variable=="apco_goal",variable:="APCO"]
+lf_apco_dom_sales_combined_dt[variable=="dom_total_gwh"|variable=="dom_goal",variable:="Dominion"]
 
 # below code ensures that historic data will appear first then goal data
 lf_apco_dom_sales_combined <- lf_apco_dom_sales_combined %>% 
@@ -366,26 +383,41 @@ va_elec_import<-subset(va_elec_import,select=-c(date))
 expenditures_source <- metadata[db_table_name=="energy_burden_county_expenditures",data_source_full_name]
 percent_income_source <- metadata[db_table_name=="energy_burden_county_percent_income",data_source_full_name]
 
-counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
-va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
+#Below there are 3 options to get the 'va_counties' geospatial dataset ready to be merged with the energy equity data
+#I have commented out options B & C, but included them for reference as none of the three options are ideal
 
-va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
-
-#isolating just county energy equity data (as there are some cities listed as well)
-#energy_burden_county_expenditures_counties <- energy_burden_county_expenditures[county %like% "County"]
-#energy_burden_county_percent_income_counties <- energy_burden_county_percent_income[county %like% "County"]
-
+#OPTION A - successfully shows all city and county boundaries EXCEPT Accomack and Northampton
+va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary"),layer="VirginiaCounty")
 va_counties <- as.data.table(va_counties)
+setnames(va_counties,old="NAMELSAD",new="county")#renaming county column to match other datasets
+va_counties$county <- toTitleCase(as.character(va_counties$county))
+#---------------------------------------------------------------------
+#OR
+#OPTION B - I was able to load this on my computer but both viewing and using this data to plot took so long that I was never able to successfully reach either outcome
+#va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary_ClippedToShoreline"),layer="VirginiaCounty_ClippedToShoreline")
+#va_counties <- as.data.table(va_counties)
+#setnames(va_counties,old="NAMELSAD",new="county")#renaming county column to match other datasets
+#va_counties$county <- toTitleCase(as.character(va_counties$county))
+#------------------------------------------------------------------------
+#OR
+#OPTION C - does not contain most cities' geospatial data but Accomack and Northampton counties appear as they should 
+#counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
+#va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
+#va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
+#va_counties <- as.data.table(va_counties)
+
 #adjusting county names to match format of other datasets
-va_counties[,county:=paste(county,"county")]
-va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
-va_counties[county=="virginia beach county",county:="virginia beach city"]
-va_counties[county=="newport news county",county:="newport news city"]
-va_counties[county=="hampton county",county:="hampton city"]
-va_counties$county <- toTitleCase(va_counties$county)
+#va_counties[,county:=paste(county,"county")]
+#va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
+#va_counties[county=="virginia beach county",county:="virginia beach city"]
+#va_counties[county=="newport news county",county:="newport news city"]
+#va_counties[county=="hampton county",county:="hampton city"]
+#va_counties$county <- toTitleCase(va_counties$county)
+#------------------------------------------------------------------------
 
 energy_burden_county_expenditures$county <- toTitleCase(energy_burden_county_expenditures$county)
 energy_burden_county_percent_income$county <- toTitleCase(energy_burden_county_percent_income$county)
+
 #merging county geospatial data with energy equity data
 va_energy_equity_by_county <- merge(va_counties,energy_burden_county_expenditures,id="county")
 va_energy_equity_by_county$avg_annual_energy_cost <- as.numeric(va_energy_equity_by_county$avg_annual_energy_cost)

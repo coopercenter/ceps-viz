@@ -390,10 +390,10 @@ percent_income_source <- metadata[db_table_name=="energy_burden_county_percent_i
 #I have commented out options B & C, but included them for reference as none of the three options are ideal
 
 #OPTION A - successfully shows all city and county boundaries EXCEPT Accomack and Northampton
-va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary"),layer="VirginiaCounty")
-va_counties <- as.data.table(va_counties)
-setnames(va_counties,old="NAMELSAD",new="county")#renaming county column to match other datasets
-va_counties$county <- toTitleCase(as.character(va_counties$county))
+# va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary"),layer="VirginiaCounty")
+# va_counties <- as.data.table(va_counties)
+# setnames(va_counties,old="NAMELSAD",new="county")#renaming county column to match other datasets
+# va_counties$county <- toTitleCase(as.character(va_counties$county))
 #---------------------------------------------------------------------
 #OR
 #OPTION B - I was able to load this on my computer but both viewing and using this data to plot took so long that I was never able to successfully reach either outcome
@@ -404,18 +404,18 @@ va_counties$county <- toTitleCase(as.character(va_counties$county))
 #------------------------------------------------------------------------
 #OR
 #OPTION C - does not contain most cities' geospatial data but Accomack and Northampton counties appear as they should 
-#counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
-#va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
-#va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
-#va_counties <- as.data.table(va_counties)
+counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
+va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
+va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
+va_counties <- as.data.table(va_counties)
 
 #adjusting county names to match format of other datasets
-#va_counties[,county:=paste(county,"county")]
-#va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
-#va_counties[county=="virginia beach county",county:="virginia beach city"]
-#va_counties[county=="newport news county",county:="newport news city"]
-#va_counties[county=="hampton county",county:="hampton city"]
-#va_counties$county <- toTitleCase(va_counties$county)
+va_counties[,county:=paste(county,"county")]
+va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
+va_counties[county=="virginia beach county",county:="virginia beach city"]
+va_counties[county=="newport news county",county:="newport news city"]
+va_counties[county=="hampton county",county:="hampton city"]
+va_counties$county <- toTitleCase(va_counties$county)
 #------------------------------------------------------------------------
 
 energy_burden_county_expenditures$county <- toTitleCase(energy_burden_county_expenditures$county)
@@ -481,5 +481,6 @@ colnames(virginia_emissions_electric_commas) <- c('Year','Million Metric Tons of
 va_emissions_compounds <- merge(emissions_co2_by_source_va[,.(year=year,CO2=total/1000)],emissions_no_by_source_va[,.(year=year,NO=total/1102311.31)],id="year")
 va_emissions_compounds <- merge(va_emissions_compounds,emissions_so2_by_source_va[,.(year=year,SO2=total/1102311.31)],id="year")
 va_emissions_compounds <- va_emissions_compounds[11:29,] #limit data to baseline year of 2000
+
 
 

@@ -2,6 +2,7 @@
 
 library(here)
 library(devtools)
+install(Rtools)
 install_github("coopercenter/cepsvizfunctions")
 library(cepsvizfunctions)
 
@@ -603,8 +604,6 @@ save(single_ring_renewable_donut_p,
      wind_projected_generation_time_series_line_p,
      wind_projected_capacity_line_p,
      single_ring_offshore_wind_capacity_donut_p,
-     va_avg_annual_energy_cost_p,
-     va_avg_annual_energy_percent_exp_p,
      pjm_solar,
      investment_by_IOUs,
      pjm_storage,
@@ -629,7 +628,7 @@ save(single_ring_renewable_donut_p,
      annual_savings_2020_2022_stacked_bar_chart,
      annual_savings_2020_2022_stacked_bar_chart_p,
      apco_dom_historic_goal_sales_combined_line_p,
-     file = "~/GitHUb/va_clean_economy_dashboard/testingFile.RData") 
+     file = "~/GitHUb/va_clean_economy_dashboard/dashboard_output_test.RData") 
 
 
 

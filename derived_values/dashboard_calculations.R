@@ -82,6 +82,9 @@ fetch_time_series_from_db <- function(db_table_name, value_description, con){
   return(dt)
 }
 
+#custom color palette
+ceps_pal <- c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#D9C6C9","#8491B4B2","#5868AC","#6FB3D9","#56BD96","#99A9E2","#A94F64","#B0DEFA","#99EEBB","#8FD3FE")
+
 # Creating a data frame called `table_list` that includes two columns:
 #      * `table_name`: the list of db table names with data to be pulled from db
 #      * `value_name` : associated name of 'value', e.g., "coal"

@@ -1,9 +1,11 @@
 #compilation of all figures relevant to dashboard
 
 library(here)
+library(devtools)
+install_github("coopercenter/cepsvizfunctions")
+library(cepsvizfunctions)
 
 source(here::here("derived_values","dashboard_calculations.R")) #sourcing in data and reformatted data tables & calculations ready to serve as input to viz functions
-source(here::here("ggplot2","viz_functions.R")) #sourcing in viz functions
 
 #----------------------------------------------PLOTTING DONUT FIGURES------------------------------------------------------------------------------
 

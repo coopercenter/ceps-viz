@@ -1,0 +1,859 @@
+----------------------------------------------------------------------
+---------------------------dashboard_plots.R--------------------------
+here() starts at C:/Users/Chloe/Desktop/ceps-viz
+Loading required package: usethis
+Warning messages:
+1: package 'devtools' was built under R version 4.0.2 
+2: package 'usethis' was built under R version 4.0.2 
+Skipping install of 'cepsvizfunctions' from a github remote, the SHA1 (54e8465c) has not changed since last install.
+  Use `force = TRUE` to force installation
+Loading required package: data.table
+Loading required package: DBI
+Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 6.3.1
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:data.table':
+
+    between, first, last
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+Loading required package: sp
+rgeos version: 0.5-3, (SVN revision 634)
+ GEOS runtime version: 3.8.0-CAPI-1.13.1 
+ Linking to sp version: 1.4-2 
+ Polygon checking: TRUE 
+
+
+Attaching package: 'zoo'
+
+The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+
+Attaching package: 'lubridate'
+
+The following objects are masked from 'package:rgeos':
+
+    intersect, setdiff, union
+
+The following objects are masked from 'package:dplyr':
+
+    intersect, setdiff, union
+
+The following objects are masked from 'package:data.table':
+
+    hour, isoweek, mday, minute, month, quarter, second, wday, week,
+    yday, year
+
+The following objects are masked from 'package:base':
+
+    date, intersect, setdiff, union
+
+Loading required package: lattice
+Loading required package: survival
+Loading required package: Formula
+
+Attaching package: 'Hmisc'
+
+The following object is masked from 'package:rgeos':
+
+    translate
+
+The following objects are masked from 'package:dplyr':
+
+    src, summarize
+
+The following objects are masked from 'package:base':
+
+    format.pval, units
+
+Reading layer `VirginiaCounty' from data source `C:\Users\Chloe\Desktop\ceps-viz\VirginiaAdministrativeBoundary' using driver `ESRI Shapefile'
+Simple feature collection with 133 features and 9 fields
+geometry type:  MULTIPOLYGON
+dimension:      XY
+bbox:           xmin: -373539.1 ymin: 60008 xmax: 376279.5 ymax: 385299
+projected CRS:  Lambert_Conformal_Conic_Virginia
+Warning messages:
+1: package 'maps' was built under R version 4.0.2 
+2: package 'sf' was built under R version 4.0.2 
+3: package 'rnaturalearth' was built under R version 4.0.2 
+4: package 'rnaturalearthdata' was built under R version 4.0.2 
+5: package 'rgeos' was built under R version 4.0.2 
+6: package 'sp' was built under R version 4.0.2 
+7: package 'zoo' was built under R version 4.0.2 
+8: package 'Hmisc' was built under R version 4.0.2 
+9: funs() is soft deprecated as of dplyr 0.8.0
+Please use a list of either functions or lambdas: 
+
+  # Simple named list: 
+  list(mean = mean, median = median)
+
+  # Auto named with `tibble::lst()`: 
+  tibble::lst(mean, median)
+
+  # Using lambdas
+  list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+This warning is displayed once per session. 
+
+Attaching package: 'plotly'
+
+The following object is masked from 'package:Hmisc':
+
+    subplot
+
+The following object is masked from 'package:ggplot2':
+
+    last_plot
+
+The following object is masked from 'package:stats':
+
+    filter
+
+The following object is masked from 'package:graphics':
+
+    layout
+
+Warning message:
+package 'plotly' was built under R version 4.0.2 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Electricity Generation by Fuel Type"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Removed 28 rows containing missing values (position_stack). 
+Warning message:
+Removed 28 rows containing missing values (position_stack). 
+Scale for 'y' is already present. Adding another scale for 'y', which will
+replace the existing scale.
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Electricity Consumption by Sector"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Consumption (Billion Btu)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Electricity Generation"
+
+$subtitle_description
+[1] "Renewable and Carbon-Free"
+
+$y_label
+[1] "Percentage of Total Generation"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: Virginia Clean Economy Act"
+
+$title_name
+[1] "Virginia Electricity Generation Goals"
+
+$subtitle_description
+[1] "Renewable and Carbon-Free"
+
+$y_label
+[1] "Percentage of Total Generation"
+
+Warning message:
+Removed 2 row(s) containing missing values (geom_path). 
+Warning messages:
+1: Ignoring unknown aesthetics: text 
+2: Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration, Virginia Clean Economy Act"
+
+$title_name
+[1] "Virginia Electricity Generation"
+
+$subtitle_description
+[1] "Renewable and Carbon Free"
+
+$y_label
+[1] "Percentage of Total Generation"
+
+Warning messages:
+1: Removed 1 row(s) containing missing values (geom_path). 
+2: Removed 2 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Carbon-Free Electricity Generation"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Removed 28 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Solar Electricity Generation"
+
+$subtitle_description
+[1] "Utility Scale and Distributed"
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Removed 2 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Electricity Generation from Wood"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: Dominion Energy 2020 Integrated Resource Plan"
+
+$title_name
+[1] "Virginia Projected Offshore Wind Electricity Generation"
+
+$subtitle_description
+[1] "Planned"
+
+$y_label
+[1] "Projected Generation (GWh)"
+
+Warning message:
+Removed 4 row(s) containing missing values (geom_path). 
+Scale for 'y' is already present. Adding another scale for 'y', which will
+replace the existing scale.
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: Dominion Energy 2020 Integrated Resource Plan"
+
+$title_name
+[1] "Virginia Projected Offshore Wind Electricity Generation"
+
+$subtitle_description
+[1] "Planned"
+
+$y_label
+[1] "Projected Generation (GWh)"
+
+Warning message:
+Removed 4 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+NULL
+
+$title_name
+[1] "Coastal Virginia Offshore Wind (CVOW) Capacity"
+
+$subtitle_description
+[1] "Planned"
+
+$y_label
+[1] "Projected Capacity (MW)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Carbon-Free Electricity Generation by Source"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Removed 28 rows containing missing values (position_stack). 
+Warning message:
+Removed 28 rows containing missing values (position_stack). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Renewable Electricity Generation"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Removed 28 rows containing missing values (position_stack). 
+Warning message:
+Removed 28 rows containing missing values (position_stack). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Renewable and Non-Renewable Electricity Generation"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Carbon Emitting and Carbon-Free Electricity Generation"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Renewable and Carbon-Free Electricity Generation"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Generation (GWh)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Net Interstate Electricity Flow"
+
+$subtitle_description
+[1] "Positive Values = Imports"
+
+$y_label
+[1] "Interstate Electricity Flow (GWh)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Date"
+
+$source_description
+[1] "Source: PJM Interconnection LLC, Virginia Clean Economy Act"
+
+$title_name
+[1] "Appalachian Power & Dominion Utility Onshore Wind and Solar"
+
+$subtitle_description
+[1] "Current and Projected Capacity vs VCEA Target Capacity"
+
+$y_label
+[1] "Capacity (MW)"
+
+Warning message:
+Removed 270 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Date"
+
+$source_description
+[1] "Source: PJM Interconnection LLC"
+
+$title_name
+[1] "Appalachian Power & Dominion Utility Onshore Wind and Solar"
+
+$subtitle_description
+[1] "Current and Projected Capacity"
+
+$y_label
+[1] "Capacity (MW)"
+
+Warning message:
+Removed 36 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: Virginia Clean Economy Act"
+
+$title_name
+[1] "Appalachian Power & Dominion Utility Onshore Wind and Solar"
+
+$subtitle_description
+[1] "VCEA Target Capacity"
+
+$y_label
+[1] "Capacity (MW)"
+
+Warning message:
+Removed 5 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Date"
+
+$source_description
+[1] "Source: PJM Interconnection LLC"
+
+$title_name
+[1] "Virginia Current and Projected Utility Wind and Solar Capacity"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Capacity (MW)"
+
+Warning message:
+Removed 129 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Date"
+
+$source_description
+[1] "Source: PJM Interconnection LLC"
+
+$title_name
+[1] "Virginia Current and Projected Utility Wind and Solar Capacity"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Capacity (MW)"
+
+Warning message:
+Removed 129 rows containing missing values (position_stack). 
+Warning message:
+Removed 129 rows containing missing values (position_stack). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Date"
+
+$source_description
+[1] "Source: PJM Interconnection LLC, Virginia Clean Economy Act"
+
+$title_name
+[1] "Dominion Projected Offshore Wind Capacity"
+
+$subtitle_description
+[1] "Note: VCEA requires Dominion to develop 5,200 MW of offshore wind by 2034"
+
+$y_label
+[1] "Capacity (MW)"
+
+Warning message:
+Removed 1 row(s) containing missing values (geom_path). 
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Date"
+
+$source_description
+[1] "Source: PJM Interconnection LLC"
+
+$title_name
+[1] "Virginia Current and Projected Utility Storage Capacity"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Capacity (MW)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia CO2 Emissions from Electricity Production"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Emissions (million metric tons CO2)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Emissions"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Emissions (million metric tons)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia CO2 Emissions From Electricity Production By Fuel Type"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Emissions (million metric tons)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: Federal Reserve Economic Data, U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Electricity Consumption per GDP"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Consumption per GDP (Btu/$)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia Electricity Consumption per Capita"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Consumption per Capita (Billion Btu/Person)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration, Federal Reserve Economic Data"
+
+$title_name
+[1] "Virginia CO2 Emissions per unit of GDP"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Emissions/GDP (Metric Tons/Thousand $)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration"
+
+$title_name
+[1] "Virginia CO2 Emissions per Capita"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Emissions per Capita (Metric Tons/Person)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration, Virgina Clean Economy Act"
+
+$title_name
+[1] "APCO and Dominion Historic Sales"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Sales (GWh)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration, Virgina Clean Economy Act"
+
+$title_name
+[1] "APCO and Dominion VCEA Sales Goals, 2022-2025"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Sales (GWh)"
+
+Warning messages:
+1: Ignoring unknown aesthetics: text 
+2: Ignoring unknown aesthetics: text 
+$figure
+
+$x_label
+[1] "Year"
+
+$source_description
+[1] "Source: U.S. Energy Information Administration, Dominion Energy Inc."
+
+$title_name
+[1] "Mandated Electricity Reduction Under Virginia Clean Economy Act"
+
+$subtitle_description
+NULL
+
+$y_label
+[1] "Total Retail Sales (GWh/year)"
+
+Warning message:
+Ignoring unknown aesthetics: text 
+Warning message:
+Ignoring unknown aesthetics: text 
+Warning message:
+Ignoring unknown aesthetics: text 
+Warning message:
+Ignoring unknown aesthetics: text 
+Warning message:
+Ignoring unknown aesthetics: text 
+Warning message:
+Ignoring unknown aesthetics: text 
+----------------------------------------------------------------------
+------------------------------dashboard.R-----------------------------
+Warning message:
+package 'shiny' was built under R version 4.0.2 
+
+Attaching package: 'rsconnect'
+
+The following object is masked from 'package:shiny':
+
+    serverInfo
+
+Warning message:
+package 'rsconnect' was built under R version 4.0.2 
+Preparing to deploy document...DONE
+Uploading bundle for document: 2488436...DONE
+Deploying bundle: 3488404 for document: 2488436 ...
+Waiting for task: 772976505
+  building: Processing bundle: 3488404
+  building: Parsing manifest
+  building: Building image: 3902573
+  building: Installing system dependencies
+  building: Fetching packages
+  building: Installing packages
+  building: Installing files
+  building: Pushing image: 3902573
+  deploying: Starting instances
+  rollforward: Activating new instances
+  terminating: Stopping old instances
+Document successfully deployed to https://cleanenergyva.shinyapps.io/va_clean_economy_dashboard_production/
+----------------------------------------------------------------------

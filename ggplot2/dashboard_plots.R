@@ -2,7 +2,6 @@
 
 library(here)
 library(devtools)
-install(Rtools)
 install_github("coopercenter/cepsvizfunctions")
 library(cepsvizfunctions)
 

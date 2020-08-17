@@ -11,13 +11,13 @@ source(here::here("derived_values","dashboard_calculations.R")) #sourcing in dat
 
 #plotting donut figure of progress towards renewable generation goal------------------------------------------------------------------------------
 
-renewable_percent_gen_2019 = va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower)/total]
-renewable_percent_gen_2030_goal = .3 #30% of Virginia’s electricity from renewables by 2030
+renewable_percent_gen_2019 = va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower)/(total-nuclear)]
+renewable_percent_gen_2030_goal = .392378 #30% of Virginia’s electricity from renewables by 2030
 
-renewable_ring = data.frame(category=c(" ","2019 renewable generation","goal"),
+renewable_ring = data.frame(category=c(" ","2019 renewable portfolio standard progress","goal"),
                             value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
 
-single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Generation",paste0("2019 Status: ",round(renewable_percent_gen_2019*100,1),"% of Generation from Renewables"),"Goal: 30% of Generation from<br>Renewables by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","VCEA_storage"))
+single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Portfolio Standard",paste0("2019 Status: ",round(renewable_percent_gen_2019*100,1),"% of Generation from RPS Eligible Sources"),"Goal: Approximately 39% of Generation from<br>RPS Eligible Sources by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","VCEA_storage"))
 single_ring_renewable_donut_p
 
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------

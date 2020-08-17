@@ -122,6 +122,16 @@ percent_renewable_and_carbon_free_goal_line <- line_figure(list(lf_VCEA_goal_per
                                                       return_static = F,subtitle_description = "Renewable and Carbon-Free")
 percent_renewable_and_carbon_free_goal_line 
 
+
+rps_renewable_line <- line_figure(list(rps_mandate_schedule),
+                                                           "year","Progress on RPS","Virginia Electricity Generation Goals",
+                                                           list("rps_madnate_schedule"),
+                                                           return_static = F,subtitle_description = "Renewable and Carbon-Free")
+rps_renewable_line
+
+rps_renewable_line_p <- ggplotly_wrapper(rps_renewable_line)
+rps_renewable_line_p
+
 percent_renewable_and_carbon_free_goal_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_line)
 percent_renewable_and_carbon_free_goal_line_p
 
@@ -131,8 +141,19 @@ percent_renewable_and_carbon_free_goal_combined_line <- line_figure(list(lf_perc
                                                       return_static = F,subtitle_description="Renewable and Carbon Free",future_date = 2020)
 percent_renewable_and_carbon_free_goal_combined_line
 
+percent_renewable_and_schedule_goal_combined_line <- line_figure(list(lf_percent_renewable_and_schedule_combined_dt),
+                                                                    "year","Percentage of Generation from RPS Eligible Sources","Virginia Renewable Portfolio Standard Schedule",
+                                                                    list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a","VCEA_storage","va_utility_sales"),
+                                                                    return_static = F,future_date = 2020)
+percent_renewable_and_schedule_goal_combined_line
+
 percent_renewable_and_carbon_free_goal_combined_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_combined_line)
 percent_renewable_and_carbon_free_goal_combined_line_p
+
+percent_renewable_and_schedule_goal_combined_line_p <- ggplotly_wrapper(percent_renewable_and_schedule_goal_combined_line)
+percent_renewable_and_schedule_goal_combined_line_p
+
+
 
 #facet grid
 renewable_and_carbon_free_facet_graph <- ggplot(data=lf_percent_renewable_carbon_free_combined,mapping=aes(x=year,y=value,color=variable))+

@@ -199,6 +199,7 @@ va_annual_renewable_and_carbon_free_gen[,percent_carbon_free:=(carbon_free/total
 # Renewable and carbon free percent gen---------------------------------------------------------------------
 lf_percent_renewable_and_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable,percent_carbon_free)],id="year")
 lf_percent_renewable <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable)],id="year")
+lf_percent_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_carbon_free)],id="year")
 
 #manually creating table of overall generation goals
 #creating table for facet grid 

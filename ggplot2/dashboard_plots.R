@@ -116,6 +116,16 @@ percent_renewable_and_carbon_free_line
 percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_line)
 percent_renewable_and_carbon_free_line_p
 
+percent_carbon_free_line <- line_figure(list(lf_percent_carbon_free),
+                                        "year","Percentage of Total Generation","Virginia Electricity Generation",
+                                        list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
+                                        return_static = F,upper_limit = 100, subtitle_description = "Carbon-Free")
+
+percent_carbon_free_line 
+
+percent_carbon_free_line_p <- ggplotly_wrapper(percent_carbon_free_line)
+percent_carbon_free_line_p
+
 percent_renewable_and_carbon_free_goal_line <- line_figure(list(lf_VCEA_goal_percent_gen),
                                                       "year","Percentage of Total Generation","Virginia Electricity Generation Goals",
                                                       list("VCEA_storage"),

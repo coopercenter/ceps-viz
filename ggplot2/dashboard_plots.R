@@ -119,7 +119,7 @@ percent_renewable_and_carbon_free_line_p
 percent_carbon_free_line <- line_figure(list(lf_percent_carbon_free),
                                         "year","Percentage of Total Generation","Virginia Electricity Generation",
                                         list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
-                                        return_static = F,upper_limit = 100, subtitle_description = "Carbon-Free")
+                                        return_static = F,modifications = theme(legend.position = "none"), upper_limit = 100, subtitle_description = "Carbon-Free")
 
 percent_carbon_free_line 
 
@@ -628,6 +628,8 @@ save(single_ring_renewable_donut_p,
      va_annual_consumption_area_p,
      va_annual_consumption_2018_pie_chart_p_with_legend,
      percent_renewable_and_carbon_free_line_p,
+     percent_carbon_free_line_p,
+     percent_renewable_and_schedule_goal_combined_line,
      va_gen_w_commas,
      va_con_w_commas,
      virginia_emissions_electric_commas,

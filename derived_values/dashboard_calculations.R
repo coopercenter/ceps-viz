@@ -69,6 +69,8 @@ VCEA_renewable_portfolio_standards<-data.table(dbGetQuery(db,"select * from \"VC
 #load in utility sales data
 va_utility_sales <- data.table(dbGetQuery(db,"select * from va_utility_sales ;"))
 
+rps_mandate_schedule <- data.table(dbGetQuery(db,"select * from clean_energy_renewable_goals ;"))
+
 #function to fetch data from a specified db table; return as a data table & rename 'value' column with descriptive name
 fetch_time_series_from_db <- function(db_table_name, value_description, con){
   library(RPostgreSQL)
@@ -186,7 +188,7 @@ other_annual_generation <- va_annual_generation[,.(year,other)]
 va_annual_renewable_and_carbon_free_gen[,renewable:=all_solar+hydropower]
 
 # Finding total annual renewable generation as a percent of total energy generation--------------------------------
-va_annual_renewable_and_carbon_free_gen[,percent_renewable:=(renewable/total)*100]
+va_annual_renewable_and_carbon_free_gen[,percent_renewable:=(renewable/(total-nuclear))*100]
 
 # Finding sum of total annual carbon-free generation--------------------------------------------------------------
 va_annual_renewable_and_carbon_free_gen[,carbon_free:=hydropower+all_solar+nuclear]
@@ -196,6 +198,8 @@ va_annual_renewable_and_carbon_free_gen[,percent_carbon_free:=(carbon_free/total
 
 # Renewable and carbon free percent gen---------------------------------------------------------------------
 lf_percent_renewable_and_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable,percent_carbon_free)],id="year")
+lf_percent_renewable <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_renewable)],id="year")
+lf_percent_carbon_free <- melt(va_annual_renewable_and_carbon_free_gen[,.(year,percent_carbon_free)],id="year")
 
 #manually creating table of overall generation goals
 #creating table for facet grid 
@@ -493,5 +497,12 @@ va_emissions_compounds <- merge(emissions_co2_by_source_va[,.(year=year,CO2=tota
 va_emissions_compounds <- merge(va_emissions_compounds,emissions_so2_by_source_va[,.(year=year,SO2=total/1102311.31)],id="year")
 va_emissions_compounds <- va_emissions_compounds[11:29,] #limit data to baseline year of 2000
 
+#load in capacity by fuel type data (likely will be replaced if we find better solar data)
+colnames(rps_mandate_schedule) <- c('year', 'variable', 'value')
+
+lf_percent_renewable$variable <- as.character(lf_percent_renewable$variable)
+lf_percent_renewable$variable[lf_percent_renewable$variable == 'percent_renewable'] <- 'Historic'
+lf_percent_renewable$variable <- as.factor(lf_percent_renewable$variable)
+lf_percent_renewable_and_schedule_combined_dt <- merge(lf_percent_renewable,rps_mandate_schedule,by=c("year","variable","value"),all=T)
 
 

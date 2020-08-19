@@ -117,9 +117,9 @@ percent_renewable_and_carbon_free_line_p <- ggplotly_wrapper(percent_renewable_a
 percent_renewable_and_carbon_free_line_p
 
 percent_carbon_free_line <- line_figure(list(lf_percent_carbon_free),
-                                        "year","Percentage of Total Generation","Virginia Electricity Generation",
+                                        "year","Percentage of Total Generation","Virginia Carbon-Free Electricity Generation",
                                         list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
-                                        return_static = F,modifications = theme(legend.position = "none"), upper_limit = 100, subtitle_description = "Carbon-Free")
+                                        return_static = F,modifications = theme(legend.position = "none"), upper_limit = 100)
 
 percent_carbon_free_line 
 

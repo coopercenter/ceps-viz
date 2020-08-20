@@ -224,6 +224,8 @@ lf_percent_renewable_carbon_free_combined <- lf_percent_renewable_carbon_free_co
   arrange(desc(category)) %>%
   mutate_at(vars(category), funs(factor(., levels=unique(.))))
 
+lf_percent_renewable_carbon_free_combined <- as.data.table(lf_percent_renewable_carbon_free_combined)
+
 #creating table for regular line plot 
 VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
                                       percent_renewable_goal=c(30,30,30,30),
@@ -497,8 +499,8 @@ va_emissions_compounds <- merge(emissions_co2_by_source_va[,.(year=year,CO2=tota
 va_emissions_compounds <- merge(va_emissions_compounds,emissions_so2_by_source_va[,.(year=year,SO2=total/1102311.31)],id="year")
 va_emissions_compounds <- va_emissions_compounds[11:29,] #limit data to baseline year of 2000
 
-#load in capacity by fuel type data (likely will be replaced if we find better solar data)
 colnames(rps_mandate_schedule) <- c('year', 'variable', 'value')
+rps_mandate_schedule <- rps_mandate_schedule[variable=="Appalachian",variable:="APCO"]
 
 lf_percent_renewable$variable <- as.character(lf_percent_renewable$variable)
 lf_percent_renewable$variable[lf_percent_renewable$variable == 'percent_renewable'] <- 'Historic'

@@ -396,34 +396,49 @@ percent_income_source <- metadata[db_table_name=="energy_burden_county_percent_i
 #I have commented out options B & C, but included them for reference as none of the three options are ideal
 
 #OPTION A - successfully shows all city and county boundaries EXCEPT Accomack and Northampton
-va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary"),layer="VirginiaCounty")
-va_counties <- as.data.table(va_counties)
-setnames(va_counties,old="NAMELSAD",new="county")#renaming county column to match other datasets
-va_counties$county <- toTitleCase(as.character(va_counties$county))
-
-#---------------------------------------------------------------------
-#OR
-#OPTION B - I was able to load this on my computer but both viewing and using this data to plot took so long that I was never able to successfully reach either outcome
-#va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary_ClippedToShoreline"),layer="VirginiaCounty_ClippedToShoreline")
+#va_counties <- sf::st_read(dsn=here::here("VirginiaAdministrativeBoundary"),layer="VirginiaCounty")
 #va_counties <- as.data.table(va_counties)
 #setnames(va_counties,old="NAMELSAD",new="county")#renaming county column to match other datasets
 #va_counties$county <- toTitleCase(as.character(va_counties$county))
-#------------------------------------------------------------------------
+
+#energy_burden_county_expenditures$county <- toTitleCase(energy_burden_county_expenditures$county)
+#energy_burden_county_percent_income$county <- toTitleCase(energy_burden_county_percent_income$county)
+
+#merging county geospatial data with energy equity data
+#va_energy_equity_by_county <- merge(va_counties,energy_burden_county_expenditures,id="county")
+#va_energy_equity_by_county$avg_annual_energy_cost <- as.numeric(va_energy_equity_by_county$avg_annual_energy_cost)
+#va_energy_equity_by_county <- merge(va_energy_equity_by_county,energy_burden_county_percent_income,id="county")
+#va_energy_equity_by_county$avg_energy_burden_as_percent_income <- as.numeric(va_energy_equity_by_county$avg_energy_burden_as_percent_income) 
+
+#states <- st_as_sf(map("state", plot = FALSE, fill = TRUE)) #to get  state outline
+
+#states <- as.data.table(states)
+#states$ID <- as.character(states$ID)
+#virginia_outline <- st_as_sf(states[ID=="virginia"])
+
+#va_energy_equity_by_county <- as.data.table(va_energy_equity_by_county)
+#strange trick to ensure hover text in map visual appears correctly
+#va_energy_equity_by_county[,number1:=(1500:1632)]
+#small_numbers <- seq(from=1, to=2.32, by=.01)
+#va_energy_equity_by_county[,number2:=small_numbers]
+
+#va_energy_equity_by_county <- st_as_sf(va_energy_equity_by_county)
+#---------------------------------------------------------------------------------------------------
+
 #OR
-#OPTION C - does not contain most cities' geospatial data but Accomack and Northampton counties appear as they should 
-#counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
-#va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
-#va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
-#va_counties <- as.data.table(va_counties)
+#OPTION B - does not contain most cities' geospatial data but Accomack and Northampton counties appear as they should 
+counties <- st_as_sf(map("county",plot = FALSE, fill = TRUE)) #loading in county data from maps package
+va_counties <- subset(counties, startsWith(as.character(counties$ID),"virginia")) #isolating VA counties
+va_counties <- separate(data = va_counties, col = ID, into = c("state", "county"), sep = ",") #isolating county name
+va_counties <- as.data.table(va_counties)
 
 #adjusting county names to match format of other datasets
-#va_counties[,county:=paste(county,"county")]
-#va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
-#va_counties[county=="virginia beach county",county:="virginia beach city"]
-#va_counties[county=="newport news county",county:="newport news city"]
-#va_counties[county=="hampton county",county:="hampton city"]
-#va_counties$county <- toTitleCase(va_counties$county)
-#------------------------------------------------------------------------
+va_counties[,county:=paste(county,"county")]
+va_counties[county=="suffolk county",county:="suffolk city"] #manually adjusting for cities
+va_counties[county=="virginia beach county",county:="virginia beach city"]
+va_counties[county=="newport news county",county:="newport news city"]
+va_counties[county=="hampton county",county:="hampton city"]
+va_counties$county <- toTitleCase(va_counties$county)
 
 energy_burden_county_expenditures$county <- toTitleCase(energy_burden_county_expenditures$county)
 energy_burden_county_percent_income$county <- toTitleCase(energy_burden_county_percent_income$county)
@@ -434,20 +449,15 @@ va_energy_equity_by_county$avg_annual_energy_cost <- as.numeric(va_energy_equity
 va_energy_equity_by_county <- merge(va_energy_equity_by_county,energy_burden_county_percent_income,id="county")
 va_energy_equity_by_county$avg_energy_burden_as_percent_income <- as.numeric(va_energy_equity_by_county$avg_energy_burden_as_percent_income) 
 
-world <- ne_countries(scale = "medium", returnclass = "sf") #to get outline outside of VA
 states <- st_as_sf(map("state", plot = FALSE, fill = TRUE)) #to get  state outline
 
 states <- as.data.table(states)
 states$ID <- as.character(states$ID)
 virginia_outline <- st_as_sf(states[ID=="virginia"])
 
-va_energy_equity_by_county <- as.data.table(va_energy_equity_by_county)
-#strange trick to ensure hover text in map visual appears correctly
-va_energy_equity_by_county[,number1:=(1500:1632)]
-small_numbers <- seq(from=1, to=2.32, by=.01)
-va_energy_equity_by_county[,number2:=small_numbers]
-
 va_energy_equity_by_county <- st_as_sf(va_energy_equity_by_county)
+#---------------------------------------------------------------------------------------------------------
+
 #For energy efficiency figures--------------------------------------------------------------------------------------------
 #renaming columns so it can be accepted as input into piechart function
 setnames(virginia_annual_savings_through_2020,old=c("Company Name","MWh"),new=c("variable","value"))

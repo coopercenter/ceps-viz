@@ -107,8 +107,8 @@ va_annual_consumption_2018_pie_chart_p_with_legend
 #--------------------------------PLOTTING RENEWABLE & CARBON-FREE GENERATION IN PARTICULAR-----------------------------------------------------
 
 # Graphing % of VA power generation (in GWh/yr) from renewables & carbon-free sources 
-percent_renewable_and_carbon_free_line <- line_figure(list(lf_percent_renewable_and_carbon_free),
-                                                      "year","Percentage of Total Generation","Virginia Electricity Generation",
+percent_renewable_and_carbon_free_line <- line_figure(list(lf_percent_renewable_carbon_free_combined[category=="Historic"]),
+                                                      "year","Percentage of Total Generation","Virginia Recent Electricity Generation",
                                                       list("eia_elec_gen_nuc_va_99_a","eia_elec_gen_sun_va_99_a","eia_elec_gen_dpv_va_99_a","eia_elec_gen_hyc_va_99_a"),
                                                       return_static = F,upper_limit = 100, subtitle_description = "Renewable and Carbon-Free")
 percent_renewable_and_carbon_free_line
@@ -127,16 +127,16 @@ percent_carbon_free_line_p <- ggplotly_wrapper(percent_carbon_free_line)
 percent_carbon_free_line_p
 
 percent_renewable_and_carbon_free_goal_line <- line_figure(list(lf_VCEA_goal_percent_gen),
-                                                      "year","Percentage of Total Generation","Virginia Electricity Generation Goals",
-                                                      list("VCEA_storage"),
-                                                      return_static = F,subtitle_description = "Renewable and Carbon-Free")
+                                                           "year","Percentage of Total Generation","Virginia Electricity Generation Goals",
+                                                           list("VCEA_storage"),
+                                                           return_static = F,subtitle_description = "Renewable and Carbon-Free")
 percent_renewable_and_carbon_free_goal_line 
 
 
 rps_renewable_line <- line_figure(list(rps_mandate_schedule),
-                                                           "year","Progress on RPS","Virginia Electricity Generation Goals",
-                                                           list("rps_madnate_schedule"),
-                                                           return_static = F,subtitle_description = "Renewable and Carbon-Free")
+                                  "year","Percentage of Generation from RPS Eligible Sources","Virginia Renewable Portfolio Standard Schedule",
+                                  list("clean_energy_renewable_goals"),
+                                  return_static = F)
 rps_renewable_line
 
 rps_renewable_line_p <- ggplotly_wrapper(rps_renewable_line)
@@ -162,8 +162,6 @@ percent_renewable_and_carbon_free_goal_combined_line_p
 
 percent_renewable_and_schedule_goal_combined_line_p <- ggplotly_wrapper(percent_renewable_and_schedule_goal_combined_line)
 percent_renewable_and_schedule_goal_combined_line_p
-
-
 
 #facet grid
 renewable_and_carbon_free_facet_graph <- ggplot(data=lf_percent_renewable_carbon_free_combined,mapping=aes(x=year,y=value,color=variable))+
@@ -650,6 +648,7 @@ save(single_ring_renewable_donut_p,
      emissions_per_gdp_line_p,
      pjm_wind,
      va_elec_net_imports_line_p,
+     rps_renewable_line_p,
   
      va_avg_annual_energy_cost_p,
      va_avg_annual_energy_percent_exp_p,

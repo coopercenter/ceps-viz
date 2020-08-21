@@ -132,14 +132,15 @@ percent_renewable_and_carbon_free_goal_line <- line_figure(list(lf_VCEA_goal_per
                                                            return_static = F,subtitle_description = "Renewable and Carbon-Free")
 percent_renewable_and_carbon_free_goal_line 
 
-
-rps_renewable_line <- line_figure(list(rps_mandate_schedule),
-                                  "year","Percentage of Generation from RPS Eligible Sources","Virginia Renewable Portfolio Standard Schedule",
-                                  list("clean_energy_renewable_goals"),
-                                  return_static = F)
+rps_renewable_line <- ggplot(rps_mandate_schedule,aes(x=year,y=value,color=variable)) +
+  geom_line(aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",round(value,4),"\n","Variable: ",variable)),linetype="dashed") + 
+  ylab("Percentage of Generation from RPS Eligible Sources") + xlab("Year") + ylim(0,NA) +
+  labs(title="Virginia Renewable Portfolio Standard Schedule",caption=paste("Source:",metadata[db_table_name=="clean_energy_renewable_goals",data_source_full_name])) +
+  scale_color_manual(name=NULL,values=ceps_pal[3:4]) +
+  theme_ceps()
 rps_renewable_line
 
-rps_renewable_line_p <- ggplotly_wrapper(rps_renewable_line)
+rps_renewable_line_p <- ggplotly_wrapper(list(figure=rps_renewable_line,x_label="Year",source_description=paste("Source:",metadata[db_table_name=="clean_energy_renewable_goals",data_source_full_name]),title_name="Virginia Renewable Portfolio Standard Schedule",subtitle_description=NULL,y_label="Percentage of Generation from RPS Eligible Sources"))
 rps_renewable_line_p
 
 percent_renewable_and_carbon_free_goal_line_p <- ggplotly_wrapper(percent_renewable_and_carbon_free_goal_line)

@@ -11,34 +11,34 @@ source(here::here("derived_values","dashboard_calculations.R")) #sourcing in dat
 
 #plotting donut figure of progress towards renewable generation goal------------------------------------------------------------------------------
 
-renewable_percent_gen_2019 = va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower)/(total-nuclear)]
-renewable_percent_gen_2030_goal = .392378 #30% of Virginia’s electricity from renewables by 2030
+renewable_percent_gen_2019 = round(va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower)/(total-nuclear)]*100,1)
+renewable_percent_gen_2050_goal = 100
 
-renewable_ring = data.frame(category=c(" ","2019 renewable portfolio standard progress","goal"),
-                            value=c(1-renewable_percent_gen_2030_goal,renewable_percent_gen_2019,renewable_percent_gen_2030_goal-renewable_percent_gen_2019))
+renewable_ring = data.frame(category=c("additional progress necessary to reach goal (%)","2019 RPS generation progress (%)"),
+                            value=c(renewable_percent_gen_2050_goal-renewable_percent_gen_2019,renewable_percent_gen_2019))
 
-single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Portfolio Standard",paste0("2019 Status: ",round(renewable_percent_gen_2019*100,1),"% of Generation from RPS Eligible Sources"),"Goal: Approximately 39% of Generation from<br>RPS Eligible Sources by 2030","label",c("whitesmoke","#5868AC","#3C5488B2"),list("eia_elec_gen_sun_va_99_a","VCEA_storage"))
+single_ring_renewable_donut_p <- single_ring_donut_figure_p(renewable_ring,"Renewable Portfolio Standard",paste0("2019 Status: ",renewable_percent_gen_2019,"% of Generation from RPS Eligible Sources"),"Goal: 100% of Generation from<br>RPS Eligible Sources by 2050","label+value",c("#3C5488B2","#5868AC"),list("eia_elec_gen_sun_va_99_a","VCEA_storage"))
 single_ring_renewable_donut_p
 
 #plotting donut figure of progress towards carbon-free generation goal ------------------------------------------------------------------------------------------
-carbon_free_percent_gen_2019 = va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower+nuclear)/total]
-carbon_free_percent_gen_2050_goal = 1 #100% of Virginia’s electricity from carbon-free sources by 2050
+carbon_free_percent_gen_2019 = round(va_annual_renewable_and_carbon_free_gen[year==2019,(all_solar+hydropower+nuclear)/total]*100,1)
+carbon_free_percent_gen_2050_goal = 100 #100% of Virginia’s electricity from carbon-free sources by 2050
 
-carbon_free_ring = data.frame(category=c("goal","2019 carbon free generation"),
+carbon_free_ring = data.frame(category=c("additional progress necessary to reach goal (%)","2019 carbon free generation (%)"),
                               value=c(carbon_free_percent_gen_2050_goal-carbon_free_percent_gen_2019,carbon_free_percent_gen_2019))
 
-single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation",paste0("2019 Status: ",round(carbon_free_percent_gen_2019*100,1),"% of Generation from Carbon-Free Sources"),"Goal: 100% of Generation from<br>Carbon-Free Sources by 2050","label",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","VCEA_storage"))
+single_ring_carbon_free_donut_p <- single_ring_donut_figure_p(carbon_free_ring,"Carbon-Free Generation",paste0("2019 Status: ",carbon_free_percent_gen_2019,"% of Generation from Carbon-Free Sources"),"Goal: 100% of Generation from<br>Carbon-Free Sources by 2050","label+value",c("#CEA5AC","#BE7E8A"),list("eia_elec_gen_nuc_va_99_a","VCEA_storage"))
 single_ring_carbon_free_donut_p
 
 #plotting donut figure of progess towards onshore wind and solar capacity goals-----------------------------------------------------------------------------------------
 solar_capacity_2019_mw = pjm_solar_working[status=="In Service",sum(mfo)] #currently only solar in service, no wind
 onshore_wind_capacity_2019_mw = pjm_wind_working[fuel=="Wind"&status=="In Service",sum(mfo)]
-sw_capacity_2024_mw_goal = 16100 #16,100 MW of solar and onshore wind by January 1, 2024 (from VCEA Summary 3.0)
+sw_capacity_2035_mw_goal = 16100 #16,100 MW of solar and onshore wind by January 1, 2024 (from VCEA Summary 3.0)
 
 sw_ring = data.frame(category=c("additional capacity necessary to reach goal","2019 capacity"),
-                     value=c(sw_capacity_2024_mw_goal-(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw),solar_capacity_2019_mw+onshore_wind_capacity_2019_mw))
+                     value=c(sw_capacity_2035_mw_goal-(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw),solar_capacity_2019_mw+onshore_wind_capacity_2019_mw))
 
-single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity",paste("2019 Status:",format(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar Capacity"),paste("Goal:",format(sw_capacity_2024_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar<br>Capacity in Operation by 2024"),"label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
+single_ring_sw_capacity_donut_p <- single_ring_donut_figure_p(sw_ring,"Onshore Wind & Solar Capacity",paste("2019 Status:",format(solar_capacity_2019_mw+onshore_wind_capacity_2019_mw,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar Capacity"),paste("Goal:",format(sw_capacity_2035_mw_goal,big.mark=",",scientific=FALSE,trim=TRUE),"MW of Onshore Wind & Solar<br>Capacity in Operation by 2035"),"label+value",c("#91D1C2B2","#00A087B2"),list("pjm_solar","pjm_wind","VCEA_storage"))
 single_ring_sw_capacity_donut_p
 
 #plotting donut figure of progress towards storage capacity------------------------------------------------------------------------------------------
@@ -212,7 +212,7 @@ wood_generation_time_series_line_p
 wind_projected_generation_time_series_line <- line_figure(list(melt(total_production_forecast_offshore_wind,id="Year")),
                                                           "Year","Projected Generation (GWh)","Virginia Projected Offshore Wind Electricity Generation",
                                                           list("total_production_forecast_offshore_wind"),
-                                                          return_static = F, modifications =  theme(legend.position = "none"), subtitle_description = "Planned")
+                                                          return_static = F, modifications =  theme(legend.position = "none"), subtitle_description = "Planned", future_date = 2020)
 wind_projected_generation_time_series_line
 
 #manually re-scaling y-axis so that value of 44 doesn't look like 0
@@ -226,7 +226,7 @@ wind_projected_generation_time_series_line_p
 # Projected wind capacity
 wind_projected_capacity_line <- line_figure(list(total_mw_offshore_wind),
                                             "Year","Projected Capacity (MW)","Coastal Virginia Offshore Wind (CVOW) Capacity",
-                                            return_static = F, subtitle_description = "Planned")
+                                            return_static = F, subtitle_description = "Planned",future_date = 2021)
 wind_projected_capacity_line
 
 wind_projected_capacity_line_p <- ggplotly_wrapper(wind_projected_capacity_line)
@@ -408,7 +408,7 @@ consumption_per_gdp_line_p
 
 consumption_per_capita_line <- line_figure(list(melt(energy_consumption_per_capita_va,id="year")),
                                            "year","Consumption per Capita (Billion Btu/Person)","Virginia Electricity Consumption per Capita",
-                                           list("residential_population_va","eia_seds_tetcb_va_a"), #for now, may change to derived values table names at some point 
+                                           list("fred_vapop","eia_seds_tetcb_va_a"), #for now, may change to derived values table names at some point 
                                            return_static = F, modifications = theme(legend.position = "none"))
 consumption_per_capita_line
 
@@ -417,7 +417,7 @@ consumption_per_capita_line_p
 
 emissions_per_gdp_line <- line_figure(list(melt(co2_emission_per_thousand_dollars_of_gdp_va,id="year")),
                                       "year","Emissions/GDP (Metric Tons/Thousand $)","Virginia CO2 Emissions per unit of GDP",
-                                      list("eia_emiss_co2_totv_tt_to_va_a","fred_vangsp"),
+                                      list("fred_vangsp","eia_emiss_co2_totv_tt_to_va_a"),
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_gdp_line
 
@@ -426,7 +426,7 @@ emissions_per_gdp_line_p
 
 emissions_per_capita_line <- line_figure(list(melt(co2_emission_per_capita_va,id="year")),
                                       "year","Emissions per Capita (Metric Tons/Person)","Virginia CO2 Emissions per Capita",
-                                      list("eia_emiss_co2_totv_tt_to_va_a","residential_population_va"),
+                                      list("fred_vangsp","eia_emiss_co2_totv_tt_to_va_a"),
                                       return_static=F,modifications = theme(legend.position = "none"))
 emissions_per_capita_line
 

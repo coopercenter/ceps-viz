@@ -473,6 +473,7 @@ virginia_annual_savings_through_2022_2 <-virginia_annual_savings_through_2022 %>
   filter(variable!=c("Total Needed"))
 virginia_annual_savings_through_2022_2[6,1]="Dominion (Gross savings)"
 virginia_annual_savings_2020_2022<-rbind(virginia_annual_savings_through_2020_2,virginia_annual_savings_through_2022_2)
+virginia_annual_savings_2020_2022$variable <- factor(virginia_annual_savings_2020_2022$variable,levels=c("Remaining Needed","APCO","C-PACE","DMME programs","Dominion (Gross savings)","Energy Codes (modeled, adoption of 2015 IECC)","ESPCs  (modeled, MUSH and private)"))
 
 #-----------------------------------------REFORMATTING DATASETS--------------------------------------------------------------------
 

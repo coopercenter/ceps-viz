@@ -226,6 +226,7 @@ wind_projected_generation_time_series_line_p
 # Projected wind capacity
 wind_projected_capacity_line <- line_figure(list(total_mw_offshore_wind),
                                             "Year","Projected Capacity (MW)","Coastal Virginia Offshore Wind (CVOW) Capacity",
+                                            list("total_mw_offshore_wind"),
                                             return_static = F, subtitle_description = "Planned",future_date = 2021)
 wind_projected_capacity_line
 
@@ -492,18 +493,18 @@ annual_savings_2022_pie_chart_p_with_legend <- pie_chart_figure_p(list(virginia_
                                                                   character_list = list("virginia_annual_savings_through_2020"),legend_shown = T,source_citation = "Source: The American Council for an Energy-Efficient Economy")
 annual_savings_2022_pie_chart_p_with_legend
 
-annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_2022, mapping=aes(fill=variable, y=value, x=year)) + 
-  geom_bar(position = position_stack(reverse=TRUE), stat="identity",color="black",size=.2,aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",round(value,4),"\n","Variable: ",variable)))+
+annual_savings_2020_2022_stacked_bar_chart<-ggplot(virginia_annual_savings_2020_2022, mapping=aes(x=year,y=value,fill=variable)) + 
+  geom_bar(position = "stack",stat="identity",color="black",size=.2,aes(group=variable,text=paste0("Year: ",year,"\n","Value: ",round(value,4),"\n","Variable: ",variable)))+
   scale_x_continuous(breaks=c(2020,2022))+
   scale_y_continuous(labels = comma)+
   labs(x="Year",y="Projected energy savings (MWh)",title="Projected Future Savings From Energy Efficiency Programs",caption="Source: The American Council for an Energy-Efficient Economy")+
-  theme(legend.title = element_blank())+
-  guides(fill = guide_legend(reverse = TRUE))+
-  scale_fill_manual(values = c("#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2","#D3D3D3"))+
+  scale_fill_manual(name=NULL,
+                    values = c("#D3D3D3","#00A087B2", "#3C5488B2", "#CEA5AC", "#BE7E8A", "#4DBBD5B2", "#91D1C2B2"))+
   theme_ceps()
 annual_savings_2020_2022_stacked_bar_chart
 
-annual_savings_2020_2022_stacked_bar_chart_p <- ggplotly_wrapper(list(figure=annual_savings_2020_2022_stacked_bar_chart,x_label="Year",source_description="Source: The American Council for an Energy-Efficient Economy",title_name="Virginia Energy Savings through 2020 and 2022",subtitle_description=NULL,y_label="Savings (MWh)")) 
+annual_savings_2020_2022_stacked_bar_chart_p <- ggplotly_wrapper(list(figure=annual_savings_2020_2022_stacked_bar_chart,x_label="Year",source_description="Source: The American Council for an Energy-Efficient Economy",title_name="Virginia Energy Savings through 2020 and 2022",subtitle_description=NULL,y_label="Savings (MWh)")) %>%
+  layout(legend = list(x = 1, y = 0.5))
 annual_savings_2020_2022_stacked_bar_chart_p
 
 #----------------------------------------PLOTTING GEOSPATIAL DATA----------------------------------------------------------
@@ -517,7 +518,7 @@ annual_savings_2020_2022_stacked_bar_chart_p
 #  geom_sf(data = va_energy_equity_by_county, aes(fill = number1,text=paste0(county,"\nEnergy Expenditures: $",avg_annual_energy_cost)),alpha=0) +
 #  scale_fill_gradientn(name="Average Annual Energy Cost \nin Dollars\n",colors=ceps_pal[1:5]) + 
 #  coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
-#  labs(title = "Average Annual Energy Cost ($) for Counties in Virginia", caption = paste0("Source: ",expenditures_source)) +
+#  labs(title = "Average Annual Energy Cost ($) for Counties in Virginia", caption = "Source: U.S. Department of Energy") +
 #  theme(panel.background = element_rect(fill = "#F0F0F0"),
 #        panel.grid = element_line(color="#F0F0F0"),
 #        axis.text = element_blank(),
@@ -540,7 +541,7 @@ annual_savings_2020_2022_stacked_bar_chart_p
 #  geom_sf(data = va_energy_equity_by_county, aes(fill = number2,text=paste0(county,"\nEnergy Expenditures: ",avg_energy_burden_as_percent_income,"%")),alpha=0) +
 #  scale_fill_gradientn(name="Average Annual Energy Cost \nas Percentage of Income\n",colors=ceps_pal[1:5]) +
 #  coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE) +
-#  labs(title = "Average Energy Burden (% income) for Counties in Virginia", caption = paste0("Source: ",percent_income_source)) +
+#  labs(title = "Average Energy Burden (% income) for Counties in Virginia", caption = "Source: U.S. Department of Energy") +
 #  theme(panel.background = element_rect(fill = "#F0F0F0"),
 #        panel.grid = element_line(color="#F0F0F0"),
 #        axis.text = element_blank(),
@@ -558,7 +559,7 @@ annual_savings_2020_2022_stacked_bar_chart_p
 
 #va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip =c("text")) %>%
 #  layout(title = list(text=paste0("Average Annual Energy Cost ($) for Counties in Virginia"),titlefont=list(size=15)),
-#         xaxis=list(title = paste0("<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)))%>%
+#         xaxis=list(title = paste0("<i>","<sub>","Source: U.S. Department of Energy","<sub>","<i>"),titlefont=list(size=14)))%>%
 #  config(displaylogo = FALSE,
 #         modeBarButtonsToRemove = c("pan2d","select2d","lasso2d","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))%>%
 #  style(hoveron = "fills") 
@@ -566,7 +567,7 @@ annual_savings_2020_2022_stacked_bar_chart_p
 
 #va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = c("text")) %>%
 #  layout(title = list(text=paste0("Average Energy Burden (% income) for Counties in Virginia"),titlefont=list(size=15)),
-#         xaxis=list(title = paste0("<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)))%>%
+#         xaxis=list(title = paste0("<i>","<sub>","Source: U.S. Department of Energy","<sub>","<i>"),titlefont=list(size=14)))%>%
 #  config(displaylogo = FALSE,
 #         modeBarButtonsToRemove = c("pan2d","select2d","lasso2d","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))%>%
 #  style(hoveron = "fills") 
@@ -580,7 +581,7 @@ va_avg_annual_energy_cost <- ggplot() +
   geom_sf(data = va_energy_equity_by_county, aes(fill = avg_annual_energy_cost,text=paste0(county,"\nEnergy Expenditures: $",avg_annual_energy_cost))) +
   scale_fill_gradientn(name="Average Annual Energy Cost \nin Dollars\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
-  labs(title = "Average Annual Energy Cost ($) for Counties in Virginia", caption = paste0("Source: ",expenditures_source)) +
+  labs(title = "Average Annual Energy Cost ($) for Counties in Virginia", caption = "Source: U.S. Department of Energy") +
   theme(panel.background = element_rect(fill = "#F0F0F0"),
         panel.grid = element_line(color="#F0F0F0"),
         axis.text = element_blank(),
@@ -602,7 +603,7 @@ va_avg_annual_energy_percent_exp <- ggplot() +
   geom_sf(data = va_energy_equity_by_county, aes(fill = avg_energy_burden_as_percent_income,text=paste0(county,"\nEnergy Expenditures: ",avg_energy_burden_as_percent_income,"%"))) +
   scale_fill_gradientn(name="Average Annual Energy Cost \nas Percentage of Income\n",colors=ceps_pal[1:5]) + #setting alpha adds some transparency
   coord_sf(xlim = c(-84, -75), ylim = c(36, 40), expand = FALSE)+
-  labs(title = "Average Energy Burden (% income) for Counties in Virginia", caption = paste0("Source: ",expenditures_source)) +
+  labs(title = "Average Energy Burden (% income) for Counties in Virginia", caption = "Source: U.S. Department of Energy") +
   theme(panel.background = element_rect(fill = "#F0F0F0"),
         panel.grid = element_line(color="#F0F0F0"),
         axis.text = element_blank(),
@@ -620,14 +621,14 @@ va_avg_annual_energy_percent_exp
 
 va_avg_annual_energy_cost_p <- ggplotly(va_avg_annual_energy_cost,tooltip = "text") %>%	
   layout(title = list(text=paste0("Average Annual Energy Cost ($) for Counties in Virginia"),titlefont=list(size=15)),
-         xaxis=list(title = paste0("<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)))%>%
+         xaxis=list(title = paste0("<br>","<i>","<sub>","Source: U.S. Department of Energy","<sub>","<i>"),titlefont=list(size=14)))%>%
   config(displaylogo = FALSE,
          modeBarButtonsToRemove = c("pan2d","select2d","lasso2d","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_cost_p
 
 va_avg_annual_energy_percent_exp_p <- ggplotly(va_avg_annual_energy_percent_exp,tooltip = "text") %>%	
   layout(title = list(text=paste0("Average Energy Burden (% income) for Counties in Virginia"),titlefont=list(size=15)),
-         xaxis=list(title = paste0("<br>","<i>","<sub>",paste0("Source: ",expenditures_source),"<sub>","<i>"),titlefont=list(size=14)))%>%
+         xaxis=list(title = paste0("<br>","<i>","<sub>","Source: U.S. Department of Energy","<sub>","<i>"),titlefont=list(size=14)))%>%
   config(displaylogo = FALSE,
          modeBarButtonsToRemove = c("pan2d","select2d","lasso2d","zoom2d","autoScale2d","resetScale2d","toggleSpikelines"))
 va_avg_annual_energy_percent_exp_p

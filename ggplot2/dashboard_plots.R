@@ -85,7 +85,7 @@ va_annual_production_2019_pie_chart_p_with_legend
 
 #--------------------------------------------PLOTTING CONSUMPTION FIGURES---------------------------------------------------------------------
 va_annual_consumption_area <- stacked_area_figure(list(eia_seds_tercb_va_a,eia_seds_teccb_va_a,eia_seds_teicb_va_a,eia_seds_teacb_va_a),
-                                                  "year","Consumption (Billion Btu)","Virginia Electricity Consumption by Sector",
+                                                  "year","Consumption (Billion Btu)","Virginia Energy Consumption by Sector",
                                                   list("eia_seds_tercb_va_a","eia_seds_teccb_va_a","eia_seds_teicb_va_a","eia_seds_teacb_va_a"),
                                                   return_static = F, modifications = scale_y_continuous(labels = comma))
 va_annual_consumption_area
@@ -94,12 +94,12 @@ va_annual_consumption_area_p <- ggplotly_wrapper(va_annual_consumption_area)
 va_annual_consumption_area_p
 
 va_annual_consumption_2018_pie_chart_p <- pie_chart_figure_p(list(eia_seds_tercb_va_a[year==2018],eia_seds_teccb_va_a[year==2018],eia_seds_teicb_va_a[year==2018],eia_seds_teacb_va_a[year==2018]),
-                                                             "year","Virginia 2018 Electricity Consumption by Sector",
+                                                             "year","Virginia 2018 Energy Consumption by Sector",
                                                              list("eia_seds_tercb_va_a","eia_seds_teccb_va_a","eia_seds_teicb_va_a","eia_seds_teacb_va_a"))
 va_annual_consumption_2018_pie_chart_p
 
 va_annual_consumption_2018_pie_chart_p_with_legend <-  pie_chart_figure_p(list(eia_seds_tercb_va_a[year==2018],eia_seds_teccb_va_a[year==2018],eia_seds_teicb_va_a[year==2018],eia_seds_teacb_va_a[year==2018]),
-                                                                          "year","Virginia 2018 Electricity Consumption by Sector",
+                                                                          "year","Virginia 2018 Energy Consumption by Sector",
                                                                           list("eia_seds_tercb_va_a","eia_seds_teccb_va_a","eia_seds_teicb_va_a","eia_seds_teacb_va_a"),
                                                                           legend_shown = T)
 va_annual_consumption_2018_pie_chart_p_with_legend
@@ -727,7 +727,7 @@ save(single_ring_renewable_donut_p,
      annual_savings_2020_2022_stacked_bar_chart,
      annual_savings_2020_2022_stacked_bar_chart_p,
      apco_dom_historic_goal_sales_combined_line_p,
-     file = "~/Desktop/va_clean_economy_dashboard/dashboard_output_test.RData") 
+     file = "~/GitHub/va_clean_economy_dashboard/dashboard_output_test.RData") 
 
 
 

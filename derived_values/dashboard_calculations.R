@@ -233,9 +233,14 @@ VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
 lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
 
 #calculating percent share of Dom & Apco sales of total sales in 2019
-total_sales = va_utility_sales[year==2019,sum(tot_sales_mwh)]
-dom_percent_share = va_utility_sales[year==2019&utility_name=="dominion",sum(tot_sales_mwh)]/total_sales
-apco_percent_share = va_utility_sales[year==2019&utility_name=="apco",sum(tot_sales_mwh)]/total_sales
+recent_year = va_utility_sales %>% select(year) %>% arrange()
+recent_year = recent_year[[nrow(va_utility_sales),1]]
+
+
+total_sales = va_utility_sales[year==recent_year,sum(tot_sales_mwh)]
+dom_percent_share = va_utility_sales[year==recent_year&utility_name=="dominion",sum(tot_sales_mwh)]/total_sales
+apco_percent_share = va_utility_sales[year==recent_year&utility_name=="apco",sum(tot_sales_mwh)]/total_sales
+
 #calculating weighted average of Dom and APCO rps
 VCEA_renewable_portfolio_standards[,`:=`(apco_rps=apco_rps*100,
                                          dominion_rps=dominion_rps*100)]#converting to percent rather than decimal for consistency with other data
@@ -250,7 +255,11 @@ lf_percent_renewable_carbon_free_combined_dt[variable=="percent_renewable"|varia
 lf_percent_renewable_carbon_free_combined_dt[variable=="percent_carbon_free"|variable=="percent_carbon_free_goal",variable:="VA carbon free"]
 
 # APCO and Dominion historic sales vs VCEA goals----------------------------------------------------------------------------
-apco_dom_historic_sales<-apco_dom_sales[year<2020]
+apco_dom_historic_sales <- apco_dom_sales %>% 
+  filter(
+    as.numeric(apco_total_gwh) != 0
+  )
+
 lf_apco_dom_historic_sales <- melt(apco_dom_historic_sales[,.(year, apco_total_gwh,dom_total_gwh)],id="year")
 
 #manually creating table of sales goals
@@ -309,8 +318,7 @@ pjm_solar_working[,projected_in_service_date:=as.Date(projected_in_service_date,
 pjm_solar_working[,actual_in_service_date:=as.Date(actual_in_service_date,"%m/%d/%Y")]
 
 VCEA_onshore_wind_solar[,date:=as.Date(paste0(year,"-01-01"))]
-VCEA_onshore_wind_solar[year>=2023,apco_onshore_wind_and_solar_mw:=na.locf(apco_onshore_wind_and_solar_mw)] #filling in goals between benchmark years
-VCEA_onshore_wind_solar[year>=2024,dominion_onshore_wind_and_solar_mw:=na.locf(dominion_onshore_wind_and_solar_mw)] #filling in goals between benchmark years
+VCEA_onshore_wind_solar %>% tidyr::fill(everything())
 setnames(VCEA_onshore_wind_solar,old=c("apco_onshore_wind_and_solar_mw","dominion_onshore_wind_and_solar_mw"),new=c("target_apco_onshore_wind_and_solar","target_dom_onshore_wind_and_solar"))
 
 apco_dom_onwind_and_solar <- pjm_wind_working[transmission_owner=="AEP",.(date=projected_in_service_date,apco_onshore_wind=mfo)] #AEP is owner of APCO
@@ -331,6 +339,8 @@ apco_dom_onwind_and_solar <- apco_dom_onwind_and_solar[,.(date,
 apco_dom_onwind_and_solar[,apco_onshore_wind_and_solar:=apco_onshore_wind+apco_solar]
 
 apco_dom_onwind_and_solar <- merge(apco_dom_onwind_and_solar,VCEA_onshore_wind_solar[,.(date,target_apco_onshore_wind_and_solar,target_dom_onshore_wind_and_solar)],id="date",all=T)
+
+apco_dom_onwind_and_solar %>% filter(!is.na(apco_onshore_wind)) %>% fill(everything())
 
 apco_dom_onwind_and_solar[date<='2023-12-01',`:=`(apco_solar=na.locf(apco_solar),
                                                   apco_onshore_wind=na.locf(apco_onshore_wind),
@@ -478,14 +488,21 @@ virginia_annual_savings_2020_2022$variable <- factor(virginia_annual_savings_202
 #-----------------------------------------REFORMATTING DATASETS--------------------------------------------------------------------
 
 # reformatting the generation dataset
-va_gen_w_commas<-data.frame(format(va_annual_generation[,2:12],big.mark=",",scientific=FALSE,trim=TRUE))
-va_gen_w_commas<-cbind(va_annual_generation[,1],va_gen_w_commas)
+va_gen_w_commas <- va_annual_generation %>%
+  select(-year) %>%
+  format(big.mark=",",scientific=FALSE,trim=TRUE) %>%
+  data.frame()
+
+va_gen_w_commas<- va_gen_w_commas %>% select(year) %>% cbind(va_gen_w_commas)
 gen_names <- names(va_gen_w_commas)
 good_gen_names <- capitalize(gsub("_"," ", gen_names))
 names(va_gen_w_commas) <- good_gen_names
 
 # reformatting the consumption dataset
-consumption_by_sector_list <- list(eia_seds_tercb_va_a,eia_seds_teccb_va_a,eia_seds_teicb_va_a,eia_seds_teacb_va_a)
+consumption_by_sector_list <- list(eia_seds_tercb_va_a,
+                                   eia_seds_teccb_va_a,
+                                   eia_seds_teicb_va_a,
+                                   eia_seds_teacb_va_a)
 
 va_annual_consumption <- NULL
 
@@ -496,19 +513,23 @@ for(table in consumption_by_sector_list){
   {va_annual_consumption <- merge(va_annual_consumption, table[], by = "year", all=TRUE)}
 }
 
-va_con_w_commas<-data.frame(format(va_annual_consumption[,2:5],big.mark=",",scientific=FALSE,trim=TRUE))
-va_con_w_commas<-cbind(va_annual_consumption[,1],va_con_w_commas)
+va_con_w_commas<- va_annual_consumption %>%
+  select(residential, commercial, industrial, transportation) %>%
+  format(big.mark=",",scientific=FALSE,trim=TRUE) %>%
+  data.frame()
+  
+va_con_w_commas <- va_annual_consumption %>% select(year) %>% cbind(va_con_w_commas)
 
 #reformatting carbon emissions from electricity sector
 virginia_emissions_electric <- eia_emiss_co2_totv_ec_to_va_a[,.(year,electric_sector_CO2_emissions)]
-virginia_emissions_electric_commas <- data.frame(signif(virginia_emissions_electric[,2], digits=4))
+virginia_emissions_electric_commas <- data.frame(signif(select(virginia_emissions_electric, electric_sector_CO2_emissions), digits=4))
 virginia_emissions_electric_commas <- cbind(virginia_emissions_electric[,1],virginia_emissions_electric_commas)
 colnames(virginia_emissions_electric_commas) <- c('Year','Million Metric Tons of CO2')
 
 #reformatting emissions compounds dataset
 va_emissions_compounds <- merge(emissions_co2_by_source_va[,.(year=year,CO2=total/1000)],emissions_no_by_source_va[,.(year=year,NO=total/1102311.31)],id="year")
 va_emissions_compounds <- merge(va_emissions_compounds,emissions_so2_by_source_va[,.(year=year,SO2=total/1102311.31)],id="year")
-va_emissions_compounds <- va_emissions_compounds[11:29,] #limit data to baseline year of 2000
+va_emissions_compounds <- va_emissions_compounds %>% filter(year >= 2000) #limit data to baseline year of 2000
 
 colnames(rps_mandate_schedule) <- c('year', 'variable', 'value')
 rps_mandate_schedule <- rps_mandate_schedule[variable=="Appalachian",variable:="APCO"]

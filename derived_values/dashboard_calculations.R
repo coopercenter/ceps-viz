@@ -493,7 +493,7 @@ va_gen_w_commas <- va_annual_generation %>%
   format(big.mark=",",scientific=FALSE,trim=TRUE) %>%
   data.frame()
 
-va_gen_w_commas<- va_gen_w_commas %>% select(year) %>% cbind(va_gen_w_commas)
+va_gen_w_commas<- va_annual_generation %>% select(year) %>% cbind(va_gen_w_commas)
 gen_names <- names(va_gen_w_commas)
 good_gen_names <- capitalize(gsub("_"," ", gen_names))
 names(va_gen_w_commas) <- good_gen_names

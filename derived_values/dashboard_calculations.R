@@ -233,7 +233,7 @@ VCEA_goal_percent_gen_dt = data.table(year=c(2030,2040,2050,2060),
 lf_VCEA_goal_percent_gen_dt <- melt(VCEA_goal_percent_gen_dt,id="year")
 
 #calculating percent share of Dom & Apco sales of total sales in 2019
-recent_year = va_utility_sales %>% select(year) %>% arrange()
+recent_year = va_utility_sales %>% select(year) %>% arrange(year)
 recent_year = recent_year[[nrow(va_utility_sales),1]]
 
 
